@@ -2,28 +2,28 @@
 namespace oc ;
 
 // 初始化 jcat 框架
-use jc\db\DB;
-use jc\db\PDODriver;
-use jc\ui\xhtml\Factory as UIFactory ;
-use jc\system\Application;
-use jc\test\integration\HtmlResourcePoolFactory;
+use oc\ext\ExtensionMetainfo;
+use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory ;
 
-$aApp = include __DIR__."/framework/inc.entrance.php" ;
 
+ini_set('display_errors', 1);
+
+require_once __DIR__."/framework/inc.entrance.php" ;
+require_once __DIR__."/platform/class/Platform.php" ;
+
+$aPlatform = new Platform(__DIR__) ;
 
 // 简单配置启动 OC platform,以及扩展, 以后完善
 require 'config.php' ;
-$aUISrcMgr = UIFactory::singleton()->sourceFileManager() ;
-$aJsFileMgr = HtmlResourcePoolFactory::singleton()->javaScriptFileManager() ;
-$aCssFileMgr = HtmlResourcePoolFactory::singleton()->cssFileManager() ;
-
-// oc platform
-$aApp->classLoader()->addPackage(__DIR__.'/classes','oc') ;
 
 // core.user
-$aApp->classLoader()->addPackage(__DIR__.'/extensions/coreuser/classes','oc\ext\coreuser') ;
-$aUISrcMgr->addFolder(__DIR__.'/extensions/coreuser/ui/templates') ;
-$aJsFileMgr->addFolder(__DIR__.'/extensions/coreuser/ui/js') ;
-$aCssFileMgr->addFolder(__DIR__.'/extensions/coreuser/ui/css') ;
+$aExtMeta = new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser') ;
+$aExtMeta->load($aPlatform) ;
+
+
+
+// 根据路由设置创建控制器 并 执行
+$aController = $aPlatform->accessRouter()->createRequestController($aPlatform->request()) ;
+$aController->mainRun($aPlatform->request()) ;
 
 ?>
