@@ -32,7 +32,7 @@ class Platform extends Application
 		
 		// 默认的控制器
 		$aAccessRouter = $this->accessRouter() ;
-		$aAccessRouter->setDefaultController('oc\\DefaultController') ;
+		$aAccessRouter->setDefaultController('oc\\base\\DefaultController') ;
 	}
 }
 
