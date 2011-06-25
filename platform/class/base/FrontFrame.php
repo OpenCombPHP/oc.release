@@ -10,11 +10,10 @@ class FrontFrame extends WebpageFrame
 	{
 		parent::__construct() ;
 		
-		$this->frameView = new View('frameView',"oc_FrontFrame.template.html") ;
-		$this->addFrameView( $this->frameView ) ;
+		$this->addFrameView(
+			new View('frameView',"oc_FrontFrame.template.html")
+		) ;
 	}
-	
-	private $frameView ;
 }
 
 ?>
