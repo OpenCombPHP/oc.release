@@ -21,6 +21,14 @@ require 'config.php' ;
 $aExtMeta = new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser') ;
 $aExtMeta->load($aPlatform) ;
 
+// blog
+$aExtMeta = new ExtensionMetainfo('blog','oc\ext\blog\Blog') ;
+$aExtMeta->load($aPlatform) ;
+
+// developtoolbox
+$aExtMeta = new ExtensionMetainfo('microblog','oc\ext\microblog\MicroBlog') ;
+$aExtMeta->load($aPlatform) ;
+
 // developtoolbox
 $aExtMeta = new ExtensionMetainfo('developtoolbox','oc\ext\developtoolbox\DevelopToolbox') ;
 $aExtMeta->load($aPlatform) ;
