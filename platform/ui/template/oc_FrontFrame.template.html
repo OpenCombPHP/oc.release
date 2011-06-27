@@ -1,6 +1,10 @@
 <div id="Cronus's Garden">
+	当前登陆用户：<a href="?c=register">注册</a> <a href="?c=update">修改</a> <a href="?c=login">登陆</a> <a href="?c=logout">退出</a><br/>
+	<foreach for="\jc\auth\IdManager::fromSession()->iterator()" item="aId">
 	
-	Sky ~~
+			{= $aId->username() } <a href="?c=switch&uid={= $aId->userId() }">切换</a><br/>
+			
+	</foreach>
 	<hr />
 	
 </div>
