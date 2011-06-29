@@ -1,10 +1,13 @@
 <div id="Cronus's Garden">
-	当前登陆用户：<a href="?c=register">注册</a> <a href="?c=update">修改</a> <a href="?c=login">登陆</a> <a href="?c=logout">退出</a><br/>
+	当前登陆用户：<a href="?c=register">注册</a> <a href="?c=coreuser.update">修改</a> <a href="?c=login">登陆</a> <a href="?c=logout">退出</a><br/>
 	<foreach for="\jc\auth\IdManager::fromSession()->iterator()" item="aId">
 	
-			{= $aId->username() } <a href="?c=switch&uid={= $aId->userId() }">切换</a><br/>
+			{= $aId->username() } <a href="?c=coreuser.switch&uid={= $aId->userId() }">切换</a><br/>
 			
 	</foreach>
+	
+	<br/>
+	博客：<a href="?c=blog">列表</a> <a href="?c=blog.insert">插入</a>
 	<hr />
 	
 </div>

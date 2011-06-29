@@ -7,6 +7,7 @@ use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory ;
 
 
 ini_set('display_errors', 1);
+//error_reporting(E_ALL);
 
 require_once __DIR__."/framework/inc.entrance.php" ;
 require_once __DIR__."/platform/class/Platform.php" ;
