@@ -9,11 +9,6 @@ class DefaultController extends Controller
 	{
 		$this->createView("defaultView", "Welcome.template.html") ;
 	}
-	
-	public function process()
-	{
-		$this->defaultView->render() ;
-	}
 }
 
 ?>

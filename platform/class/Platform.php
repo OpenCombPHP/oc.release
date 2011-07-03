@@ -3,7 +3,7 @@ namespace oc ;
 
 use jc\system\Application;
 use jc\system\AppFactory;
-use jc\ui\xhtml\Factory as UIFactory;
+use jc\ui\xhtml\UIFactory ;
 use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory;
 
 class Platform extends Application

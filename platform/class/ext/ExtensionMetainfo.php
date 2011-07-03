@@ -2,7 +2,7 @@
 namespace oc\ext ;
 
 use oc\Platform;
-use jc\ui\xhtml\Factory as UIFactory;
+use jc\ui\xhtml\UIFactory ;
 use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory;
 use jc\lang\Object;
 
