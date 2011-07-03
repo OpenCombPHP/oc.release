@@ -2,7 +2,7 @@
 namespace oc ;
 
 use jc\system\Application;
-use jc\system\AppFactory;
+use oc\system\PlatformFactory ;
 use jc\ui\xhtml\UIFactory ;
 use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory;
 
@@ -17,11 +17,9 @@ class Platform extends Application
 			Application::setSingleton($this) ;
 		}
 		
-		$aAppFactory = AppFactory::createFactory() ;
+		$aAppFactory = new PlatformFactory() ;
 		$aAppFactory->build($this) ;		
 		
-		// class
-		$this->classLoader()->addPackage(__DIR__,'oc') ;
 		
 		// app dir
 		$this->setApplicationDir($sAppDir) ;
