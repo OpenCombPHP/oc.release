@@ -7,7 +7,9 @@ class DefaultController extends Controller
 {
 	protected function init()
 	{
-		$this->createView("defaultView", "Welcome.template.html") ;
+		$this->add( new FrontFrame() ) ;
+		
+		$this->createView("defaultView", "oc:Welcome.template.html") ;
 	}
 }
 

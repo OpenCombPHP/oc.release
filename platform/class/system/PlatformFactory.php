@@ -12,12 +12,12 @@ class PlatformFactory extends HttpAppFactory
 		
 		// class
 		$aClassLoader->addPackage(dirname(__DIR__),'oc') ;
-		
+
 		return $aClassLoader ;
 	}
 	public function createAccessRouter(CoreApplication $aApp)
 	{
-		return $aApp->create('AccessRouter',__NAMESPACE__) ;
+		return new AccessRouter() ;
 	}
 }
 

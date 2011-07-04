@@ -69,14 +69,17 @@ class ExtensionMetainfo extends Object
 		// 注册ui模板目录
 		UIFactory::singleton()->sourceFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiTemplateFolder()
+				, $this->name()
 		) ;
 		
 		// 注册 js/css 目录
 		HtmlResourcePoolFactory::singleton()->javaScriptFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiJsFolder()
+				, $this->name()
 		) ;
 		HtmlResourcePoolFactory::singleton()->cssFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiCssFolder()
+				, $this->name()
 		) ;
 		
 		$sClass = $this->className() ;		

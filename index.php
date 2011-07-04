@@ -32,13 +32,18 @@ $aExtMeta->load($aPlatform) ;
 $aExtMeta = new ExtensionMetainfo('blog','oc\ext\blog\Blog') ;
 $aExtMeta->load($aPlatform) ;
 
-// developtoolbox
+// microblog
 $aExtMeta = new ExtensionMetainfo('microblog','oc\ext\microblog\MicroBlog') ;
 $aExtMeta->load($aPlatform) ;
 
 // developtoolbox
 $aExtMeta = new ExtensionMetainfo('developtoolbox','oc\ext\developtoolbox\DevelopToolbox') ;
 $aExtMeta->load($aPlatform) ;
+
+// instantmessaging
+$aExtMeta = new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging') ;
+$aExtMeta->load($aPlatform) ;
+
 
 
 

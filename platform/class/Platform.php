@@ -1,9 +1,11 @@
 <?php
 namespace oc ;
 
+use jc\ui\xhtml\UIFactory ;
+use jc\mvc\view\UIFactory as MvcUIFactory ;
+use oc\ui\SourceFileManager;
 use jc\system\Application;
 use oc\system\PlatformFactory ;
-use jc\ui\xhtml\UIFactory ;
 use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory;
 
 class Platform extends Application
@@ -18,13 +20,20 @@ class Platform extends Application
 		}
 		
 		$aAppFactory = new PlatformFactory() ;
-		$aAppFactory->build($this) ;		
-		
+		$aAppFactory->build($this) ;	
 		
 		// app dir
 		$this->setApplicationDir($sAppDir) ;
 		
-		UIFactory::singleton()->sourceFileManager()->addFolder($sAppDir.'/platform/ui/template/') ;
+		$aSrcFileMgr = new SourceFileManager() ;
+		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
+		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
+		
+		$aSrcFileMgr->addFolder($sAppDir.'/platform/ui/template/','oc') ;
+		$aSrcFileMgr->addFolder(\jc\PATH.'src/template/','jc') ;
+		
+		//UIFactory::singleton()->sourceFileManager()->addFolder($sAppDir.'/platform/ui/template/','oc') ;
+		
 		HtmlResourcePoolFactory::singleton()->javaScriptFileManager()->addFolder($sAppDir.'/platform/ui/js/') ;
 		HtmlResourcePoolFactory::singleton()->cssFileManager()->addFolder($sAppDir.'/platform/ui/css/') ;
 		
