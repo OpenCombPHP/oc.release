@@ -10,7 +10,10 @@ class Model extends JcModel
 	 */
 	public function child($sName)
 	{
-		orm\MAMap::transFullOrmName($sName) ;
+		if( !$this->isAggregation() )
+		{
+			orm\MAMap::transFullOrmName($sName) ;
+		}
 		
 		return parent::child($sName) ;
 	}

@@ -5,7 +5,7 @@ namespace oc ;
 use oc\mvc\model\db\orm\MAMap;
 use jc\mvc\model\db\orm\ModelAssociationMap;
 use oc\ext\ExtensionMetainfo;
-use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory ;
+use jc\resrc\htmlresrc\HtmlResourcePoolFactory ;
 
 
 ini_set('display_errors', 1);

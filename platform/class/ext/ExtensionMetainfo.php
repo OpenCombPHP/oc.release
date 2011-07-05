@@ -3,7 +3,7 @@ namespace oc\ext ;
 
 use oc\Platform;
 use jc\ui\xhtml\UIFactory ;
-use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory;
+use jc\resrc\htmlresrc\HtmlResourcePoolFactory;
 use jc\lang\Object;
 
 class ExtensionMetainfo extends Object

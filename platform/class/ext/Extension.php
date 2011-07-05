@@ -1,7 +1,7 @@
 <?php
 namespace oc\ext ;
 
-use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory;
+use jc\resrc\htmlresrc\HtmlResourcePoolFactory;
 use jc\lang\Object;
 
 abstract class Extension extends Object 

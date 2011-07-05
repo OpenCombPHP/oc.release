@@ -6,7 +6,7 @@ use jc\mvc\view\UIFactory as MvcUIFactory ;
 use oc\ui\SourceFileManager;
 use jc\system\Application;
 use oc\system\PlatformFactory ;
-use jc\mvc\view\htmlresrc\HtmlResourcePoolFactory;
+use jc\resrc\htmlresrc\HtmlResourcePoolFactory;
 
 class Platform extends Application
 {
