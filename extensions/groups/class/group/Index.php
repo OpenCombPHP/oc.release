@@ -1,5 +1,5 @@
 <?php
-namespace oc\ext\mtag ;
+namespace oc\ext\groups\group ;
 
 use oc\base\FrontFrame;
 
@@ -33,9 +33,9 @@ class Index extends Controller
 		// 网页框架
 		$this->add(new FrontFrame()) ;
 		
-		$this->createView("defaultView", "Blog.Index.html") ;
+		$this->createView("defaultView", "group.index.html") ;
 		
-		$this->model = Model::fromFragment('blog',array(),true);
+		$this->model = Model::fromFragment('group',array(),true);
 		
 		//设置model
 		$this->defaultView->setModel($this->model) ;
@@ -45,7 +45,6 @@ class Index extends Controller
 	public function process()
 	{
 		$this->model->load();
-		
 		
 //		$this->model->printStruct() ;
 //		foreach ($this->model->childIterator() as $row){

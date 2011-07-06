@@ -1,5 +1,0 @@
-<foreach for="$theModel->childIterator()" item="row">
-	
-			{= $row->data('title') } <a href="?c=blog.update&id={= $row->data('bid') }">修改</a> <a href="?c=blog.delete&id={= $row->data('bid') }">删除</a> <br/>
-			
-</foreach>
