@@ -1,0 +1,5 @@
+<foreach for="$theModel->childIterator()" item="row">
+	
+			{= $row->data('title') } <a href="?c=blog.tag.content&tid={= $row->data('tid') }">查看标签内容</a>  <a href="?c=blog.tag.update&id={= $row->data('tid') }">修改</a> <br/>
+			
+</foreach>
