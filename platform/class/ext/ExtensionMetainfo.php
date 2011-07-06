@@ -60,6 +60,8 @@ class ExtensionMetainfo extends Object
 	{		
 		$sPlatformDir = $aPlatform->applicationDir() ;
 		
+		$sName = $this->name() ;
+		
 		// 加载类包
 		$aPlatform->classLoader()->addPackage(
 				$sPlatformDir.$this->classPackageFolder()
@@ -69,17 +71,19 @@ class ExtensionMetainfo extends Object
 		// 注册ui模板目录
 		UIFactory::singleton()->sourceFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiTemplateFolder()
-				, $this->name()
+				, $sName
 		) ;
 		
 		// 注册 js/css 目录
 		HtmlResourcePoolFactory::singleton()->javaScriptFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiJsFolder()
-				, $this->name()
+				, "extensions/{$sName}/ui/js/"
+				, $sName
 		) ;
 		HtmlResourcePoolFactory::singleton()->cssFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiCssFolder()
-				, $this->name()
+				, "extensions/{$sName}/ui/css/"
+				, $sName
 		) ;
 		
 		$sClass = $this->className() ;		
