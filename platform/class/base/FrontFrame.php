@@ -11,7 +11,7 @@ class FrontFrame extends WebpageFrame
 		parent::__construct() ;
 		
 		$this->addFrameView(
-			new View('frameView',"oc:oc_FrontFrame.template.html")
+			new View('frameView',"oc:FrontFrame.template.html")
 		) ;
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext ;
 
+use jc\resrc\HtmlResourcePool;
+
 use oc\Platform;
 use jc\ui\xhtml\UIFactory ;
 use jc\resrc\htmlresrc\HtmlResourcePoolFactory;
@@ -75,12 +77,12 @@ class ExtensionMetainfo extends Object
 		) ;
 		
 		// 注册 js/css 目录
-		HtmlResourcePoolFactory::singleton()->javaScriptFileManager()->addFolder(
+		HtmlResourcePool::singleton()->javaScriptFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiJsFolder()
 				, "extensions/{$sName}/ui/js/"
 				, $sName
 		) ;
-		HtmlResourcePoolFactory::singleton()->cssFileManager()->addFolder(
+		HtmlResourcePool::singleton()->cssFileManager()->addFolder(
 				$sPlatformDir.$this->resourceUiCssFolder()
 				, "extensions/{$sName}/ui/css/"
 				, $sName

@@ -2,13 +2,12 @@
 namespace oc ;
 
 use oc\resrc\UrlResourceManager;
-
+use jc\resrc\HtmlResourcePool;
 use jc\ui\xhtml\UIFactory ;
 use jc\mvc\view\UIFactory as MvcUIFactory ;
 use oc\ui\SourceFileManager;
 use jc\system\Application;
 use oc\system\PlatformFactory ;
-use jc\resrc\htmlresrc\HtmlResourcePoolFactory;
 
 class Platform extends Application
 {
@@ -38,8 +37,7 @@ class Platform extends Application
 		// css/js 资源
 		$aJsMgr = new UrlResourceManager() ;
 		$aCssMgr = new UrlResourceManager() ;
-		HtmlResourcePoolFactory::singleton()->setJavaScriptFileManager($aJsMgr) ;
-		HtmlResourcePoolFactory::singleton()->setCssFileManager($aCssMgr) ;
+		HtmlResourcePool::setSingleton( new HtmlResourcePool($aJsMgr,$aCssMgr) ) ;
 		
 		$aJsMgr->addFolder($sAppDir.'/platform/ui/js/','platform/ui/js/','oc') ;
 		$aCssMgr->addFolder($sAppDir.'/platform/ui/css/','platform/ui/css/','oc') ;
