@@ -1,7 +1,8 @@
-<js src="oc:oc.js" />
+
+<js src="oc:jquery-1.6.2.min.js" />
 <css src="oc:oc.css" />
 
-<div id="Cronus's Garden">
+<div id="Cronus's Garden" class="k">
 	当前登陆用户：<a href="?c=register">注册</a> <a href="?c=coreuser.update">修改</a> <a href="?c=login">登陆</a> <a href="?c=logout">退出</a><br/>
 	<foreach for="\jc\auth\IdManager::fromSession()->iterator()" item="aId">
 	
@@ -9,19 +10,15 @@
 			
 	</foreach>
 	
-	<br/>
+  <br/>
 	博客：<a href="?c=blog">列表</a> <a href="?c=blog.insert">插入</a>  <a href="?c=blog.tag.list">标签列表(聚合)</a>  <a href="?c=blog.tag.hot">热度云梯（排名）</a>
     <br/>
     微博：<a href="?c=microblog.MicroBlogList">列表</a> <a href="?c=microblog.MicroBlogAdd">插入</a>   <a href="?c=microblog.MicroBlogTagList">标签列表(聚合)</a>  <a href="?c=microblog.MicroBlogTagTop">热度云梯（排名）</a>
-	<hr />
-	
-</div>
+    <br/>
+    群组：<a href="?c=mtag">列表</a> <a href="?c=mtag.add">插入</a>   <a href="?c=thread">话题列表</a>  <a href="?c=thread.add">增加话题</a></div>
 
-<views />
+<div class="k"><views /></div>
 
-<div id="Gaia's Room">
-	
-	<hr />
-	Earth
-	
+<div id="Gaia's Room" class="k">
+	这里是底
 </div>

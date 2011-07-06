@@ -1,0 +1,27 @@
+body,td,th {
+	font-size: 12px;
+}
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	line-height:18px;
+}
+.k {
+	border: 1px solid #ccc;
+	margin: 5px;
+	padding: 5px;
+}
+a:link {
+	color: #360;
+}
+a:visited {
+	color: #360;
+}
+a:hover {
+	color: #000;
+}
+a:active {
+	color: #360;
+}
