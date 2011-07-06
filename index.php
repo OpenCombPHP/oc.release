@@ -32,8 +32,8 @@ $aExtMeta->load($aPlatform) ;
 $aExtMeta = new ExtensionMetainfo('blog','oc\ext\blog\Blog') ;
 $aExtMeta->load($aPlatform) ;
 
-// mtag
-$aExtMeta = new ExtensionMetainfo('mtag','oc\ext\mtag\Mtag') ;
+// groups
+$aExtMeta = new ExtensionMetainfo('groups','oc\ext\groups\Groups') ;
 $aExtMeta->load($aPlatform) ;
 
 // microblog
