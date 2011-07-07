@@ -29,33 +29,25 @@ class MAMap extends ModelAssociationMap
 		{
 			self::transFullOrmName($sPrototypeName,$sExtensionName) ;
 			
-			$fnTranslater = null ;
-			$fnTranslater = function (array &$arrFragment=array(),$fnTranslater) use ($sExtensionName)
+		
+			foreach(array_keys($arrAssocFragment) as $name)
 			{
-				foreach(array_keys($arrFragment) as $name)
+				$property =& $arrAssocFragment[$name] ;
+				
+				if( is_string($property) )
 				{
-					$property =& $arrFragment[$name] ;
-					
-					if( is_string($property) )
-					{
-						MAMap::transFullOrmName($property,$sExtensionName) ;
-					}
-					
-					else 
-					{
-						$fnTranslater($property,$fnTranslater) ;
-						
-						$sFullName = $name ;
-						MAMap::transFullOrmName($sFullName,$sExtensionName) ;
-						$arrFragment[$sFullName] =& $property ;
-						
-						unset($arrFragment[$name]) ;
-					}
+					MAMap::transFullOrmName($property,$sExtensionName) ;
 				}
-			} ;
-			
-			$fnTranslater($arrAssocFragment,$fnTranslater) ;
-			// call_user_func_array( $fnTranslater, array(&$arrAssocFragment,$sExtensionName,$fnTranslater) ) ;
+				
+				else 
+				{					
+					$sFullName = $name ;
+					MAMap::transFullOrmName($sFullName,$sExtensionName) ;
+					
+					$arrAssocFragment[$sFullName] =& $property ;
+					unset($arrAssocFragment[$name]) ;
+				}
+			}
 		}
 		
 		return parent::fragment($sPrototypeName,$arrAssocFragment,$bRetPrototype) ;
