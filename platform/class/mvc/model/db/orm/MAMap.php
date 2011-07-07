@@ -32,8 +32,10 @@ class MAMap extends ModelAssociationMap
 			$fnTranslater = null ;
 			$fnTranslater = function (array &$arrFragment=array(),$fnTranslater) use ($sExtensionName)
 			{
-				foreach($arrFragment as $name=>&$property)
+				foreach(array_keys($arrFragment) as $name)
 				{
+					$property =& $arrFragment[$name] ;
+					
 					if( is_string($property) )
 					{
 						MAMap::transFullOrmName($property,$sExtensionName) ;
