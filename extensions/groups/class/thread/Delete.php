@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext\groups\thread ;
 
+use jc\mvc\controller\Relocater;
+
 use oc\base\FrontFrame;
 
 use jc\session\Session;
@@ -26,30 +28,24 @@ use jc\mvc\view\DataExchanger ;
  * @author gaojun
  *
  */
-class Index extends Controller
+class Delete extends Controller
 {
 	protected function init()
 	{
 		// 网页框架
 		$this->add(new FrontFrame()) ;
 		
-		$this->createView("defaultView", "thread.index.html") ;
-		
-		$this->model = Model::fromFragment('thread',array(),true);
-		
-		//设置model
-		$this->defaultView->setModel($this->model) ;
-		
+		$this->model = Model::fromFragment('group');
 	}
 	
 	public function process()
 	{
-		$this->model->load(IdManager::fromSession()->currentId()->userId(),"uid");
 		
-//		$this->model->printStruct() ;
-//		foreach ($this->model->childIterator() as $row){
-//			echo "<pre>";print_r($row->data("text"));echo "</pre>";
-//		}
+		$this->model->load($this->aParams->get("gid"),"gid");
+		if($this->model->delete())
+		{
+		    Relocater::locate("/?c=groups.index", "删除成功") ;
+		}
 	}
 }
 

@@ -19,19 +19,19 @@ class Groups extends Extension
         $aAssocMap = ModelAssociationMap::singleton() ;
     	$aAssocMap->addOrm(
                 	array(
-                		'keys' => 'mid' ,
+                		'keys' => 'gid' ,
                 		'table' => 'group' ,
                 		'hasMany' => array(
 							array(
                 				'prop' => 'thread' ,
-                				'fromk' => 'mid' ,
-                				'tok' => 'mid' ,
+                				'fromk' => 'gid' ,
+                				'tok' => 'gid' ,
                 				'model' => 'thread'
 							) ,
 							array(
                 				'prop' => 'user' ,
-                				'fromk' => 'mid' ,
-                				'tok' => 'mid' ,
+                				'fromk' => 'gid' ,
+                				'tok' => 'gid' ,
                 				'model' => 'user'
 							) ,
 						),
@@ -41,13 +41,28 @@ class Groups extends Extension
         
     	$aAssocMap->addOrm(
                 	array(
-                		'keys' => 'mid' ,
+                		'keys' => 'tid' ,
                 		'table' => 'thread' ,
                 		'hasOne' => array(
 							array(
                 				'prop' => 'group' ,
-                				'fromk' => 'mid' ,
-                				'tok' => 'mid' ,
+                				'fromk' => 'gid' ,
+                				'tok' => 'gid' ,
+                				'model' => 'group'
+							) ,
+						),
+                	)
+        ) ;
+        
+    	$aAssocMap->addOrm(
+                	array(
+                		'keys' => 'gid' ,
+                		'table' => 'user',
+                		'hasOne' => array(
+							array(
+                				'prop' => 'group' ,
+                				'fromk' => 'gid' ,
+                				'tok' => 'gid' ,
                 				'model' => 'group'
 							) ,
 						),
@@ -56,8 +71,15 @@ class Groups extends Extension
         
 		///////////////////////////////////////
 		// 向系统添加控制器
-		$this->application()->accessRouter()->addController("oc\\ext\\groups\\group\\Index",'group',"") ;
-		$this->application()->accessRouter()->addController("oc\\ext\\groups\\thread\\Index",'thread',"") ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\group\\Index",'index') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\group\\Add",'add') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\group\\Update",'update') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\group\\Delete",'delete') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\group\\AddGroup",'addgroup') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\thread\\Index",'thread.index') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\thread\\Add",'thread.add') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\thread\\Update",'thread.update') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\groups\\thread\\Delete",'thread.delete') ;
 	}
 	
 }

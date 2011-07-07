@@ -1,0 +1,15 @@
+{* 显示 当前视图 的消息队列 }
+<msgqueue for="$theView" />
+
+<form action="" method="post">
+	<div>
+		名称：<widget id="name"/>
+		<msgqueue for="$theView->widget('name')" />
+	</div>
+	<div>
+		类别：<widget id="type"/>
+		<msgqueue for="$theView->widget('type')" />
+	</div>
+	<input type="submit" value="submit" />
+	
+</form>
