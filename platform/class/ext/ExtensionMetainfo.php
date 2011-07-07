@@ -45,12 +45,12 @@ class ExtensionMetainfo extends Object
 	
 	public function resourceUiJsFolder()
 	{
-		return 'extensions/'.$this->sName.'/ui/template/' ;
+		return 'extensions/'.$this->sName.'/ui/js/' ;
 	}
 	
 	public function resourceUiCssFolder()
 	{
-		return 'extensions/'.$this->sName.'/ui/template/' ;
+		return 'extensions/'.$this->sName.'/ui/css/' ;
 	}
 	
 	public function className()
