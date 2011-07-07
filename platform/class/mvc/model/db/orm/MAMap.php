@@ -30,7 +30,7 @@ class MAMap extends ModelAssociationMap
 			self::transFullOrmName($sPrototypeName,$sExtensionName) ;
 			
 			$fnTranslater = null ;
-			$fnTranslater = function (array &$arrFragment=array()) use ($sExtensionName,$fnTranslater)
+			$fnTranslater = function (array &$arrFragment=array(),$fnTranslater) use ($sExtensionName)
 			{
 				foreach($arrFragment as $name=>&$property)
 				{
@@ -41,9 +41,10 @@ class MAMap extends ModelAssociationMap
 					
 					else 
 					{
-						$fnTranslater($property,$sExtensionName,$fnTranslater) ;
+						$fnTranslater($property,$fnTranslater) ;
 						
-						$sFullName = MAMap::transFullOrmName($name,$sExtensionName) ;
+						$sFullName = $name ;
+						MAMap::transFullOrmName($sFullName,$sExtensionName) ;
 						$arrFragment[$sFullName] =& $property ;
 						
 						unset($arrFragment[$name]) ;
@@ -51,7 +52,7 @@ class MAMap extends ModelAssociationMap
 				}
 			} ;
 			
-			$fnTranslater($arrAssocFragment,$sExtensionName,$fnTranslater) ;
+			$fnTranslater($arrAssocFragment,$fnTranslater) ;
 			// call_user_func_array( $fnTranslater, array(&$arrAssocFragment,$sExtensionName,$fnTranslater) ) ;
 		}
 		
