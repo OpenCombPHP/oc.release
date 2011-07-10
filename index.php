@@ -2,8 +2,8 @@
 namespace oc ;
 
 // 初始化 jcat 框架
-use oc\mvc\model\db\orm\MAMap;
-use jc\mvc\model\db\orm\ModelAssociationMap;
+use oc\mvc\model\db\orm\PAMap;
+use jc\mvc\model\db\orm\PrototypeAssociationMap;
 use oc\ext\ExtensionMetainfo;
 use jc\resrc\htmlresrc\HtmlResourcePoolFactory ;
 
@@ -22,7 +22,7 @@ $aPlatform = new Platform(__DIR__) ;
 require 'config.php' ;
 
 // 初始化 
-ModelAssociationMap::setSingleton(new MAMap()) ;
+PrototypeAssociationMap::setSingleton(new PAMap()) ;
 
 // coreuser
 $aExtMeta = new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser') ;

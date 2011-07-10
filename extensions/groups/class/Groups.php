@@ -3,7 +3,7 @@ namespace oc\ext\groups ;
 
 use jc\auth\IdManager;
 
-use jc\mvc\model\db\orm\ModelAssociationMap;
+use jc\mvc\model\db\orm\PrototypeAssociationMap;
 
 use jc\db\DB ;
 use jc\db\PDODriver ;
@@ -16,7 +16,7 @@ class Groups extends Extension
 	{
 		
     	// 取得模型关系图的单件实例
-        $aAssocMap = ModelAssociationMap::singleton() ;
+        $aAssocMap = PrototypeAssociationMap::singleton() ;
     	$aAssocMap->addOrm(
                 	array(
                 		'keys' => 'gid' ,
