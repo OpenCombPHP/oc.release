@@ -64,7 +64,7 @@ class AccessRouter extends JcAccessRouter
    
     	if( class_exists($sControllerClass) )
     	{
-    		return new $sControllerClass ;
+    		return new $sControllerClass($aRequest) ;
     	}
     	else
     	{
