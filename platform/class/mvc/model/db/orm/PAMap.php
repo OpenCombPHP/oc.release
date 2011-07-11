@@ -56,10 +56,6 @@ class PAMap extends PrototypeAssociationMap
 					{
 						self::transFullOrmName($arrAssoCfg['model'],$sExtensionName) ;
 					}
-					/*if( !empty($arrAssoCfg['prop']) )
-					{
-						self::transFullOrmName($arrAssoCfg['prop'],$sExtensionName) ;
-					}*/
 					if( !empty($arrAssoCfg['bridge']) )
 					{
 						self::transFullOrmName($arrAssoCfg['bridge'],$sExtensionName,true) ;
