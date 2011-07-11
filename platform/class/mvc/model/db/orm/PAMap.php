@@ -34,13 +34,13 @@ class PAMap extends PrototypeAssociationMap
 				
 				if( is_string($property) )
 				{
-					MAMap::transFullOrmName($property,$sExtensionName) ;
+					PAMap::transFullOrmName($property,$sExtensionName) ;
 				}
 				
 				else 
 				{					
 					$sFullName = $name ;
-					MAMap::transFullOrmName($sFullName,$sExtensionName) ;
+					PAMap::transFullOrmName($sFullName,$sExtensionName) ;
 					
 					$arrAssocFragment[$sFullName] =& $property ;
 					unset($arrAssocFragment[$name]) ;
@@ -66,7 +66,7 @@ class PAMap extends PrototypeAssociationMap
 		
 		self::transFullOrmName($arrOrm['table'],$sExtensionName,true) ;
 		
-		foreach(AssociationPrototype::allAssociationTypes() as $sType)
+		foreach(Association::allAssociationTypes() as $sType)
 		{
 			if( !empty($arrOrm[$sType]) )
 			{
