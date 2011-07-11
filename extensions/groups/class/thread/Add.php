@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext\groups\thread ;
 
+use jc\mvc\view\View;
+
 use jc\verifier\NotEmpty;
 
 use oc\base\FrontFrame;
@@ -37,6 +39,15 @@ class Add extends Controller
 		
 		
 		$this->createView("defaultView", "thread.add.html",true) ;
+		
+		if($_GET["t"] == "poll")
+		{
+		    $this->defaultView->add(
+				$this->pollView = new View("pollView", "thread.add.poll.html")
+			);
+			
+		}
+		
 		
 		// 为视图创建控件
 		$this->defaultView->addWidget( new Text("content","群组","",Text::multiple), 'content' )->addVerifier( NotEmpty::singleton (), "请说点什么" ) ;
