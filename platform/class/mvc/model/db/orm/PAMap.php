@@ -26,26 +26,6 @@ class PAMap extends PrototypeAssociationMap
 		if( $sExtensionName = Extension::retraceExtensionName() )
 		{
 			self::transFullOrmName($sPrototypeName,$sExtensionName) ;
-			
-		
-			foreach(array_keys($arrAssocFragment) as $name)
-			{
-				$property =& $arrAssocFragment[$name] ;
-				
-				if( is_string($property) )
-				{
-					PAMap::transFullOrmName($property,$sExtensionName) ;
-				}
-				
-				else 
-				{					
-					$sFullName = $name ;
-					PAMap::transFullOrmName($sFullName,$sExtensionName) ;
-					
-					$arrAssocFragment[$sFullName] =& $property ;
-					unset($arrAssocFragment[$name]) ;
-				}
-			}
 		}
 		
 		return parent::fragment($sPrototypeName,$arrAssocFragment,$bRetPrototype) ;
@@ -76,10 +56,10 @@ class PAMap extends PrototypeAssociationMap
 					{
 						self::transFullOrmName($arrAssoCfg['model'],$sExtensionName) ;
 					}
-					if( !empty($arrAssoCfg['prop']) )
+					/*if( !empty($arrAssoCfg['prop']) )
 					{
 						self::transFullOrmName($arrAssoCfg['prop'],$sExtensionName) ;
-					}
+					}*/
 					if( !empty($arrAssoCfg['bridge']) )
 					{
 						self::transFullOrmName($arrAssoCfg['bridge'],$sExtensionName,true) ;
