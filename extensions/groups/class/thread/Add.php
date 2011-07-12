@@ -1,12 +1,9 @@
 <?php
 namespace oc\ext\groups\thread ;
 
-use jc\mvc\view\View;
-
+use oc\mvc\view\View;
 use jc\verifier\NotEmpty;
-
 use oc\base\FrontFrame;
-
 use jc\session\Session;
 use jc\auth\IdManager;
 use jc\auth\Id;
@@ -40,16 +37,9 @@ class Add extends Controller
 		
 		$this->createView("defaultView", "thread.add.html",true) ;
 		
-		if($_GET["t"] == "poll")
-		{
-		    $this->defaultView->add(
-				$this->pollView = new View("pollView", "thread.add.poll.html")
-			);
-			
-		}
 		
-		
-		// 为视图创建控件
+	    // 为视图创建控件
+		$this->defaultView->addWidget( new Text("title","标题","",Text::single), 'title' )->addVerifier( NotEmpty::singleton (), "请说点什么" ) ;
 		$this->defaultView->addWidget( new Text("content","群组","",Text::multiple), 'content' )->addVerifier( NotEmpty::singleton (), "请说点什么" ) ;
 		
 		$this->oSelect = new Select ( 'group', '选择类型', 1 );
@@ -57,12 +47,34 @@ class Add extends Controller
 		$this->oSelect->addVerifier( NotEmpty::singleton (), "请选择类型" );
 		
 		$this->defaultView->addWidget ( $this->oSelect, 'gid' );
+			
+		if($this->aParams->get("t")=="")
+		{
+			$this->model = Model::fromFragment('thread');
+			
+		}
+		elseif ($this->aParams->get("t")=="poll")
+		{
+			$this->defaultView->add(
+				$this->pollView = new View("pollView", "thread.add.poll.html")
+			);
+			
+			
+			$this->pollView->addWidget ( new Select ( 'poll_maxitem', '选择数量', 1 ), 'poll.maxitem' )
+								->addOption ( "不限制", "0", true)
+								->addOption ( "最多2项", "2" )
+								->addOption ( "最多3项", "3" )
+						->addVerifier( NotEmpty::singleton (), "请选择数量" ) ;
 						
-						
-		$this->model = Model::fromFragment('thread');
+			$this->pollView->addWidget( new Text("poll_item_title","投票内容","",Text::single), 'item.title' )->addVerifier( NotEmpty::singleton (), "请说点什么" ) ;
+			
+			$this->model = Model::fromFragment('thread',array("poll"=>array("item")));
+		}
+		
 		
 		//设置model
 		$this->defaultView->setModel($this->model) ;
+		$this->pollView->setModel($this->model) ;
 		
 	}
 	
@@ -91,6 +103,13 @@ class Add extends Controller
 				$this->defaultView->model()->setData('uid',IdManager::fromSession()->currentId()->userId()) ;
 				$this->defaultView->model()->setData('time',time()) ;
 				
+				if($this->aParams->get("t") == "poll")
+				{
+					//echo "<pre>";print_r($this->defaultView->model()->printStruct());echo "</pre>";exit;
+				    $item = $this->defaultView->model()->child('poll')->child('item')->createChild();
+				    $item->setData("sss","title");
+				}
+				
             	try {
             		if( $this->defaultView->model()->save() )
             		{
@@ -101,7 +120,6 @@ class Add extends Controller
             		{
             			$this->defaultView->createMessage( Message::failed, "遇到错误！" ) ;
             		}
-            		
             			
             	} catch (ExecuteException $e) {
             			throw $e ;

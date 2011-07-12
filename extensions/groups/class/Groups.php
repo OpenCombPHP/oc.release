@@ -50,7 +50,14 @@ class Groups extends Extension
                 				'tok' => 'gid' ,
                 				'model' => 'group'
 							) ,
+							array(
+                				'prop' => 'poll' ,
+                				'fromk' => 'tid' ,
+                				'tok' => 'tid' ,
+                				'model' => 'poll'
+							) ,
 						),
+						
                 	)
         ) ;
         
@@ -66,6 +73,26 @@ class Groups extends Extension
                 				'model' => 'group'
 							) ,
 						),
+                	)
+        ) ;
+    	$aAssocMap->addOrm(
+                	array(
+                		'keys' => 'tid' ,
+                		'table' => 'poll',
+						'hasMany' => array(
+							array(
+                				'prop' => 'item' ,
+                				'fromk' => 'tid' ,
+                				'tok' => 'tid' ,
+                				'model' => 'poll_item'
+							) ,
+						),
+                	)
+        ) ;
+    	$aAssocMap->addOrm(
+                	array(
+                		'keys' => 'iid' ,
+                		'table' => 'poll_item',
                 	)
         ) ;
         
