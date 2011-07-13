@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext\groups\thread ;
 
+use jc\mvc\controller\Relocater;
+
 use oc\mvc\view\View;
 use jc\verifier\NotEmpty;
 use oc\base\FrontFrame;
@@ -65,16 +67,20 @@ class Add extends Controller
 								->addOption ( "最多2项", "2" )
 								->addOption ( "最多3项", "3" )
 						->addVerifier( NotEmpty::singleton (), "请选择数量" ) ;
-						
-			$this->pollView->addWidget( new Text("poll_item_title","投票内容","",Text::single), 'item.title' )->addVerifier( NotEmpty::singleton (), "请说点什么" ) ;
+			
+			for($i = 1; $i <= 5; $i++){
+				$this->pollView->addWidget( new Text("poll_item_title_".$i,"投票内容","",Text::single), 'item.title' ) ;
+			}
+			
 			
 			$this->model = Model::fromFragment('thread',array("poll"=>array("item")));
+			$this->pollView->setModel($this->model) ;
 		}
 		
 		
 		//设置model
 		$this->defaultView->setModel($this->model) ;
-		$this->pollView->setModel($this->model) ;
+		
 		
 	}
 	
@@ -103,22 +109,30 @@ class Add extends Controller
 				$this->defaultView->model()->setData('uid',IdManager::fromSession()->currentId()->userId()) ;
 				$this->defaultView->model()->setData('time',time()) ;
 				
+				
 				if($this->aParams->get("t") == "poll")
 				{
-					//echo "<pre>";print_r($this->defaultView->model()->printStruct());echo "</pre>";exit;
-				    $item = $this->defaultView->model()->child('poll')->child('item')->createChild();
-				    $item->setData("sss","title");
+					$this->defaultView->model()->setData('type',"poll") ;
+					
+					for($i = 1; $i <= $this->aParams->get("itemSum"); $i++){
+						if($this->aParams->get("poll_item_title_".$i))
+						{
+						    $item = $this->defaultView->model()->child('poll')->child('item')->createChild();
+				    		$item->setData("title",$this->aParams->get("poll_item_title_".$i));
+						}
+					}
+				}else{
+					$this->defaultView->model()->setData('type',"thread") ;
 				}
 				
             	try {
             		if( $this->defaultView->model()->save() )
             		{
-            			$this->defaultView->createMessage( Message::success, "发布成功！" ) ;
-            			$this->defaultView->hideForm() ;
+            			Relocater::locate("/?c=groups.thread.index", "修改成功！") ;
             		}
             		else 
             		{
-            			$this->defaultView->createMessage( Message::failed, "遇到错误！" ) ;
+            			Relocater::locate("/?c=groups.thread.index", "修改失败！") ;
             		}
             			
             	} catch (ExecuteException $e) {

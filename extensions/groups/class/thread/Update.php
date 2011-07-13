@@ -1,6 +1,10 @@
 <?php
 namespace oc\ext\groups\thread ;
 
+use jc\mvc\controller\Relocater;
+
+use oc\mvc\view\View;
+
 use oc\base\FrontFrame;
 
 use jc\session\Session;
@@ -36,6 +40,9 @@ class Update extends Controller
 		//创建视图
 		$this->createView("defaultView", "thread.update.html",true) ;
 		
+		
+		
+		
 		// 为视图创建控件
 		$this->defaultView->addWidget( new Text("content","群组","",Text::multiple), 'content' )->addVerifier( NotEmpty::singleton (), "请说点什么" ) ;
 		
@@ -44,9 +51,28 @@ class Update extends Controller
 		$this->oSelect->addVerifier( NotEmpty::singleton (), "请选择类型" );
 		
 		$this->defaultView->addWidget ( $this->oSelect, 'gid' );
-						
-						
-		$this->model = Model::fromFragment('thread');
+		
+		if($this->aParams->get("t")=="thread")
+		{
+			$this->model = Model::fromFragment('thread');
+			
+		}
+		elseif ($this->aParams->get("t")=="poll")
+		{
+			$this->defaultView->add(
+				$this->pollView = new View("pollView", "thread.update.poll.html")
+			);
+			
+			
+			$this->pollView->addWidget ( new Select ( 'poll_maxitem', '选择数量', 1 ), 'poll.maxitem' )
+								->addOption ( "不限制", "0", true)
+								->addOption ( "最多2项", "2" )
+								->addOption ( "最多3项", "3" )
+						->addVerifier( NotEmpty::singleton (), "请选择数量" ) ;
+			
+			$this->model = Model::fromFragment('thread',array("poll"=>array("item")));
+			$this->pollView->setModel($this->model) ;
+		}
 		
 		//设置model
 		$this->defaultView->setModel($this->model) ;
@@ -55,9 +81,9 @@ class Update extends Controller
 	
 	public function process()
 	{
+		//群组下拉菜单内容
 		$oUserModel = Model::fromFragment('user',array("group"),true);
 		$oUserModel->load(IdManager::fromSession()->currentId()->userId(),"uid");
-		//$oUserModel->printStruct();
 		
 		foreach ($oUserModel->childIterator() as $row){
 			$this->oSelect	->addOption ($row->child("group")->data("name"),$row->child("group")->data("gid"));
@@ -65,10 +91,24 @@ class Update extends Controller
 		
 		
 		$this->defaultView->model()->load($this->aParams->get("tid"),"tid");
-		
 		$this->defaultView->exchangeData(DataExchanger::MODEL_TO_WIDGET) ;
 		
-		$this->defaultView->model()->setData('time',time()) ;
+		if($this->aParams->get("t")=="poll")
+		{
+			$i=0;
+			foreach ($this->defaultView->model()->child("poll")->child("item")->childIterator() as $row)
+			{
+				if($row["votes"] > 0)
+				{
+				    $this->defaultView->createMessage( Message::failed, "此投票已经有人参与，不可以修改！" ) ;
+				    $this->defaultView->hideForm();
+            		$this->pollView->disable();
+				}
+				$this->pollView->addWidget( new Text("poll_item_title_".$i,"投票内容",$row->data("title"),Text::single), 'item.title' );
+				$i++;
+			}
+		}
+		
 				
 		if( $this->defaultView->isSubmit( $this->aParams ) )		 
 		{
@@ -79,19 +119,38 @@ class Update extends Controller
             if( $this->defaultView->verifyWidgets() )
             {
             	$this->defaultView->exchangeData(DataExchanger::WIDGET_TO_MODEL) ;
-            	
 				$this->defaultView->model()->setData('time',time()) ;
+				
+				if($this->aParams->get("t")=="poll")
+				{
+					$this->defaultView->model()->child('poll')->child('item')->delete();
+					$this->defaultView->model()->child('poll')->child('item')->clearChildren() ;
+					
+					for($i = 0; $i < $this->aParams->get("itemSum"); $i++){
+						if($this->aParams->get("poll_item_title_".$i))
+						{
+						    $item = $this->defaultView->model()->child('poll')->child('item')->createChild();
+					    	$item->setData("title",$this->aParams->get("poll_item_title_".$i));
+					    	$item->setData("tid",$this->defaultView->model()->data("tid"));
+						}
+						
+					}
+				}
 				
             	try {
             		if( $this->defaultView->model()->save() )
             		{
-	            		$this->defaultView->createMessage( Message::success, "修改成功！" ) ;
-	            		$this->defaultView->hideForm() ;
+            			$this->defaultView->createMessage( Message::failed, "修改成功！" ) ;
+            			$this->defaultView->hideForm();
+            			$this->pollView->disable();
+            			//Relocater::locate("/?c=groups.thread.index", "修改成功！") ;
             		}
             		
             		else 
             		{
-	            		$this->defaultView->createMessage( Message::success, "修改成功！" ) ;
+            			$this->defaultView->createMessage( Message::failed, "修改失败！" ) ;
+            			$this->pollView->disable();
+	            		//Relocater::locate("/?c=groups.thread.index", "修改失败！") ;
             		}
             			
             	} catch (ExecuteException $e) {

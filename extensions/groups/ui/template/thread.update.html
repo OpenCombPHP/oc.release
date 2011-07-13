@@ -10,6 +10,8 @@
 		内容：<widget id="content"/>
 		<msgqueue for="$theView->widget('content')" />
 	</div>
+	<views name='pollView'/>
+	<input type="hidden" id="t" name="t" value="{= $theRequest->get('t')}" />
 	<input type="submit" value="submit" />
 	
 </form>

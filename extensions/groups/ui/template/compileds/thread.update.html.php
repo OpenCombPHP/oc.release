@@ -50,6 +50,13 @@ if( $__ui_msgqueue->count() ){
 } ?>
 
 	</div>
+	<?php ob_flush() ;
+$theView = $aVariables->get('theView') ;
+foreach($theView->iterator() as $aChildView){
+	$theView->outputStream()->write($aChildView->outputStream()) ;
+}?>
+	<input type="hidden" id="t" name="t" value="<?php echo eval("if(!isset(\$__uivar_theRequest)){ \$__uivar_theRequest=&\$aVariables->getRef('theRequest') ;};
+return \$__uivar_theRequest->get('t');") ;?>" />
 	<input type="submit" value="submit" />
 	
 <input type="hidden" name="<?php echo $aVariables->get('theView')->htmlFormSignature()?>" value="1" /></form><?php } ?>
