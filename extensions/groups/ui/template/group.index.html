@@ -1,5 +1,0 @@
-<foreach for="$theModel->childIterator()" item="row">
-	
-			{= $row->data('name') } <a href="?c=groups.addgroup&gid={= $row->data('gid') }">加入群组</a> <a href="?c=groups.invite&gid={= $row->data('gid') }">邀请加入</a> <a href="?c=groups.update&gid={= $row->data('gid') }">修改</a> <a href="?c=groups.delete&gid={= $row->data('gid') }">删除</a> <br/>
-			
-</foreach>

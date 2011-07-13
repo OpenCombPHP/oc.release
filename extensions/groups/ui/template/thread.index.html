@@ -1,5 +1,0 @@
-<foreach for="$theModel->childIterator()" item="row">
-	
-			{= $row->data('content') }<if "$row->data('type')=='poll'">(投票)</if> <a href="?c=groups.thread.update&tid={= $row->data('tid') }&t={= $row->data('type') }">修改</a> <a href="?c=groups.thread.delete&tid={= $row->data('tid') }">删除</a> <br/>
-			
-</foreach>
