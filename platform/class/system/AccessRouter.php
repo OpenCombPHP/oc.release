@@ -7,6 +7,26 @@ use jc\system\AccessRouter as JcAccessRouter;
 
 class AccessRouter extends JcAccessRouter
 {
+    /**
+     * Enter description here ...
+     * 
+     * @return void
+     */
+    public function setDefaultController($sControllerName,$sExtensionName=null)
+    {
+    	if( $sExtensionName===null )
+    	{
+    		$sExtensionName = Extension::retraceExtensionName() ;
+    		
+	    	if( !$sExtensionName )
+	    	{
+	    		$sExtensionName = 'oc' ;
+	    	}
+    	}
+    	
+    	parent::setDefaultController($sControllerName,$sExtensionName) ;
+    }
+    
     public function addController($sControllerClass,$sControllerName=null,$sExtensionName=null)
     {
     	if(!$sControllerName)
