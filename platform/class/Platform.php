@@ -1,6 +1,8 @@
 <?php
 namespace oc ;
 
+use oc\ext\ExtensionManager;
+
 use oc\ext\ExtensionMetainfo;
 
 use oc\resrc\UrlResourceManager;
@@ -85,25 +87,31 @@ class Platform extends Application
 		$aExtension->setApplication($this) ;
 				
 		$aExtension->load() ;
-		$this->arrExtensions[] = $aExtension ;
+		
+		$this->extensions()->add($aExtension) ;
 		
 		return $aExtension ;
 	}
 	
-	/**
-	 * \Iterator
-	 */
-	public function extensionsIterator()
-	{
-		return new \ArrayIterator($this->arrExtensions) ;
-	}
-	
-	public function extenstionsDir()
+	public function extensionsDir()
 	{
 		return $this->applicationDir() . 'extensions/' ;
 	}
 	
-	private $arrExtensions = array() ;
+	/**
+	 * @return oc\ext\ExtensionManager 
+	 */
+	public function extensions()
+	{
+		if( !$this->aExtensionManager )
+		{
+			$this->aExtensionManager = new ExtensionManager() ;
+		}
+		
+		return $this->aExtensionManager ;
+	}
+	
+	private $aExtensionManager ;
 }
 
 ?>
