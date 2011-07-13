@@ -1,6 +1,8 @@
 <?php
 namespace oc ;
 
+use oc\ext\ExtensionMetainfo;
+
 use oc\resrc\UrlResourceManager;
 use jc\resrc\HtmlResourcePool;
 use jc\ui\xhtml\UIFactory ;
@@ -47,6 +49,61 @@ class Platform extends Application
 		$aAccessRouter = $this->accessRouter() ;
 		$aAccessRouter->setDefaultController('oc\\base\\DefaultController') ;
 	}
+
+	public function loadExtension(ExtensionMetainfo $aExtMeta)
+	{		
+		$sPlatformDir = $this->applicationDir() ;
+		
+		$sName = $aExtMeta->name() ;
+		
+		// 加载类包
+		$this->classLoader()->addPackage(
+				$sPlatformDir.$aExtMeta->classPackageFolder()
+				, $aExtMeta->classPackageNamespace()
+		) ;
+		
+		// 注册ui模板目录
+		UIFactory::singleton()->sourceFileManager()->addFolder(
+				$sPlatformDir.$aExtMeta->resourceUiTemplateFolder()
+				, $sName
+		) ;
+		
+		// 注册 js/css 目录
+		HtmlResourcePool::singleton()->javaScriptFileManager()->addFolder(
+				$sPlatformDir.$aExtMeta->resourceUiJsFolder()
+				, "extensions/{$sName}/ui/js/"
+				, $sName
+		) ;
+		HtmlResourcePool::singleton()->cssFileManager()->addFolder(
+				$sPlatformDir.$aExtMeta->resourceUiCssFolder()
+				, "extensions/{$sName}/ui/css/"
+				, $sName
+		) ;
+		
+		$sClass = $aExtMeta->className() ;		
+		$aExtension = new $sClass($aExtMeta) ;
+		$aExtension->setApplication($this) ;
+				
+		$aExtension->load() ;
+		$this->arrExtensions[] = $aExtension ;
+		
+		return $aExtension ;
+	}
+	
+	/**
+	 * \Iterator
+	 */
+	public function extensionsIterator()
+	{
+		return new \ArrayIterator($this->arrExtensions) ;
+	}
+	
+	public function extenstionsDir()
+	{
+		return $this->applicationDir() . 'extensions/' ;
+	}
+	
+	private $arrExtensions = array() ;
 }
 
 ?>
