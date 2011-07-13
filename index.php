@@ -25,28 +25,22 @@ require 'config.php' ;
 PrototypeAssociationMap::setSingleton(new PAMap()) ;
 
 // coreuser
-$aExtMeta = new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser') ;
-$aExtMeta->load($aPlatform) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser')) ;
 
 // blog
-$aExtMeta = new ExtensionMetainfo('blog','oc\ext\blog\Blog') ;
-$aExtMeta->load($aPlatform) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('blog','oc\ext\blog\Blog')) ;
 
 // groups
-$aExtMeta = new ExtensionMetainfo('groups','oc\ext\groups\Groups') ;
-$aExtMeta->load($aPlatform) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('groups','oc\ext\groups\Groups')) ;
 
 // microblog
-$aExtMeta = new ExtensionMetainfo('microblog','oc\ext\microblog\MicroBlog') ;
-$aExtMeta->load($aPlatform) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('microblog','oc\ext\microblog\MicroBlog')) ;
 
 // developtoolbox
-$aExtMeta = new ExtensionMetainfo('developtoolbox','oc\ext\developtoolbox\DevelopToolbox') ;
-$aExtMeta->load($aPlatform) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('developtoolbox','oc\ext\developtoolbox\DevelopToolbox')) ;
 
 // instantmessaging
-$aExtMeta = new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging') ;
-$aExtMeta->load($aPlatform) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging')) ;
 
 
 
@@ -55,7 +49,7 @@ $aExtMeta->load($aPlatform) ;
 $aController = $aPlatform->accessRouter()->createRequestController($aPlatform->request()) ;
 if($aController)
 {
-	$aController->mainRun($aPlatform->request()) ;
+	$aController->mainRun() ;
 }
 else 
 {
