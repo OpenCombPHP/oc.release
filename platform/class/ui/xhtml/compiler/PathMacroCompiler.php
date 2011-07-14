@@ -14,7 +14,12 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		$sExtension = null ;
 
 		$sContents = trim($aObject->source()) ;
-		if( substr($sContents,0,4)=='ext.' )
+		
+		if( $sContents=='ext')
+		{
+			$sExtension = $aCompilerManager->compilingStatus()->sourceNamespace() ;
+		}
+		else if( substr($sContents,0,4)=='ext.' )
 		{
 			$sExtension = substr($sContents,4) ;
 			if( $sExtension=='*' )
