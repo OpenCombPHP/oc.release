@@ -24,6 +24,9 @@ require 'config.php' ;
 // 初始化 
 PrototypeAssociationMap::setSingleton(new PAMap()) ;
 
+// sns
+$aPlatform->loadExtension(new ExtensionMetainfo('sns','oc\ext\sns\Sns')) ;
+
 // coreuser
 $aPlatform->loadExtension(new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser')) ;
 
