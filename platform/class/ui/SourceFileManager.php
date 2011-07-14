@@ -35,16 +35,18 @@ class SourceFileManager extends JcSourceFileManager
 		}
 		
 		$this->arrFolders[$sExtensionName] = array() ;
-	}
-	
-	public function find($sFilename,$sNamespace='*')
+	}	
+
+	public function detectNamespace($sFilename)
 	{
-		if( $sNamespace=='*' and strstr($sFilename,':')===false )
+		if( ($nPos=strpos($sFilename,':'))!==false )
 		{
-			$sNamespace = Extension::retraceExtensionName() ;
+			return array(substr($sFilename,0,$nPos),substr($sFilename,$nPos+1)) ;
 		}
-		
-		return parent::find($sFilename,$sNamespace) ;
+		else 
+		{
+			return array(Extension::retraceExtensionName(), $sFilename) ;
+		}
 	}
 }
 

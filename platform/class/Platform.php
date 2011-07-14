@@ -31,6 +31,13 @@ class Platform extends Application
 		$this->setApplicationDir($sAppDir) ;
 		
 		// 模板文件
+		UIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
+				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
+		) ;
+		MvcUIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
+				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
+		) ;
+		
 		$aSrcFileMgr = new SourceFileManager() ;
 		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
@@ -93,9 +100,13 @@ class Platform extends Application
 		return $aExtension ;
 	}
 	
+	public function extensionsUrl()
+	{
+		return $this->sExtensionsFolder.'/' ;
+	}
 	public function extensionsDir()
 	{
-		return $this->applicationDir() . 'extensions/' ;
+		return $this->applicationDir() . $this->sExtensionsFolder . '/' ;
 	}
 	
 	/**
@@ -111,6 +122,7 @@ class Platform extends Application
 		return $this->aExtensionManager ;
 	}
 	
+	private $sExtensionsFolder = 'extensions' ;
 	private $aExtensionManager ;
 }
 

@@ -1,6 +1,9 @@
 <?php
+use oc\ext\ExtensionMetainfo;
 namespace oc\ext ;
 
+use jc\system\Application;
+use oc\Platform;
 use jc\lang\Object;
 
 abstract class Extension extends Object 
@@ -10,6 +13,27 @@ abstract class Extension extends Object
 		$this->aMetainfo = $aMeta ;
 	}
 
+	public function url()
+	{
+		return $this->application()->extensionsUrl() . $this->metainfo()->installFolder() ;
+	}
+	public function publicFilesUrl()
+	{}
+	
+	public function settings()
+	{}
+	public function publicFiles()
+	{}
+	public function dataFiles()
+	{}
+	public function cacheFiles()
+	{}
+	public function temporaryFiles()
+	{}
+
+	/**
+	 * @return ExtensionMetainfo
+	 */
 	public function metainfo()
 	{
 		return $this->aMetainfo ;
@@ -36,6 +60,24 @@ abstract class Extension extends Object
 		}
 		
 		return 'platform' ;
+	}
+	
+	/**
+	 * @return Extension
+	 */
+	static public function retraceExtension(ExtensionManager $aExtMgr=null)
+	{
+		if( !$sExtensionName = self::retraceExtensionName() )
+		{
+			return null ; 
+		}
+		
+		if(!$aExtMgr)
+		{
+			$aExtMgr = Application::singleton() ;
+		}
+		
+		return $aExtMgr->extension($sExtensionName) ;
 	}
 	
 	private $aMetainfo ;
