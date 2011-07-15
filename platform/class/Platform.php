@@ -2,9 +2,7 @@
 namespace oc ;
 
 use oc\ext\ExtensionManager;
-
 use oc\ext\ExtensionMetainfo;
-
 use oc\resrc\UrlResourceManager;
 use jc\resrc\HtmlResourcePool;
 use jc\ui\xhtml\UIFactory ;
@@ -18,18 +16,18 @@ class Platform extends Application
 	public function __construct($sAppDir)
 	{
 		parent::__construct() ;
-		
+
 		if( !Application::singleton(false) )
 		{
 			Application::setSingleton($this) ;
 		}
-		
+
 		$aAppFactory = new PlatformFactory() ;
-		$aAppFactory->build($this) ;	
-		
+		$aAppFactory->build($this) ;
+
 		// app dir
 		$this->setApplicationDir($sAppDir) ;
-		
+
 		// 模板文件
 		UIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
 				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
@@ -60,11 +58,11 @@ class Platform extends Application
 	}
 
 	public function loadExtension(ExtensionMetainfo $aExtMeta)
-	{		
+	{
 		$sPlatformDir = $this->applicationDir() ;
-		
+
 		$sName = $aExtMeta->name() ;
-		
+
 		// 加载类包
 		$this->classLoader()->addPackage(
 				$sPlatformDir.$aExtMeta->classPackageFolder()
@@ -118,12 +116,12 @@ class Platform extends Application
 		{
 			$this->aExtensionManager = new ExtensionManager() ;
 		}
-		
 		return $this->aExtensionManager ;
 	}
 	
 	private $sExtensionsFolder = 'extensions' ;
 	private $aExtensionManager ;
+	private $aStaticPageManager ;
 }
 
 ?>
