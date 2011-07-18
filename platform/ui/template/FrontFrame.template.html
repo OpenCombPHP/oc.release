@@ -1,12 +1,55 @@
 <js src="oc:jquery-1.6.2.min.js" />
-<css src="oc:oc.css" />
-  
-<model:foreach>
-	<data>xxx</data>  
-</model:foreach>
+<css src="oc:common.css" />
 
 
-<div id="Cronus's Garden" class="k">
+<!-- wrapper start-->
+<div id="wrapper">
+	<!-- header start-->
+	<div id="header">
+		<div class="logo">
+			<h1><a title="SNS web os" href="">Logo</a>
+			</h1>
+		</div>
+		<div class="upperMenu">
+			<span class="upperLogined"><span class="cur_username"></span><a href="" target="_blank">管理</a>
+			| <a href="" target="_blank">退出</a>
+			| </span>
+			<span class="upperNologin"><a href="" target="_blank">登陆</a>
+			| <a href="" target="_blank">注册</a>
+			| </span>
+			<a href="" target="_blank">帮助</a>
+		</div>
+		<div class="navigation">
+			<ul class="nav">
+				<li class="home nowpage">
+					<a href="">首页</a>
+				</li>
+				<li class="profile">
+					<a href="">个人主页</a>
+				</li>
+				<li class="friends">
+					<a href="">好友</a>
+				</li>
+				<li class="application">
+					<a href="">应用</a>
+				</li>
+				<li class="settings">
+					<a href="">设置</a>
+				</li>
+			</ul>
+			<div class="search">
+				<form>
+					<input type="text" class="search_text" value="搜索感兴趣的内容" />
+					<a href="" class="btn_search">搜 索</a>
+				</form> 
+			</div>
+		</div>
+	</div>
+	<!-- header end -->
+	<div class="clear"></div>
+	
+	<!-- 暂时 -->
+	<div id="Cronus's Garden" class="k">
 	当前登陆用户：
 	 <a href="?c=register">注册</a>
 	 <a href="?c=coreuser.update">修改</a>
@@ -15,11 +58,7 @@
 	    <a href="/?c=coreuser.subscribe.index">我关注的用户</a>
 	     <a href="/?c=coreuser.alluser">所有用户</a>
 	      <a href="?c=myfriend">我的好友</a><br/>
-	<foreach for="\jc\auth\IdManager::fromSession()->iterator()" item="aId">
 	
-			{= $aId->username() } <a href="?c=coreuser.switch&uid={= $aId->userId() }">切换</a><br/>
-			
-	</foreach>
 	
   <br/>
 	博客：
@@ -39,9 +78,29 @@
             <a href="?c=groups.thread.add&t=poll">增加投票</a>
               <a href="?c=groups.thread.add&t=task">增加任务</a>
     </div>
-
-<div class="k"><views /></div>
-
-<div id="Gaia's Room" class="k">
-	这里是底
+    <!-- 暂时 -->
 </div>
+<!-- wrapper end -->
+
+
+<!-- main start -->
+<div id="main">
+	<views />
+</div>
+<!-- main end -->
+
+
+<!-- footer start -->
+<div id="footer">
+	<div class="upperMenu">
+		<a href="" target="_blank">关于我们</a>
+		| <a href="" target="_blank">加入我们</a>
+		| <a href="" target="_blank">联系我们</a>
+		| <a href="" target="_blank">免责声明</a>
+		| <a href="" target="_blank">帮助中心</a>
+		| <a href="" target="_blank">手机版</a>
+	</div>
+	<div class="copyright">&copy;2011<a href="">cando</a>
+		,all rights reserved</div>
+</div>
+<!-- footer end -->

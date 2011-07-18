@@ -1,0 +1,388 @@
+/*CSS reset*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {margin:0;padding:0;}
+table { border-collapse:collapse; border-spacing:0;}
+fieldset,img { border:0;}
+address,caption,cite,code,dfn,em,strong,th,var { font-style:normal; font-weight:normal;}
+ol,ul { list-style:none;}
+caption,th { text-align:left;}
+h1,h2,h3,h4,h5,h6 { font-size:100%; font-weight:normal;}
+q:before,q:after {content:'';}
+abbr,acronym {border:0;}
+
+/*CSS normal*/
+body{ font:12px Tahoma,Arial,sans-serif;color:#333}
+#wrapper{width:960px; margin:0 auto;/* background:url(/platform/ui/images/NO4.jpg) no-repeat center 0;*/}
+a{color:#005eac; text-decoration:none}
+a:hover{ text-decoration:underline}
+.clear{ clear:both;}
+
+/*header-------------------------------------------*/
+#header{width:940px; margin:0 auto; padding-top:40px; }
+.logo{ float:left;}
+.logo a{ display:block; width:71px; height:37px; background:url(/platform/ui/images/logo.jpg) no-repeat 0; text-indent:-9999px; overflow:hidden}
+#header .upperMenu{ float:right; color:#999}
+#header .upperMenu a{ color:#999}
+.navigation{width:930px;height:20px; background:#005eac; float:left;margin:10px 0 0;padding:5px;}
+.navigation li{ display:inline;margin:0 24px 0 2px; font-weight:bold; font-size:16px;}
+.nav{ float:left}
+.nav a{color:#fff;}
+.search{ float:right;}
+.search_text{width:176px; height:14px;color:#bbb;border:0;float:left; padding:2px;}
+.btn_search{width:50px; height:18px; line-height:18px; color:#005eac; background:#c4e4ff;float:left; border:0; border-left:1px solid #ddd; text-align:center}
+a:hover.btn_search{ text-decoration:none}
+
+/*main-------------------------------------------*/
+#main{margin:20px auto 0; width:940px;}
+.aside{width:135px; float:left}
+.login,.logined{border:1px solid #ddd;width:270px; height:130px;padding:15px}
+.username span, .password span{font-size:16px; color:#000;margin-right:6px;}
+.password{margin-top:14px;}
+.textfield{width:200px; height:20px;padding:2px; border:1px solid #ddd;}
+.remember{padding-left:58px;margin-top:12px; color:#6e6e6e;}
+.remember a{}
+.login_btn{padding-left:58px;margin-top:10px;}
+.logined_btn{ width:208px; margin:14px auto 0;}
+.btn_login, .btn_register{width:84px; height:25px; font-size:16px; line-height:25px;cursor:pointer}
+.btn_login{ background:#005eac; color:#fff; border:1px solid #024073}
+.btn_register{ background:#d2d2d2; color:#6f6f6f; border:1px solid #737373; margin-left:34px;}
+.userInfo{width:208px; margin:10px auto 0;}
+.userInfo img{width:60px; height:60px;}
+.avatar{width:60px; height:60px; padding:2px; border:1px solid #ccc; display:block; float:left}
+.text { float:left;margin-left:10px;}
+.text h5 a{color:#005eac; font-size:14px;}
+.text p{margin-top:10px;}
+
+.mt14{ margin-top:14px;}
+
+.column{border:1px solid #ddd;width:290px; padding:5px;}
+.column h2, .section h2{ font-size:14px; font-weight:bold; color:#666;margin-bottom:8px;height:16px; line-height:16px;}
+.decorate{width:7px; height:16px; background:#005eac; float:left; margin:0 4px 0 1px;}
+.more{ float:right; font-size:12px; font-weight:normal; color:#666; background:url(/platform/ui/images/more.gif) no-repeat right 0;padding-right:14px;}
+a:hover.more{color:#005eac; text-decoration:none; background-position:right -18px;}
+.column li{ background:url(/platform/ui/images/column_line.gif) repeat-x 0 bottom;margin-bottom:6px;overflow: hidden;padding-bottom:6px;zoom:1;}
+.column .last{ background:none;margin-bottom:0}
+.thumb{ height:60px; height:60px;padding:2px; border:1px solid #ccc; float:left;display:inline;}
+.thumb img{width:60px; height:60px;}
+.info{ float:left; display:inline;margin-left:3px;width:220px;}
+.info h3{ font-size:14px; font-weight:bold; overflow:hidden; line-height:18px;}
+.jion{color:#666}
+
+
+.content{float:right; widht:625px;}
+.section{border:1px solid #ddd;width:610px; padding:5px;}
+.section li{width:190px; float:left; height:110px; overflow:hidden;padding-right:10px;}
+.section .thumb{height:50px; height:50px;}
+.section .thumb img{width:50px; height:50px;}
+.section .info{width:120px;margin-left:6px;}
+.des{ clear:both;padding:6px 2px 0; color:#434343}
+
+.tabpart{border:2px solid #ddd;width:618px;}
+.tab_tit{width:614px; background:#ddd; height:19px;padding:4px 0 0 4px;}
+.tab_tit li{ float:left; margin-right:1px; }
+.tab_tit li a{font-size:14px; font-weight:bold; color:#888;padding:2px 8px}
+.tab_tit li a:hover{ text-decoration:none}
+.tab_tit li.selectTag a{ color:#005eac; background:#fff}
+.tab_item{ display:none; height:610px; width:610px;}
+.selectTag {display: block}
+.tabpart .more{margin:6px 10px 6px 0}
+.album{ clear:both;margin-left:10px;}
+.album li{width:120px; height:139px; background:url(/platform/ui/images/album_bg.jpg) no-repeat 0 0;padding:3px;margin:0 12px;_margin:0 10px;float:left}
+.album img{width:120px; height:90px;}
+.album p{ line-height:16px;}
+.album span{color:#666;margin-left:3px;}
+
+/*footer-------------------------------------------*/
+#footer{width:940px; margin:14px auto 10px; text-align:right; line-height:18px;}
+
+
+
+/*
+#p7ssm {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #FFFFFF;
+	margin: 0px;
+	width: 608px;
+	height:286px;
+	position: relative;
+	z-index: 100;
+	font-size:12px;
+	BORDER: #dddddd 1px solid;
+	padding:6px;
+}
+/*Extra Wrappers - used for the Shadow Box style only. DO NOT EDIT.*/
+#p7ssm_w2 {position: relative; z-index: 100;}
+/*
+NAV MENU
+*/
+#p7ssm_nav_wrapper {}
+/*The Drop Down Menu DIV*/
+#p7SSMwnav {
+	position: absolute;
+	width: 200px;
+	left: 0px;
+	z-index: 100;
+	filter: alpha(opacity=100);
+	opacity: 1;
+	top: auto;
+}
+/*
+The Inner Nav Menu Wrapper... Necessary for the script
+The Script will hide this element before the page loads
+Set value to "none" if you want to hide the nav bar in
+Dreamweaver, but it will be hidden if script is disabled.
+*/
+#p7ssm_navList {display:block;}
+#p7ssm_navList ul {margin: 0px; padding: 0px; font-size: 12px;}
+#p7ssm_navList li {list-style-type: none;}
+
+/*THUMBNAILS*/
+#p7SSMwhmb {
+	float:left
+	width:129px;
+	filter: alpha(opacity=100);
+	opacity: 1.0;
+}
+#p7ssm_thumb_wrapper {}
+/*Thumbnail Drag Bar*/
+#p7ssm_dragbar {}
+#p7ssm_dragbar span {}
+/*Thumbnail Preview*/
+#p7ssm_preview {}
+/*Preview Table - DO NOT EDIT*/
+#p7ssm_preview table {}
+#p7ssm_preview td {}
+#p7ssm_preview img {
+	padding: 2px;
+	border: 1px solid #666;
+	display: block;
+	width:100px;
+	height:100px;
+}
+.p7ssm_sectionTrigger {display:none;}
+
+/*Thumbnail Matrix �б�ͼƬ�������� */
+.p7ssm_thumb_section {width:129px;}
+.p7ssm_thumb_section ul {margin: 0px; padding: 0px;}
+.p7ssm_thumb_section li {list-style-type: none; float: left; margin:0px 4px 2px 4px;}
+.p7ssm_thumb_section a {padding: 1px; float: left; border: 1px solid #EAEAEA;}
+/*\Hide from IE5 Mac*/
+.p7ssm_thumb_section a {float: none; display: block;}
+/*End Hide*/
+.p7ssm_thumb_section a:hover {border:1px solid #FF0000;}
+.p7ssm_thumb_section a:hover img {height: 66px; width: 129px; padding: 0; border: 0; display: block;}
+.p7ssm_thumb_section .down {border:1px solid #B6E000!important; cursor: default;}
+.p7ssm_thumb_section .down img {height: 66px; width: 129px; padding: 0; border: 0; display: block;}
+.p7ssm_thumb_section img {height: 66px; width: 129px; padding: 0; border: 0; display: block;}
+.p7ssm_clearThumbs {clear: both; height: 0; line-height: 0.0; font-size: 0;}
+
+/*Toolbar Controls */
+#p7ssm_toolbar {display:none;}
+#p7ssm_tools {}
+#p7ssm_toolbar em {display: none;}
+#p7ssm_toolbar a {display: block;}
+/*The Icon that Tgoggles the Nav Menu open and closed*/
+#p7SSMtnav {
+	display: block;
+	width: 34px;
+	height: 36px;
+	background-image: url(images/dt_01.jpg);
+	background-repeat: no-repeat;
+}
+/*The Nav Bar Icon down state*/
+#p7SSMtnav.down {
+	background-position: left bottom;
+}
+/*The Icon that Tgoggles the Thumbnail Panel open and closed*/
+#p7SSMthmb {
+	background-image: url(mages/buttom/dt_01.jpg);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 23px;
+}
+/*The Thumbnail Icon down state*/
+#p7SSMthmb.down {
+	background-position: left bottom !important;
+}
+#p7ssm_first {
+	background-image: url(images/buttom/first.jpg);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 22px;
+	background-position: left top;
+}
+#p7ssm_prev {
+	background-image: url(images/buttom/prew.jpg);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 18px;
+}
+.p7ssm_play {
+	background-image: url(images/buttom/play.jpg);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 28px;
+}
+.p7ssm_pause {
+	background-image: url(images/buttom/pause.jpg);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 28px;
+}
+#p7ssm_next {
+	background-image: url(images/buttom/next.jpg);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 18px;
+}
+#p7ssm_last {
+	background-image: url(images/buttom/last.jpg);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 28px;
+}
+#p7ssm_counter {
+	font-size: 11px;
+	color: #888888;
+	padding: 0px;
+}
+#p7ssm_slidechannel {
+	background-image: url(images/buttom/speedchannel.jpg);
+	background-repeat: no-repeat;
+	z-index: 1;
+	height: 36px;
+	width: 50px;
+	top: 0px;
+	position: relative;
+}
+#p7ssm_slider {
+	position: absolute;
+	top: 10px;
+	left: 20px;
+	z-index: 100;
+	height: 17px;
+	width: 8px;
+}
+#p7ssm_slidebar {
+	background-image: url(http://sports.qianlong.com/ui/ssm/p7ssm/img/p7ssm_slider.gif);
+	background-repeat: no-repeat;
+	height: 17px;
+	width: 8px;
+	cursor: default;
+}
+/*The Hover state for all the toolbar icons*/
+#p7ssm_first:hover, #p7ssm_prev:hover,
+.p7ssm_play:hover, .p7ssm_pause:hover,
+#p7ssm_next:hover, #p7ssm_last:hover,
+#p7ssm_slidebar:hover, #p7SSMthmb:hover, #p7SSMtnav:hover {
+	background-position: left bottom;
+}
+/*SLIDER TOOLTIP*/
+#p7ssm_speed{
+	position:absolute;
+	display:none;
+	left:0px;
+	top:36px;
+	padding:4px;
+	background-color:#333333;
+	border:1px solid #000;
+	color:#CCCCCC;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	z-index: 100;
+	filter: alpha(opacity=75);
+	opacity: 0.75;
+}
+/*FULLSIZE IMAGE */
+/*\FS TABLE DO NOT EDIT - and hide from IE5 Mac*/
+#p7ssm_fstbl {
+	width:473px;
+	float:left;
+	margin: 0;
+}
+/*End Hiding*/
+/*The Outer Wrapper for Fullsize Image*/
+#p7ssm_fullsize {
+	padding: 0;
+	margin:0;
+	width:392px;
+}
+/*Animating Box Wrapper for Fullsize Image*/
+#p7ssm_fsc {
+	margin: 0;
+	width:392px;
+	padding: 0;
+}
+/*Inner Wrapper for Fullsize Image*/
+#p7ssm_fsw {
+	padding: 0px;
+	margin:0px;
+}
+#p7ssm_fsimg img {
+	width:473px;
+	height:285px;
+}
+#p7ssm_description {width:473px;height:28px;}
+
+#p7ssm_cf {
+	position: absolute;
+	visibility: hidden;
+	left: 0;
+	top: 0;
+	z-index: 99;
+}
+/*Firefox Strict Mode Box Model Fix - DO NOT EDIT*/
+#p7ssm_cf img {
+	display: block;
+}
+/*The Fullsize Image*/
+#p7ssm_fsc img {
+	border: 0;
+}
+/*\Firefox Fix - Hide from IE5 Mac*/
+#p7ssm_fsc img {
+	display: block;
+}
+/*End Hiding*/
+/* Description Styles */
+#p7ssm_description {
+	margin:-24px 0 0 0;
+	background:#FFFFFF;
+	filter: alpha(opacity=60);
+	opacity: 0.60;
+	padding: 0px 0px;
+	color: #333333;
+	line-height: 1.5em;
+	display: none;
+	text-align:center;
+}
+/*Description Paragraphs*/
+#p7ssm_description p {
+	margin: 6px 0;
+	color: #333333;
+}
+/*Description Links*/
+#p7ssm_description a {
+	color: #333333;
+}
+/*Hiiden Link for Fullsize Image. DO NOT EDIT*/
+.p7ssm_lk {
+	display:none;
+}
+/*Hidden Description Source. DO NOT EDIT*/
+.p7ssm_fd {
+    width: 392px;
+    font-size:12px;
+	display:none;
+	padding: 0;
+}
+/*The Loading Progrees Bar. DO NOT EDIT*/
+#p7ssm_loading {
+	position:absolute;
+	left:0px;
+	top:0px;
+	visibility: hidden;
+	z-index: 100;
+}
+.border {
+	border: 1px solid #CCCCCC;
+}
