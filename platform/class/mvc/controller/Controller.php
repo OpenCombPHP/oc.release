@@ -1,6 +1,8 @@
 <?php
 namespace oc\mvc\controller ;
 
+use oc\ext\Extension;
+
 use jc\auth\AuthenticationException;
 use jc\mvc\controller\Controller as JcController ;
 
@@ -17,11 +19,30 @@ class Controller extends JcController
     /** 
      * @return oc\mvc\view\View
      */
-    public function createView($sName,$sSourceFile)
+    public function createView($sName=null,$sSourceFile=null)
     {
+	    if( !$sName )
+	    {
+	    	$sName = $this->name() ;
+	    }
+    
+	    if( !$sSourceFile )
+	    {
+	    	$sSourceFile = Extension::retraceExtensionName() . ':' . $sName . '.html' ;
+	    }
+	    
+	    if( strstr($sSourceFile,':')===false )
+	    {
+	    	$sSourceFile = Extension::retraceExtensionName() . ':' . $sSourceFile ;
+	    }
+    	
     	return parent::createView($sName,$sSourceFile,'oc\\mvc\\view\\View') ;
     }
-    
+
+    public function createFormView($sName=null,$sSourceFile=null)
+    {
+    	return $this->createView($sName,$sSourceFile,'oc\\mvc\\view\\FormView') ;
+    }
 
     /**
      * 
