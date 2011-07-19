@@ -1,6 +1,8 @@
 <?php
 namespace oc\mvc\controller ;
 
+use jc\auth\IdManager;
+
 use oc\base\FrontFrame;
 
 use oc\ext\Extension;
@@ -57,11 +59,6 @@ class Controller extends JcController
     	}
     	catch (AuthenticationException $e)
     	{
-    		foreach($this->viewContainer()->iterator() as $aView)
-    		{
-    			$aView->disable() ;
-    		}
-    		
     		$aController = new PermissionDenied($this->aParams) ;
     		$this->add($aController) ;
     		
@@ -69,7 +66,15 @@ class Controller extends JcController
     	}
     }
     
-	public function permissionDenied($sMessage=null,array $arrArgvs=array())
+    protected function requireLogined($sMessage=null,array $arrArgvs=array()) 
+    {
+    	if( !IdManager::fromSession()->currentId() )
+    	{
+    		$this->permissionDenied($sMessage,$arrArgvs) ;
+    	}
+    }
+    
+	protected function permissionDenied($sMessage=null,array $arrArgvs=array())
 	{
 		throw new AuthenticationException($this,$sMessage,$arrArgvs) ;
 	}
