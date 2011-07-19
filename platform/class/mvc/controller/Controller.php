@@ -1,6 +1,8 @@
 <?php
 namespace oc\mvc\controller ;
 
+use oc\base\FrontFrame;
+
 use oc\ext\Extension;
 
 use jc\auth\AuthenticationException;
@@ -51,11 +53,7 @@ class Controller extends JcController
     public function mainRun ()
     {
 	    try{
-			
-	    	$this->processChildren() ;
-			
-			$this->process() ;
-			
+	    	parent::mainRun() ;
     	}
     	catch (AuthenticationException $e)
     	{
@@ -67,18 +65,19 @@ class Controller extends JcController
     		$aController = new PermissionDenied($this->aParams) ;
     		$this->add($aController) ;
     		
-    		$aController->process() ;
-    		
+    		$aController->mainRun() ;
     	}
-    	
-    	$this->displayViews() ;
     }
     
 	public function permissionDenied($sMessage=null,array $arrArgvs=array())
 	{
 		throw new AuthenticationException($this,$sMessage,$arrArgvs) ;
 	}
-	
+
+    public function createFrame()
+    {
+    	return new FrontFrame() ;
+    }
 }
 
 ?>
