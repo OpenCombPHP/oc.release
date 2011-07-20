@@ -41,9 +41,12 @@ abstract class Extension extends Object
 	
 	abstract public function load() ;
 	
-	static public function retraceExtensionName()
+	static public function retraceExtensionName($arrStack=null)
 	{
-		$arrStack = debug_backtrace() ;
+		if(!$arrStack)
+		{
+			$arrStack = debug_backtrace() ;
+		}
 		
 		foreach($arrStack as $arrCall)
 		{

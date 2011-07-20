@@ -7,11 +7,14 @@ use jc\mvc\model\db\orm\PrototypeAssociationMap;
 
 class PAMap extends PrototypeAssociationMap
 {
-	public function addOrm(array $arrOrm,$bCheck=true)
+	public function addOrm(array $arrOrm,$bCheck=true,$sExtension=null)
 	{
-		self::transFullOrmNameForCfg(
-				$arrOrm, Extension::retraceExtensionName()
-		) ;
+		if(!$sExtension)
+		{
+			$sExtension = Extension::retraceExtensionName() ;
+		}
+		
+		self::transFullOrmNameForCfg( $arrOrm, $sExtension ) ;
 		
 		if( empty($arrOrm['class']) )
 		{
