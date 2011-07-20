@@ -1,7 +1,7 @@
 <?php
-use oc\ext\ExtensionMetainfo;
 namespace oc\ext ;
 
+use oc\ext\ExtensionMetainfo;
 use jc\system\Application;
 use oc\Platform;
 use jc\lang\Object;
