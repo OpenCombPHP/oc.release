@@ -1,6 +1,8 @@
 <?php
 namespace oc\mvc\controller ;
 
+use jc\mvc\model\db\orm\Prototype;
+
 use jc\auth\IdManager;
 
 use oc\base\FrontFrame;
@@ -15,9 +17,32 @@ class Controller extends JcController
 	/**
 	 * @return oc\mvc\model\db\Model
 	 */
-    public function createModel($sName,$prototype,array $arrProperties=array(),$bAgg=false,$sClass='jc\\mvc\\model\\db\\Model')
+    public function createModel($prototype,array $arrProperties=array(),$bAgg=false,$sName=null,$sClass='jc\\mvc\\model\\db\\Model')
     {
-    	return parent::createModel($sName,$prototype,$arrProperties,$bAgg,'oc\\mvc\\model\\db\\Model') ;
+    	if( !$sName )
+    	{
+    		if( is_string($prototype) )
+    		{
+    			$sName = $prototype ;
+    		}
+    		else if( is_array($prototype) )
+    		{
+    			if( !empty($prototype['name']) )
+    			{
+    				$sName = $prototype['name'] ;
+    			}
+    			else if ( !empty($prototype['table']) )
+    			{
+    				$sName = $prototype['table'] ;
+    			}
+    		}
+    		else if( $prototype instanceof Prototype )
+    		{
+    			$sName = $prototype->name() ;
+    		}
+    	}
+    	
+    	return parent::createModel($prototype,$arrProperties,$bAgg,$sName,'oc\\mvc\\model\\db\\Model') ;
     }
     
     /** 
