@@ -45,6 +45,12 @@ $aPlatform->loadExtension(new ExtensionMetainfo('developtoolbox','oc\ext\develop
 // instantmessaging
 $aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging')) ;
 
+// electronicnewspaper
+$aPlatform->loadExtension(new ExtensionMetainfo('electronicnewspaper','oc\ext\electronicnewspaper\ElectronicNewspaper')) ;
+
+// tourdmedm
+//$aPlatform->loadExtension(new ExtensionMetainfo('tourdmedm','oc\ext\tourdmedm\Tourdmedm')) ;
+
 
 
 
