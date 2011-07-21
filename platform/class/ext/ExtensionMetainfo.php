@@ -33,6 +33,10 @@ class ExtensionMetainfo extends Object
 		return 'oc\\ext\\'.$this->sName ;
 	}
 	
+	public function classCompiledPackageFolder()
+	{
+		return 'extensions/'.$this->sName.'/compiled/' ;
+	}
 	public function classPackageFolder()
 	{
 		return 'extensions/'.$this->sName.'/class/' ;
