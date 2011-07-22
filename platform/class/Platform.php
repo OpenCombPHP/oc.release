@@ -65,8 +65,9 @@ class Platform extends Application
 
 		// 加载类包
 		$this->classLoader()->addPackage(
-				$sPlatformDir.$aExtMeta->classPackageFolder()
-				, $aExtMeta->classPackageNamespace()
+				$aExtMeta->classPackageNamespace()
+				, $sPlatformDir.$aExtMeta->classCompiledPackageFolder()
+				, $sPlatformDir.$aExtMeta->classPackageFolder()
 		) ;
 		
 		// 注册ui模板目录
