@@ -14,7 +14,7 @@ body{ font:12px Tahoma,Arial,sans-serif;color:#333}
 #wrapper{width:960px; margin:0 auto;/* background:url(/platform/ui/images/NO4.jpg) no-repeat center 0;*/}
 a{color:#005eac; text-decoration:none}
 a:hover{ text-decoration:underline}
-.clear{ clear:both;}
+.clear{ clear:both; font-size:0; line-height:0; float:none; visibility:hidden;}
 
 /*header-------------------------------------------*/
 #header{width:940px; margin:0 auto; padding-top:40px; }
