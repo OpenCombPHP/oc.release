@@ -15,7 +15,7 @@ class Platform extends Application
 {
 	public function __construct($sAppDir)
 	{
-		parent::__construct() ;
+		parent::__construct($sAppDir) ;
 
 		if( !Application::singleton(false) )
 		{
@@ -66,8 +66,8 @@ class Platform extends Application
 		// 加载类包
 		$this->classLoader()->addPackage(
 				$aExtMeta->classPackageNamespace()
-				, $sPlatformDir.$aExtMeta->classCompiledPackageFolder()
-				, $sPlatformDir.$aExtMeta->classPackageFolder()
+				, $aExtMeta->classCompiledPackageFolder()
+				, $aExtMeta->classPackageFolder()
 		) ;
 		
 		// 注册ui模板目录

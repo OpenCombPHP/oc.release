@@ -11,7 +11,7 @@ class PlatformFactory extends HttpAppFactory
 		$aClassLoader = parent::createClassLoader($aApp) ;
 		
 		// class
-		$aClassLoader->addPackage( 'oc', dirname(dirname(__DIR__)).'/compiled', dirname(__DIR__) ) ;
+		$aClassLoader->addPackage( 'oc', '/platform/compiled', '/platform/class' ) ;
 
 		return $aClassLoader ;
 	}

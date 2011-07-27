@@ -35,11 +35,11 @@ class ExtensionMetainfo extends Object
 	
 	public function classCompiledPackageFolder()
 	{
-		return 'extensions/'.$this->sName.'/compiled/' ;
+		return '/extensions/'.$this->sName.'/compiled' ;
 	}
 	public function classPackageFolder()
 	{
-		return 'extensions/'.$this->sName.'/class/' ;
+		return '/extensions/'.$this->sName.'/class' ;
 	}
 	
 	public function resourceUiTemplateFolder()
