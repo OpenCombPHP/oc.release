@@ -48,6 +48,9 @@ $aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\insta
 // electronicnewspaper
 $aPlatform->loadExtension(new ExtensionMetainfo('electronicnewspaper','oc\ext\electronicnewspaper\ElectronicNewspaper')) ;
 
+// bannerad
+$aPlatform->loadExtension(new ExtensionMetainfo('bannerad','oc\ext\bannerad\BannerAd')) ;
+
 // tourdmedm
 //$aPlatform->loadExtension(new ExtensionMetainfo('tourdmedm','oc\ext\tourdmedm\Tourdmedm')) ;
 
