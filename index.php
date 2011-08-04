@@ -50,18 +50,8 @@ $aPlatform->loadExtension(new ExtensionMetainfo('developtoolbox','oc\ext\develop
 // instantmessaging
 $aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging')) ;
 
-// electronicnewspaper
-$aPlatform->loadExtension(new ExtensionMetainfo('electronicnewspaper','oc\ext\electronicnewspaper\ElectronicNewspaper')) ;
-
-// bannerad
-$aPlatform->loadExtension(new ExtensionMetainfo('bannerad','oc\ext\bannerad\BannerAd')) ;
-
 // album
 $aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
-
-// tourdmedm
-//$aPlatform->loadExtension(new ExtensionMetainfo('tourdmedm','oc\ext\tourdmedm\Tourdmedm')) ;
-
 
 // 启用class编译
 $aPlatform->classLoader()->enableClassCompile() ;
