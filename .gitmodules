@@ -31,3 +31,6 @@
 [submodule "extensions/album"]
 	path = extensions/album
 	url = http://git.opencomb.com/oc/extensions/sns/album.git
+[submodule "framework"]
+	path = framework
+	url = http://git.jecat.cn/framework/framework.git
