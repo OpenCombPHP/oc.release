@@ -1,0 +1,33 @@
+[submodule "extensions/coreuser"]
+	path = extensions/coreuser
+	url = http://git.opencomb.com/oc/extensions/core/coreuser.git
+[submodule "extensions/blog"]
+	path = extensions/blog
+	url = http://git.opencomb.com/oc/extensions/sns/blog.git
+[submodule "extensions/feed"]
+	path = extensions/feed
+	url = http://git.opencomb.com/oc/extensions/sns/feed.git
+[submodule "extensions/groups"]
+	path = extensions/groups
+	url = http://git.opencomb.com/oc/extensions/sns/groups.git
+[submodule "extensions/instantmessaging"]
+	path = extensions/instantmessaging
+	url = http://git.opencomb.com/oc/extensions/sns/instantmessaging.git
+[submodule "extensions/message"]
+	path = extensions/message
+	url = http://git.opencomb.com/oc/extensions/sns/message.git
+[submodule "extensions/microblog"]
+	path = extensions/microblog
+	url = http://git.opencomb.com/oc/extensions/sns/microblog.git
+[submodule "extensions/notice"]
+	path = extensions/notice
+	url = http://git.opencomb.com/oc/extensions/sns/notice.git
+[submodule "extensions/sns"]
+	path = extensions/sns
+	url = http://git.opencomb.com/oc/extensions/sns/sns.git
+[submodule "extensions/developtoolbox"]
+	path = extensions/developtoolbox
+	url = http://git.opencomb.com/oc/extensions/develop/developtoolbox.git
+[submodule "extensions/album"]
+	path = extensions/album
+	url = http://git.opencomb.com/oc/extensions/sns/album.git
