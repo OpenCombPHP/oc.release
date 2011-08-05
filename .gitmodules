@@ -34,3 +34,15 @@
 [submodule "framework"]
 	path = framework
 	url = http://git.jecat.cn/framework/framework.git
+[submodule "extensions/tester"]
+	path = extensions/tester
+	url = http://git.opencomb.com/oc/extensions/develop/tester.git
+[submodule "extensions/pearcommon"]
+	path = extensions/pearcommon
+	url = http://git.opencomb.com/oc/extensions/develop/pearcommon.git
+[submodule "extensions/pearphp"]
+	path = extensions/pearphp
+	url = http://git.opencomb.com/oc/extensions/develop/pearphp.git
+[submodule "extensions/pearphpunit"]
+	path = extensions/pearphpunit
+	url = http://git.opencomb.com/oc/extensions/develop/pearphpunit.git
