@@ -26,12 +26,20 @@ class PAMap extends PrototypeAssociationMap
 	
 	public function fragment($sPrototypeName,array $arrAssocFragment=array(),$bRetPrototype=true)
 	{
+		$sPrototypeNameInput = $sPrototypeName ;
 		if( $sExtensionName = Extension::retraceExtensionName() )
 		{
 			self::transFullOrmName($sPrototypeName,$sExtensionName) ;
 		}
 		
-		return parent::fragment($sPrototypeName,$arrAssocFragment,$bRetPrototype) ;
+		$aPrototype = parent::fragment($sPrototypeName,$arrAssocFragment,$bRetPrototype) ;
+		
+		if( $bRetPrototype and $aPrototype )
+		{
+			$aPrototype->setTableAlias($sPrototypeNameInput) ;
+		}
+		
+		return $aPrototype ;
 	}
 	
 	static public function transFullOrmNameForCfg(array &$arrOrm,$sExtensionName)
