@@ -53,8 +53,19 @@ $aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\insta
 // album
 $aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
 
+// tester
+//$aPlatform->loadExtension(new ExtensionMetainfo('pearcommon','oc\ext\pearcommon\PearCommon')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('pearphp','oc\ext\pearphp\PearPHP')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('pearphpunit','oc\ext\pearphpunit\PearPHPUnit')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('tester','oc\ext\tester\Tester')) ;
+
 // 启用class编译
 $aPlatform->classLoader()->enableClassCompile() ;
+
+// 访问入口
+$aPlatform->fileSystem()->findFolder('/')->setHttpUrl(
+	dirname($aPlatform->request()->url())
+) ;
 
 /*
 $aFile = new File(__DIR__.'/extensions/blog/class/Blog.php') ;
