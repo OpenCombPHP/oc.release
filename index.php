@@ -63,9 +63,12 @@ $aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
 $aPlatform->classLoader()->enableClassCompile() ;
 
 // 访问入口
-$aPlatform->fileSystem()->findFolder('/')->setHttpUrl(
-	dirname($aPlatform->request()->url())
-) ;
+if( $aFs = $aPlatform->fileSystem()->findFolder('/') )
+{
+	$aFs->setHttpUrl(
+		dirname($aPlatform->request()->url())
+	) ;
+}
 
 /*
 $aFile = new File(__DIR__.'/extensions/blog/class/Blog.php') ;
