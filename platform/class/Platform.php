@@ -3,7 +3,7 @@ namespace oc ;
 
 use oc\ext\ExtensionManager;
 use oc\ext\ExtensionMetainfo;
-use oc\resrc\UrlResourceManager;
+use oc\resrc\ResourceManager;
 use jc\resrc\HtmlResourcePool;
 use jc\ui\xhtml\UIFactory ;
 use jc\mvc\view\UIFactory as MvcUIFactory ;
@@ -26,6 +26,7 @@ class Platform extends Application
 		$aAppFactory->build($this) ;
 
 		// app dir
+		$aFs = $this->fileSystem() ;
 		$this->setApplicationDir($sAppDir) ;
 
 		// 模板文件
@@ -40,17 +41,17 @@ class Platform extends Application
 		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
-		$aSrcFileMgr->addFolder($sAppDir.'/platform/ui/template/','oc') ;
-		$aSrcFileMgr->addFolder(\jc\PATH.'src/template/','jc') ;
+		$aSrcFileMgr->addFolder($aFs->findFolder('/platform/ui/template'),'oc') ;
+		$aSrcFileMgr->addFolder($aFs->findFolder('/framework/src/template'),'jc') ;
 		
 		// css/js 资源
-		$aJsMgr = new UrlResourceManager() ;
-		$aCssMgr = new UrlResourceManager() ;
+		$aJsMgr = new ResourceManager() ;
+		$aCssMgr = new ResourceManager() ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aJsMgr,$aCssMgr) ) ;
 		
-		$aJsMgr->addFolder($sAppDir.'/platform/ui/js/','platform/ui/js/','oc') ;
-		$aCssMgr->addFolder($sAppDir.'/platform/ui/css/','platform/ui/css/','oc') ;
-		$aCssMgr->addFolder(\jc\PATH.'src/style/','framework/src/style/','jc') ;
+		$aJsMgr->addFolder($aFs->findFolder('/platform/ui/js'),'oc') ;
+		$aCssMgr->addFolder($aFs->findFolder('/platform/ui/css'),'oc') ;
+		$aCssMgr->addFolder($aFs->findFolder('/framework/src/style'),'jc') ;
 		
 		// 默认的控制器
 		$aAccessRouter = $this->accessRouter() ;
@@ -66,27 +67,25 @@ class Platform extends Application
 		// 加载类包
 		$this->classLoader()->addPackage(
 				$aExtMeta->classPackageNamespace()
-				, $aExtMeta->classCompiledPackageFolder()
-				, $aExtMeta->classPackageFolder()
+				, $aExtMeta->classCompiledPackageFolder()->path()
+				, $aExtMeta->classPackageFolder()->path()
 		) ;
 		
 		// 注册ui模板目录
-		UIFactory::singleton()->sourceFileManager()->addFolder(
-				$sPlatformDir.$aExtMeta->resourceUiTemplateFolder()
-				, $sName
-		) ;
+		if( $aTemplateFolder=$aExtMeta->resourceUiTemplateFolder() )
+		{
+			UIFactory::singleton()->sourceFileManager()->addFolder($aTemplateFolder, $sName) ;
+		}
 		
 		// 注册 js/css 目录
-		HtmlResourcePool::singleton()->javaScriptFileManager()->addFolder(
-				$sPlatformDir.$aExtMeta->resourceUiJsFolder()
-				, "extensions/{$sName}/ui/js/"
-				, $sName
-		) ;
-		HtmlResourcePool::singleton()->cssFileManager()->addFolder(
-				$sPlatformDir.$aExtMeta->resourceUiCssFolder()
-				, "extensions/{$sName}/ui/css/"
-				, $sName
-		) ;
+		if($aJsFolder=$aExtMeta->resourceUiJsFolder())
+		{
+			HtmlResourcePool::singleton()->javaScriptFileManager()->addFolder($aJsFolder,$sName) ;
+		}
+		if($aCssFolder=$aExtMeta->resourceUiCssFolder())
+		{
+			HtmlResourcePool::singleton()->cssFileManager()->addFolder($aCssFolder,$sName) ;
+		}
 		
 		$sClass = $aExtMeta->className() ;		
 		$aExtension = new $sClass($aExtMeta) ;

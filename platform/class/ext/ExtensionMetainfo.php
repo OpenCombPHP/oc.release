@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext ;
 
+use jc\system\Application;
+
 use jc\resrc\HtmlResourcePool;
 
 use oc\Platform;
@@ -33,28 +35,53 @@ class ExtensionMetainfo extends Object
 		return 'oc\\ext\\'.$this->sName ;
 	}
 	
-	public function classCompiledPackageFolder()
+	public function classCompiledPackageFolder(Platform $aPlatform=null)
 	{
-		return '/extensions/'.$this->sName.'/compiled' ;
+		if(!$aPlatform)
+		{
+			$aPlatform = Application::singleton() ;
+		}
+		
+		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/compiled') ;
 	}
-	public function classPackageFolder()
+	public function classPackageFolder(Platform $aPlatform=null)
 	{
-		return '/extensions/'.$this->sName.'/class' ;
+		if(!$aPlatform)
+		{
+			$aPlatform = Application::singleton() ;
+		}
+		
+		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/class') ;
 	}
 	
-	public function resourceUiTemplateFolder()
+	public function resourceUiTemplateFolder(Platform $aPlatform=null)
 	{
-		return 'extensions/'.$this->sName.'/ui/template/' ;
+		if(!$aPlatform)
+		{
+			$aPlatform = Application::singleton() ;
+		}
+		
+		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/ui/template') ;
 	}
 	
-	public function resourceUiJsFolder()
+	public function resourceUiJsFolder(Platform $aPlatform=null)
 	{
-		return 'extensions/'.$this->sName.'/ui/js/' ;
+		if(!$aPlatform)
+		{
+			$aPlatform = Application::singleton() ;
+		}
+		
+		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/ui/js') ;
 	}
 	
-	public function resourceUiCssFolder()
+	public function resourceUiCssFolder(Platform $aPlatform=null)
 	{
-		return 'extensions/'.$this->sName.'/ui/css/' ;
+		if(!$aPlatform)
+		{
+			$aPlatform = Application::singleton() ;
+		}
+		
+		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/ui/css') ;
 	}
 	
 	public function className()

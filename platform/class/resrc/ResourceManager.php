@@ -1,30 +1,30 @@
 <?php
 namespace oc\resrc ;
 
-use jc\fs\Dir ;
+use jc\fs\IFolder;
 use oc\ext\Extension ;
-use jc\resrc\UrlResourceManager as JsUrlResourceManager ;
+use jc\resrc\ResourceManager as JsResourceManager ;
 
-class UrlResourceManager extends JsUrlResourceManager
+class ResourceManager extends JsResourceManager
 {
-	public function addFolder($sPath,$sUrlPrefix=null,$sExtensionName=null)
+	public function addFolder(IFolder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
 			$sExtensionName = Extension::retraceExtensionName() ;
 		}
 		
-		parent::addFolder($sPath,$sUrlPrefix,$sExtensionName) ;
+		parent::addFolder($aFolder,$sExtensionName) ;
 	}
 	
-	public function removeFolder($sPath,$sExtensionName=null)
+	public function removeFolder(IFolder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
 			$sExtensionName = Extension::retraceExtensionName() ;
 		}
 		
-		parent::removeFolder($sPath,$sExtensionName) ;
+		parent::removeFolder($aFolder,$sExtensionName) ;
 	}
 
 	public function clearFolders($sExtensionName=null)
@@ -37,6 +37,9 @@ class UrlResourceManager extends JsUrlResourceManager
 		$this->arrFolders[$sExtensionName] = array() ;
 	}
 	
+	/**
+	 * @return jc\fs\IFile
+	 */
 	public function find($sFilename,$sNamespace='*')
 	{
 		if( $sNamespace=='*' and strstr($sFilename,':')===false )

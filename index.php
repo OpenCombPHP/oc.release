@@ -21,8 +21,6 @@ require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
 
 $aPlatform = new Platform(__DIR__) ;
 
-print_r($aPlatform->request()->get('xxxxssss')) ;
-
 // 简单配置启动 OC platform,以及扩展, 以后完善
 require 'config.php' ;
 

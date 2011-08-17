@@ -1,30 +1,32 @@
 <?php
 namespace oc\ui ;
 
+use jc\fs\IFolder;
+
 use jc\fs\Dir;
 use oc\ext\Extension ;
 use jc\ui\SourceFileManager as JcSourceFileManager ;
 
 class SourceFileManager extends JcSourceFileManager
 {
-	public function addFolder($sPath,$sExtensionName=null)
+	public function addFolder(IFolder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
 			$sExtensionName = Extension::retraceExtensionName() ;
 		}
 		
-		parent::addFolder($sPath,$sExtensionName) ;
+		parent::addFolder($aFolder,$sExtensionName) ;
 	}
 	
-	public function removeFolder($sPath,$sExtensionName=null)
+	public function removeFolder(IFolder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
 			$sExtensionName = Extension::retraceExtensionName() ;
 		}
 		
-		parent::removeFolder($sPath,$sExtensionName) ;
+		parent::removeFolder($aFolder,$sExtensionName) ;
 	}
 
 	public function clearFolders($sExtensionName=null)
