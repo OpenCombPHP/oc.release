@@ -51,6 +51,9 @@ $aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\insta
 // album
 $aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
 
+// comment
+$aPlatform->loadExtension(new ExtensionMetainfo('comment','oc\ext\comment\Comment')) ;
+
 // tester
 //$aPlatform->loadExtension(new ExtensionMetainfo('pearcommon','oc\ext\pearcommon\PearCommon')) ;
 //$aPlatform->loadExtension(new ExtensionMetainfo('pearphp','oc\ext\pearphp\PearPHP')) ;
