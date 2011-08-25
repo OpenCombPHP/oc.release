@@ -11,8 +11,10 @@ class PlatformFactory extends HttpAppFactory
 		$aClassLoader = parent::createClassLoader($aApp) ;
 		
 		// class
-		$aClassLoader->addPackage( 'oc', '/platform/compiled', '/platform/class' ) ;
+		$aClassLoader->addPackage( 'oc', '/platform/class', '/platform/compiled' ) ;
 
+		$aClassLoader->enableClassCompile(true) ;
+		
 		return $aClassLoader ;
 	}
 	public function createAccessRouter(CoreApplication $aApp)
