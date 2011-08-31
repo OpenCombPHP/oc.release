@@ -1,10 +1,9 @@
 <?php
 namespace oc\ext ;
 
+use jc\lang\Exception;
 use jc\system\Application;
-
 use jc\resrc\HtmlResourcePool;
-
 use oc\Platform;
 use jc\ui\xhtml\UIFactory ;
 use jc\resrc\htmlresrc\HtmlResourcePoolFactory;
@@ -42,7 +41,16 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/compiled') ;
+		$sPath = '/extensions/'.$this->sName.'/compiled' ;
+		if( !$aFolder=$aPlatform->fileSystem()->find($sPath) and !$aFolder=$aPlatform->fileSystem()->createFolder($sPath) )
+		{
+			throw new Exception(
+				"无法为扩展(%s)创建class编译目录：%s，请检查文件系统上的权限。"
+				, array($this->name(),$sPath)
+			) ;
+		}
+		
+		return $aFolder ;
 	}
 	public function classPackageFolder(Platform $aPlatform=null)
 	{
