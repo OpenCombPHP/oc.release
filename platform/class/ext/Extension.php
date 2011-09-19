@@ -15,7 +15,7 @@ abstract class Extension extends Object
 
 	public function url()
 	{
-		return $this->application()->extensionsUrl() . $this->metainfo()->installFolder() ;
+		return $this->application()->extensionsUrl() . $this->metainfo()->installFolderPath() ;
 	}
 	public function publicFilesUrl()
 	{}

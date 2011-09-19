@@ -23,10 +23,20 @@ class ExtensionMetainfo extends Object
 	{
 		return $this->sName ;
 	}
-	
-	public function installFolder()
+
+	public function installFolderPath()
 	{
 		return $this->sName.'/' ;
+	}
+	
+	public function installFolder(Platform $aPlatform=null)
+	{
+		if(!$aPlatform)
+		{
+			$aPlatform = Application::singleton() ;
+		}
+		
+		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName) ;
 	}
 	
 	public function classPackageNamespace()
