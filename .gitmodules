@@ -1,58 +1,58 @@
 [submodule "extensions/coreuser"]
 	path = extensions/coreuser
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/core/coreuser.git
+	url = git@github.com:OpenComb/extensions-core-coreuser.git
 
 [submodule "extensions/blog"]
 	path = extensions/blog
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/blog.git
+	url = git@github.com:OpenComb/extensions-sns-blog.git
 
 [submodule "extensions/feed"]
 	path = extensions/feed
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/feed.git
+	url = git@github.com:OpenComb/extensions-sns-feed.git
 
 [submodule "extensions/groups"]
 	path = extensions/groups
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/groups.git
+	url = git@github.com:OpenComb/extensions-sns-groups.git
 
 [submodule "extensions/instantmessaging"]
 	path = extensions/instantmessaging
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/instantmessaging.git
+	url = git@github.com:OpenComb/extensions-sns-instantmessaging.git
 
 [submodule "extensions/message"]
 	path = extensions/message
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/message.git
+	url = git@github.com:OpenComb/extensions-sns-message.git
 [submodule "extensions/microblog"]
 	path = extensions/microblog
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/microblog.git
+	url = git@github.com:OpenComb/extensions-sns-microblog.git
 [submodule "extensions/notice"]
 	path = extensions/notice
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/notice.git
+	url = git@github.com:OpenComb/extensions-sns-notice.git
 [submodule "extensions/sns"]
 	path = extensions/sns
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/sns.git
+	url = git@github.com:OpenComb/extensions-sns-sns.git
 [submodule "extensions/album"]
 	path = extensions/album
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/sns/album.git
+	url = git@github.com:OpenComb/extensions-sns-album.git
 
 [submodule "extensions/developtoolbox"]
 	path = extensions/developtoolbox
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/develop/developtoolbox.git
+	url = git@github.com:OpenComb/extensions-develop-developtoolbox.git
 [submodule "extensions/tester"]
 	path = extensions/tester
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/develop/tester.git
+	url = git@github.com:OpenComb/extensions-develop-tester.git
 
 [submodule "extensions/pearcommon"]
 	path = extensions/pearcommon
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/pear/pearcommon.git
+	url = git@github.com:OpenComb/extensions-pear-pearcommon.git
 [submodule "extensions/pearphp"]
 	path = extensions/pearphp
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/pear/pearphp.git
+	url = git@github.com:OpenComb/extensions-pear-pearphp.git
 [submodule "extensions/pearphpunit"]
 	path = extensions/pearphpunit
-	url = gituser@wonei-office.3322.org:~/repo/opencomb.com/extensions/pear/pearphpunit.git
+	url = git@github.com:OpenComb/extensions-pear-pearphpunit.git
 
 
 
 [submodule "framework"]
 	path = framework
-	url = gituser@wonei-office.3322.org:~/repo/jecat.cn/framework.git
+	url = git@github.com:JeCat/framework.git

@@ -88,5 +88,6 @@ else
 	header("HTTP/1.0 404 Not Found");
 }
 
-echo microtime(1) - $t ;
+echo microtime(1) - $t, "<br />\r\n" ;
+echo $aPlatform->classLoader()->totalLoadTime() ;
 ?>
