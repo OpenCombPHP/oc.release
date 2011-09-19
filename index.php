@@ -28,16 +28,16 @@ require 'config.php' ;
 PrototypeAssociationMap::setSingleton(new PAMap()) ;
 
 // sns
-$aPlatform->loadExtension(new ExtensionMetainfo('sns','oc\ext\sns\Sns')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('sns','oc\ext\sns\Sns')) ;
 
 // coreuser
 $aPlatform->loadExtension(new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser')) ;
 
 // blog
-$aPlatform->loadExtension(new ExtensionMetainfo('blog','oc\ext\blog\Blog')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('blog','oc\ext\blog\Blog')) ;
 
 // groups
-$aPlatform->loadExtension(new ExtensionMetainfo('groups','oc\ext\groups\Groups')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('groups','oc\ext\groups\Groups')) ;
 
 // microblog
 $aPlatform->loadExtension(new ExtensionMetainfo('microblog','oc\ext\microblog\MicroBlog')) ;
@@ -46,13 +46,16 @@ $aPlatform->loadExtension(new ExtensionMetainfo('microblog','oc\ext\microblog\Mi
 $aPlatform->loadExtension(new ExtensionMetainfo('developtoolbox','oc\ext\developtoolbox\DevelopToolbox')) ;
 
 // instantmessaging
-$aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging')) ;
 
 // album
-$aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
 
 // comment
-$aPlatform->loadExtension(new ExtensionMetainfo('comment','oc\ext\comment\Comment')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('comment','oc\ext\comment\Comment')) ;
+
+// Real Knowledge Platform
+$aPlatform->loadExtension(new ExtensionMetainfo('realknowledgeplatform','oc\ext\realknowledgeplatform\RealKnowledgePlatform')) ;
 
 // tester
 //$aPlatform->loadExtension(new ExtensionMetainfo('pearcommon','oc\ext\pearcommon\PearCommon')) ;
