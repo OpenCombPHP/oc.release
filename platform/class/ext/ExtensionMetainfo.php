@@ -59,7 +59,14 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/class') ;
+		$aClassFolder = $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/class') ;
+		
+		if(!$aClassFolder)
+		{
+			throw new Exception("找不到扩展（%s）的源文件目录",$this->sName) ;
+		}
+		
+		return $aClassFolder ;
 	}
 	
 	public function resourceUiTemplateFolder(Platform $aPlatform=null)
