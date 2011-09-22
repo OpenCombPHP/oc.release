@@ -17,14 +17,14 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		
 		if( $sContents=='ext')
 		{
-			$sExtension = $aCompilerManager->compilingStatus()->sourceNamespace() ;
+			$sExtension = $aObject->root()->ns() ;
 		}
 		else if( substr($sContents,0,4)=='ext.' )
 		{
 			$sExtension = substr($sContents,4) ;
 			if( $sExtension=='*' )
 			{
-				$sExtension = $aObject->parent()->ns() ;
+				$sExtension = $aObject->root()->ns() ;
 			}
 			$sExtension = addslashes($sExtension) ;
 		}
@@ -32,7 +32,7 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		if($sExtension)
 		{
 			$aDev->write( "if(\$aBelongsExt=\\jc\\system\\Application::singleton()->extensions()->extension('$sExtension')){\r\n" ) ;
-			$aDev->write( "	echo \$aBelongsExt->url() ;" ) ;
+			$aDev->write( "	\$aDevice->write(\$aBelongsExt->url()) ;" ) ;
 			$aDev->write( "}" ) ;
 		}
 		else
