@@ -1,15 +1,15 @@
 <?php
 namespace oc\ui\xhtml\compiler ;
 
+use jc\ui\TargetCodeOutputStream;
 use jc\ui\IObject;
-use jc\io\IOutputStream;
 use jc\ui\CompilerManager;
 use jc\ui\xhtml\compiler\macro\PathMacroCompiler as JcPathMacroCompiler;
 
 class PathMacroCompiler extends JcPathMacroCompiler
 {
 	
-	public function compile(IObject $aObject,IOutputStream $aDev,CompilerManager $aCompilerManager)
+	public function compile(IObject $aObject,TargetCodeOutputStream $aDev,CompilerManager $aCompilerManager)
 	{
 		$sExtension = null ;
 
@@ -31,9 +31,9 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		
 		if($sExtension)
 		{
-			$aDev->write( "<?php if(\$aBelongsExt=\\jc\\system\\Application::singleton()->extensions()->extension('$sExtension')){\r\n" ) ;
-			$aDev->write( "echo \$aBelongsExt->url() ;" ) ;
-			$aDev->write( "}?>" ) ;
+			$aDev->write( "if(\$aBelongsExt=\\jc\\system\\Application::singleton()->extensions()->extension('$sExtension')){\r\n" ) ;
+			$aDev->write( "	echo \$aBelongsExt->url() ;" ) ;
+			$aDev->write( "}" ) ;
 		}
 		else
 		{
