@@ -26,7 +26,7 @@ class ExtensionMetainfo extends Object
 
 	public function installFolderPath()
 	{
-		return $this->sName.'/' ;
+		return $this->sName ;
 	}
 	
 	public function installFolder(Platform $aPlatform=null)
