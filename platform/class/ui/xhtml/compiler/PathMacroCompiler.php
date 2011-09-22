@@ -24,7 +24,7 @@ class PathMacroCompiler extends JcPathMacroCompiler
 			$sExtension = substr($sContents,4) ;
 			if( $sExtension=='*' )
 			{
-				$sExtension = $aCompilerManager->compilingStatus()->sourceNamespace() ;
+				$sExtension = $aObject->parent()->ns() ;
 			}
 			$sExtension = addslashes($sExtension) ;
 		}
