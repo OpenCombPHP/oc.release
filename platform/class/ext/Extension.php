@@ -77,7 +77,7 @@ abstract class Extension extends Object
 		
 		if(!$aExtMgr)
 		{
-			$aExtMgr = Application::singleton() ;
+			$aExtMgr = Application::singleton()->extensions() ;
 		}
 		
 		return $aExtMgr->extension($sExtensionName) ;
