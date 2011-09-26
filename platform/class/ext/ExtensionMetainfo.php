@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext ;
 
+use oc\ext\coreuser\subscribe\Create;
+
 use jc\lang\Exception;
 use jc\system\Application;
 use jc\resrc\HtmlResourcePool;
@@ -113,7 +115,18 @@ class ExtensionMetainfo extends Object
 	{
 		return $this->sClassName ;
 	}
-	
+
+	public function publicDataFolder()
+	{
+		$aFilesystem = Application::singleton()->fileSystem() ;
+		
+		if( !$aFolder=$aFilesystem->find('/data/public/'.$this->sName) )
+		{
+			$aFolder = $aFilesystem->createFolder('/data/public/'.$this->sName) ;
+		}
+		
+		return $aFolder ;
+	}
 }
 
 ?>
