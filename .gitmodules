@@ -53,9 +53,6 @@
 
 
 
-[submodule "framework"]
-	path = framework
-	url = git@github.com:JeCat/framework.git
 [submodule "extensions/realknowledgeplatform"]
 	path = extensions/realknowledgeplatform
 	url = root@zq.local.com:/local/d/project/jecat.cn/opencomb.com/oc.release/extensions/realknowledgeplatform
