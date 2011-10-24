@@ -49,13 +49,13 @@ $aPlatform->loadExtension(new ExtensionMetainfo('developtoolbox','oc\ext\develop
 //$aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging')) ;
 
 // album
-//$aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('album','oc\ext\album\Album')) ;
 
 // comment
 //$aPlatform->loadExtension(new ExtensionMetainfo('comment','oc\ext\comment\Comment')) ;
 
 // Real Knowledge Platform
-//$aPlatform->loadExtension(new ExtensionMetainfo('realknowledgeplatform','oc\ext\realknowledgeplatform\RealKnowledgePlatform')) ;
+$aPlatform->loadExtension(new ExtensionMetainfo('realknowledgeplatform','oc\ext\realknowledgeplatform\RealKnowledgePlatform')) ;
 
 // tester
 //$aPlatform->loadExtension(new ExtensionMetainfo('pearcommon','oc\ext\pearcommon\PearCommon')) ;

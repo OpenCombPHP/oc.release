@@ -115,7 +115,10 @@ class ExtensionMetainfo extends Object
 	{
 		return $this->sClassName ;
 	}
-
+	/**
+	 * 
+	 * @return jc\fs\IFolder 
+	 */
 	public function publicDataFolder()
 	{
 		$aFilesystem = Application::singleton()->fileSystem() ;
