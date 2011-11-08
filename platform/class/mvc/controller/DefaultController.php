@@ -1,14 +1,12 @@
 <?php
-namespace oc\base ;
+namespace oc\mvc\controller ;
 
-use jc\mvc\controller\Controller;
+use oc\mvc\controller\Controller;
 
 class DefaultController extends Controller
 {
 	protected function init()
 	{
-		$this->add( new FrontFrame() ) ;
-		
 		$this->createView("defaultView", "oc:Welcome.template.html") ;
 	}
 }

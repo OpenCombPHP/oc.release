@@ -6,58 +6,17 @@ use oc\ext\ExtensionMetainfo;
 use oc\resrc\ResourceManager;
 use jc\resrc\HtmlResourcePool;
 use jc\ui\xhtml\UIFactory ;
-use jc\mvc\view\UIFactory as MvcUIFactory ;
-use oc\ui\SourceFileManager;
 use jc\system\Application;
 use oc\system\PlatformFactory ;
 
 class Platform extends Application
 {
-	public function __construct($sAppDir)
+	public function init()
 	{
-		parent::__construct($sAppDir) ;
-
-		if( !Application::singleton(false) )
-		{
-			Application::setSingleton($this) ;
-		}
-
-		$aAppFactory = new PlatformFactory() ;
-		$aAppFactory->build($this) ;
-
-		// app dir
-		$aFs = $this->fileSystem() ;
-		$this->setApplicationDir($sAppDir) ;
-
-		// 模板文件
-		UIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
-		) ;
-		MvcUIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
-		) ;
-		
-		$aSrcFileMgr = new SourceFileManager() ;
-		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
-		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
-		
-		$aSrcFileMgr->addFolder($aFs->findFolder('/platform/ui/template'),'oc') ;
-		$aSrcFileMgr->addFolder($aFs->findFolder('/framework/src/template'),'jc') ;
-		
-		// css/js 资源
-		$aJsMgr = new ResourceManager() ;
-		$aCssMgr = new ResourceManager() ;
-		HtmlResourcePool::setSingleton( new HtmlResourcePool($aJsMgr,$aCssMgr) ) ;
-		
-		$aJsMgr->addFolder($aFs->findFolder('/platform/ui/js'),'oc') ;
-		$aCssMgr->addFolder($aFs->findFolder('/platform/ui/css'),'oc') ;
-		$aCssMgr->addFolder($aFs->findFolder('/framework/src/style'),'jc') ;
-		
-		// 默认的控制器
-		$aAccessRouter = $this->accessRouter() ;
-		$aAccessRouter->setDefaultController('oc\\base\\DefaultController') ;
+		$this->extensions() ;
+		//foreach($this->extensions()->installExtension() as )
 	}
-
+	
 	public function loadExtension(ExtensionMetainfo $aExtMeta)
 	{
 		$sPlatformDir = $this->applicationDir() ;
@@ -114,7 +73,7 @@ class Platform extends Application
 	{
 		if( !$this->aExtensionManager )
 		{
-			$this->aExtensionManager = new ExtensionManager() ;
+			$this->aExtensionManager = new ExtensionManager($this->setting()) ;
 		}
 		return $this->aExtensionManager ;
 	}

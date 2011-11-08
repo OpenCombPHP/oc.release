@@ -8,14 +8,16 @@ use jc\ui\SourceFileManager as JcSourceFileManager ;
 
 class SourceFileManager extends JcSourceFileManager
 {
-	public function addFolder(IFolder $aFolder,$sExtensionName=null)
+	public function addFolder(IFolder $aFolder,IFolder $aCompiled=null,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
 			$sExtensionName = Extension::retraceExtensionName() ;
 		}
 		
-		parent::addFolder($aFolder,$sExtensionName) ;
+		$aFolder->setProperty('compiled',$aCompiled) ;
+		
+		parent::addFolder($aFolder,$aCompiled,$sExtensionName) ;
 	}
 	
 	public function removeFolder(IFolder $aFolder,$sExtensionName=null)

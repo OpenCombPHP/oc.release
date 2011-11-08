@@ -1,5 +1,5 @@
 <?php
-namespace oc\base ;
+namespace oc\mvc\controller ;
 
 use jc\mvc\controller\Controller;
 

@@ -2,13 +2,8 @@
 namespace oc\mvc\controller ;
 
 use jc\mvc\model\db\orm\Prototype;
-
 use jc\auth\IdManager;
-
-use oc\base\FrontFrame;
-
 use oc\ext\Extension;
-
 use jc\auth\AuthenticationException;
 use jc\mvc\controller\Controller as JcController ;
 

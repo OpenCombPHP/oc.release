@@ -1,8 +1,12 @@
 <?php
 namespace oc\ext ;
 
-use oc\ext\coreuser\subscribe\Create;
+use jc\util\VersionExcetion;
 
+use jc\util\String;
+
+use jc\util\Version;
+use oc\ext\coreuser\subscribe\Create;
 use jc\lang\Exception;
 use jc\system\Application;
 use jc\resrc\HtmlResourcePool;
@@ -13,17 +17,85 @@ use jc\lang\Object;
 
 class ExtensionMetainfo extends Object
 {
-	public function __construct($sName,$sClassName)
+	/**
+	 * @return ExtensionMetainfo
+	 */
+	static public function load($sExtPath)
+	{
+		if( !$aExtFolder = Application::singleton()->fileSystem()->findFolder($sExtPath) )
+		{
+			throw new ExtensionException("扩展路径无效：%s",$sExtPath) ;
+		}
+		
+		if( !$aMetainfoFile = $aExtFolder->findFile('metainfo.xml') )
+		{
+			throw new ExtensionException("扩展无效，缺少 metainfo 文件：%s",$sExtPath) ;
+		}
+		
+		$aMetainfoContents = new String() ;
+		$aMetainfoFile->openReader()->readInString($aMetainfoContents) ;
+		
+		if( !$aDomMetainfo = simplexml_load_string($aMetainfoContents) )
+		{
+			throw new ExtensionException("扩展 metainfo 文件内容无效：%s",$aMetainfoFile->url()) ;
+		}
+		
+		// 检查必须的参数
+		foreach( array('name','version') as $sNodeName )
+		{
+			if(empty($aDomMetainfo->$sNodeName))
+			{
+				throw new ExtensionException(
+						"扩展 metainfo 文件内容无效，缺少必须的  元素：%s"
+						, array($aMetainfoFile->url(),$sNodeName)
+				) ;
+			}
+		}
+
+		// --------------
+		// name,version,class
+		try{
+			new self(
+				$aDomMetainfo->name
+				, Version::FromString($aDomMetainfo->version)
+				, empty($aDomMetainfo->class)? null: str_replace(trim($aDomMetainfo->class),'.','\\')
+			) ;
+		}
+		catch (VersionExcetion $e)
+		{
+			throw new ExtensionException(
+					"扩展 %s 的 metainfo 文件中定义的 version 格式无效：%s"
+					, array($aDomMetainfo['Extension']['name'],$aDomMetainfo['Extension']['version'])
+					, $e
+			) ;
+		}
+		
+		// package
+		foreach($aDomMetainfo->xpath('/Extension/package') as $sPackage)
+		{
+			echo $sPackage['folder'] ;
+		}
+	}
+	
+	public function __construct($sName,Version $aVersion)
 	{
 		parent::__construct() ;
 		
 		$this->sName = $sName ;
-		$this->sClassName = $sClassName ;
+		$this->aVersion = $aVersion ;
 	}
 
 	public function name()
 	{
 		return $this->sName ;
+	}
+	
+	/**
+	 * @return jc\util\Version
+	 */
+	public function version()
+	{
+		return $this->aVersion ;
 	}
 
 	public function installFolderPath()
@@ -53,7 +125,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		$sPath = '/extensions/'.$this->sName.'/compiled' ;
+		$sPath = '/data/compiled/class/extensions/'.$this->sName.'/'.$this->version() ;
 		if( !$aFolder=$aPlatform->fileSystem()->find($sPath) and !$aFolder=$aPlatform->fileSystem()->createFolder($sPath) )
 		{
 			throw new Exception(
@@ -127,6 +199,10 @@ class ExtensionMetainfo extends Object
 		
 		return $aFolder ;
 	}
+	
+	private $sName ;
+	private $aVersion ;
+	private $sClassName ;
 }
 
 ?>

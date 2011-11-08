@@ -10,28 +10,18 @@ use oc\ext\ExtensionMetainfo;
 
 $t = microtime(1) ;
 
-ini_set('display_errors', 1);
-
-//error_reporting(E_ALL);
-
-require_once __DIR__."/framework/inc.entrance.php" ;
-require_once __DIR__."/framework/src/lib.php/system/HttpAppFactory.php" ;
-require_once __DIR__."/platform/class/Platform.php" ;
-require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
-
-$aPlatform = new Platform(__DIR__) ;
 
 // 简单配置启动 OC platform,以及扩展, 以后完善
-require 'config.php' ;
+$aPlatform = require 'jc.init.php' ;
 
 // 初始化 
-PrototypeAssociationMap::setSingleton(new PAMap()) ;
+//PrototypeAssociationMap::setSingleton(new PAMap()) ;
 
 // sns
 //$aPlatform->loadExtension(new ExtensionMetainfo('sns','oc\ext\sns\Sns')) ;
 
 // coreuser
-$aPlatform->loadExtension(new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser')) ;
+// $aPlatform->loadExtension(new ExtensionMetainfo('coreuser','oc\ext\coreuser\CoreUser')) ;
 
 // blog
 //$aPlatform->loadExtension(new ExtensionMetainfo('blog','oc\ext\blog\Blog')) ;
@@ -40,10 +30,10 @@ $aPlatform->loadExtension(new ExtensionMetainfo('coreuser','oc\ext\coreuser\Core
 //$aPlatform->loadExtension(new ExtensionMetainfo('groups','oc\ext\groups\Groups')) ;
 
 // microblog
-$aPlatform->loadExtension(new ExtensionMetainfo('microblog','oc\ext\microblog\MicroBlog')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('microblog','oc\ext\microblog\MicroBlog')) ;
 
 // developtoolbox
-$aPlatform->loadExtension(new ExtensionMetainfo('developtoolbox','oc\ext\developtoolbox\DevelopToolbox')) ;
+//$aPlatform->loadExtension(new ExtensionMetainfo('developtoolbox','oc\ext\developtoolbox\DevelopToolbox')) ;
 
 // instantmessaging
 //$aPlatform->loadExtension(new ExtensionMetainfo('instantmessaging','oc\ext\instantmessaging\InstantMessaging')) ;
@@ -80,6 +70,9 @@ $aPlatform->classLoader()->compiler()->compile($aFile->openReader(),$aPlatform->
 exit() ;
 */
 
+
+$aPlatform->init() ;
+
 // 根据路由设置创建控制器 并 执行
 $aController = $aPlatform->accessRouter()->createRequestController($aPlatform->request()) ;
 if($aController)
@@ -89,8 +82,9 @@ if($aController)
 else 
 {
 	header("HTTP/1.0 404 Not Found");
+	echo "<h1>Page Not Found</h1>" ;
 }
 
-echo microtime(1) - $t, "<br />\r\n" ;
-echo $aPlatform->classLoader()->totalLoadTime() ;
+//echo microtime(1) - $t, "<br />\r\n" ;
+//echo $aPlatform->classLoader()->totalLoadTime() ;
 ?>
