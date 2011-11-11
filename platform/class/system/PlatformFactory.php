@@ -1,6 +1,8 @@
 <?php
 namespace oc\system ;
 
+use jc\bean\BeanFactory;
+
 use oc\Platform;
 use jc\lang\Object;
 use jc\system\Application;
@@ -56,6 +58,9 @@ class PlatformFactory extends HttpAppFactory
 		$aPublicFolders = $aPlatform->publicFolders() ;
 		$aPublicFolders->addFolder($aFs->findFolder('/public/platform'),'oc') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
+		
+		// bean classes
+		BeanFactory::singleton()->registerBeanClass('oc\\mvc\\model\\db\\orm\\Prototype','prototype') ;
 		
 		// 默认的控制器
 		$aAccessRouter = $aPlatform->accessRouter() ;

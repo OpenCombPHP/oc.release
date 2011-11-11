@@ -23,7 +23,7 @@ $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;
 
 
 // 数据库
-DB::singleton()->setDriver( new PDODriver("mysql:host=192.168.1.1;dbname=oc",'root','1') ) ;
+DB::singleton()->setDriver( new PDODriver("mysql:host=192.168.1.1;dbname=oc2",'root','1') ) ;
 
 // 会话
 Session::setSingleton( new OriginalSession() ) ;
