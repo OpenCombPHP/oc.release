@@ -1,9 +1,7 @@
 .buildpath
 .project
 .settings/
-platform/compiled/
-platform/ui/template/compileds/
-/classpath.php
+classpath.php
 dummy.php
 phpinfo.php
 test.php
