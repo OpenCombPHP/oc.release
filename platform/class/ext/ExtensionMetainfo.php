@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext ;
 
+use jc\fs\FileSystem;
+
 use jc\util\VersionExcetion;
 
 use jc\util\String;
@@ -53,41 +55,106 @@ class ExtensionMetainfo extends Object
 		}
 
 		// --------------
-		// name,version,class
+		// name,version,class,sExtensionPath
+		$sExtName = strval($aDomMetainfo->name) ;
 		try{
-			new self(
-				$aDomMetainfo->name
+			$aExtMetainfo = new self(
+				$sExtName
 				, Version::FromString($aDomMetainfo->version)
-				, empty($aDomMetainfo->class)? null: str_replace(trim($aDomMetainfo->class),'.','\\')
+				, $sExtPath
+				, empty($aDomMetainfo->class)? null: str_replace('.','\\',trim($aDomMetainfo->class))
 			) ;
 		}
 		catch (VersionExcetion $e)
 		{
 			throw new ExtensionException(
 					"扩展 %s 的 metainfo 文件中定义的 version 格式无效：%s"
-					, array($aDomMetainfo['Extension']['name'],$aDomMetainfo['Extension']['version'])
+					, array($aDomMetainfo->name,$aDomMetainfo->version)
 					, $e
 			) ;
 		}
 		
 		// package
-		foreach($aDomMetainfo->xpath('/Extension/package') as $sPackage)
+		foreach($aDomMetainfo->xpath('/Extension/package') as $aPackage)
 		{
-			echo $sPackage['folder'] ;
+			if(empty($aPackage['folder']))
+			{
+				throw new ExtensionException("扩展%s的metainfo.xml文件中 package 节点缺少 folder 属性",$aDomMetainfo->name) ;
+			}
+			if(empty($aPackage['namespace']))
+			{
+				throw new ExtensionException("扩展%s的metainfo.xml文件中 package 节点缺少 namespace 属性",$aDomMetainfo->name) ;
+			}
+			
+			$sNamespace = strval($aPackage['namespace']) ;
+			$sNamespace = str_replace('.','\\',$sNamespace) ;
+			$sNamespace = str_replace('/','\\',$sNamespace) ;
+			
+			
+			$aExtMetainfo->arrPackages[] = array($sNamespace,self::formatPath($aPackage['folder'])) ;
 		}
+	
+		// template
+		foreach($aDomMetainfo->xpath('/Extension/template') as $nIdx=>$aNode)
+		{
+			if(empty($aNode['folder']))
+			{
+				throw new ExtensionException("扩展%s的metainfo.xml文件中的第%d个 template 节点缺少 folder 属性",array($nIdx,$aDomMetainfo->name)) ;
+			}
+			$sFolder = self::formatPath($aNode['folder']) ;
+			$sNamespace = empty($aNode['for'])? $sExtName: trim($aNode['for']) ;
+
+			$aExtMetainfo->arrTemplateFolders[] = array($sFolder,$sNamespace) ;
+		}
+		
+		// public folder
+		foreach($aDomMetainfo->xpath('/Extension/publicFolder') as $nIdx=>$aNode)
+		{
+			if(empty($aNode['folder']))
+			{
+				throw new ExtensionException("扩展%s的metainfo.xml文件中的第%d个 publicFolder 节点缺少 folder 属性",array($nIdx,$aDomMetainfo->name)) ;
+			}
+			$sFolder = self::formatPath($aNode['folder']) ;
+			$sNamespace = empty($aNode['for'])? $sExtName: trim($aNode['for']) ;
+
+			$aExtMetainfo->arrPublicFolders[] = array($sFolder,$sNamespace) ;
+		}
+		
+		// bean folder
+		foreach($aDomMetainfo->xpath('/Extension/beanFolder') as $nIdx=>$aNode)
+		{
+			if(empty($aNode['folder']))
+			{
+				throw new ExtensionException("扩展%s的metainfo.xml文件中的第%d个 beanFolder 节点缺少 folder 属性",array($nIdx,$aDomMetainfo->name)) ;
+			}
+			$sFolder = self::formatPath($aNode['folder']) ;
+			$sNamespace = empty($aNode['for'])? $sExtName: trim($aNode['for']) ;
+
+			$aExtMetainfo->arrBeanFolders[] = array($sFolder,$sNamespace) ;
+		}
+		
+		
+		return $aExtMetainfo ;
 	}
 	
-	public function __construct($sName,Version $aVersion)
+	public function __construct($sName,Version $aVersion,$sExtPath,$sClass=null)
 	{
 		parent::__construct() ;
 		
 		$this->sName = $sName ;
 		$this->aVersion = $aVersion ;
+		$this->sExtensionPath = $sExtPath ;
+		$this->sClassName = $sClass ;
 	}
 
 	public function name()
 	{
 		return $this->sName ;
+	}
+	
+	public function className()
+	{
+		return $this->sClassName?: 'oc\\ext\\Extension' ;
 	}
 	
 	/**
@@ -97,26 +164,47 @@ class ExtensionMetainfo extends Object
 	{
 		return $this->aVersion ;
 	}
-
-	public function installFolderPath()
+	
+	public function installPath()
 	{
-		return $this->sName ;
+		return $this->sExtensionPath ;
+	}	
+	
+	/**
+	 * @return \Iterator
+	 */
+	public function pakcageIterator()
+	{
+		return new \ArrayIterator($this->arrPackages) ;
 	}
 	
-	public function installFolder(Platform $aPlatform=null)
+	/**
+	 * @return \Iterator
+	 */
+	public function templateFolderIterator()
 	{
-		if(!$aPlatform)
-		{
-			$aPlatform = Application::singleton() ;
-		}
-		
-		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName) ;
+		return new \ArrayIterator($this->arrTemplateFolders) ;
 	}
 	
-	public function classPackageNamespace()
+	/**
+	 * @return \Iterator
+	 */
+	public function publicFolderIterator()
 	{
-		return 'oc\\ext\\'.$this->sName ;
+		return new \ArrayIterator($this->arrPublicFolders) ;
 	}
+	
+	/**
+	 * @return \Iterator
+	 */
+	public function beanFolderIterator()
+	{
+		return new \ArrayIterator($this->arrBeanFolders) ;
+	}
+	
+	
+	
+	
 	
 	public function classCompiledPackageFolder(Platform $aPlatform=null)
 	{
@@ -183,11 +271,10 @@ class ExtensionMetainfo extends Object
 		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/ui/css') ;
 	}
 	
-	public function className()
-	{
-		return $this->sClassName ;
-	}
-
+	/**
+	 * 
+	 * @return jc\fs\IFolder 
+	 */
 	public function publicDataFolder()
 	{
 		$aFilesystem = Application::singleton()->fileSystem() ;
@@ -200,9 +287,26 @@ class ExtensionMetainfo extends Object
 		return $aFolder ;
 	}
 	
+	static public function formatPath($sPath)
+	{
+		$sPath = FileSystem::formatPath(strval($sPath)) ;
+		if( substr($sPath,0,1)!=='/' )
+		{
+			$sPath = '/' . $sPath ;
+		}
+		
+		return $sPath ;
+	}
+	
 	private $sName ;
 	private $aVersion ;
 	private $sClassName ;
+	
+	private $arrPackages ;
+	private $arrTemplateFolders = array() ;
+	private $arrPublicFolders = array() ;
+	private $arrBeanFolders = array() ;
+	
 }
 
 ?>

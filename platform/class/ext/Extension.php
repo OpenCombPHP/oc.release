@@ -6,7 +6,7 @@ use jc\system\Application;
 use oc\Platform;
 use jc\lang\Object;
 
-abstract class Extension extends Object 
+class Extension extends Object 
 {
 	public function __construct(ExtensionMetainfo $aMeta)
 	{
@@ -39,7 +39,9 @@ abstract class Extension extends Object
 		return $this->aMetainfo ;
 	}
 	
-	abstract public function load() ;
+	public function load()
+	{}
+	
 	
 	static public function retraceExtensionName($arrStack=null)
 	{

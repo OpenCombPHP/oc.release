@@ -3,10 +3,11 @@
 .settings/
 platform/compiled/
 platform/ui/template/compileds/
-
 /classpath.php
 dummy.php
 phpinfo.php
 test.php
-
 data
+framework
+settings
+extensions

@@ -9,6 +9,26 @@ use jc\mvc\controller\Controller as JcController ;
 
 class Controller extends JcController
 {
+    /**
+     * properties:
+     * 	name				string						名称
+     * 	params				array,jc\util\IDataSrc 		参数
+     *  model.ooxx			config
+     *  view.ooxx			config
+     *  controller.ooxx		config
+     * 
+     * @see jc\bean\IBean::build()
+     */
+    public function build(array & $arrConfig,$sNamespace='*')
+    {
+    	if($sNamespace=='*')
+    	{
+    		$sNamespace = $this->application()->extensions()->extensionNameByClass( get_class($this) )?: '*' ;
+    	}
+    	
+    	return parent::build($arrConfig,$sNamespace) ;
+    }
+    
 	/**
 	 * @return oc\mvc\model\db\Model
 	 */

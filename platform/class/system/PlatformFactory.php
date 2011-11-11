@@ -52,23 +52,15 @@ class PlatformFactory extends HttpAppFactory
 		$aSrcFileMgr->addFolder($aFs->findFolder('/platform/template'),$aFs->findFolder('/data/compiled/template/platform'),'oc') ;
 		$aSrcFileMgr->addFolder($aFs->findFolder('/framework/src/template'),$aFs->findFolder('/data/compiled/template/framework'),'jc') ;
 		
-		// css/js 资源
-		$aJsMgr = new ResourceManager() ;
-		$aCssMgr = new ResourceManager() ;
-		HtmlResourcePool::setSingleton( new HtmlResourcePool($aJsMgr,$aCssMgr) ) ;
-		
-		$aJsMgr->addFolder($aFs->findFolder('/public/platform/js'),'oc') ;
-		$aCssMgr->addFolder($aFs->findFolder('/public/platform/css'),'oc') ;
-		$aCssMgr->addFolder($aFs->findFolder('/framework/src/style'),'jc') ;
+		// public folder
+		$aPublicFolders = $aPlatform->publicFolders() ;
+		$aPublicFolders->addFolder($aFs->findFolder('/public/platform'),'oc') ;
+		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 		
 		// 默认的控制器
 		$aAccessRouter = $aPlatform->accessRouter() ;
 		$aAccessRouter->setDefaultController('oc\\mvc\\controller\\DefaultController') ;
-		
-		// 加载
-		
-
-		
+				
 		return $aPlatform ;
 	}
 	
