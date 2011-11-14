@@ -1,6 +1,8 @@
 <?php
 namespace oc\system ;
 
+use jc\fs\FileSystem;
+
 use jc\bean\BeanFactory;
 
 use oc\Platform;
@@ -51,8 +53,16 @@ class PlatformFactory extends HttpAppFactory
 		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
-		$aSrcFileMgr->addFolder($aFs->findFolder('/platform/template'),$aFs->findFolder('/data/compiled/template/platform'),'oc') ;
-		$aSrcFileMgr->addFolder($aFs->findFolder('/framework/src/template'),$aFs->findFolder('/data/compiled/template/framework'),'jc') ;
+		$aSrcFileMgr->addFolder(
+				$aFs->findFolder('/framework/src/template')
+				, $aFs->findFolder('/data/compiled/template/framework',FileSystem::FIND_AUTO_CREATE)
+				, 'jc'
+		) ;
+		$aSrcFileMgr->addFolder(
+				$aFs->findFolder('/platform/template')
+				, $aFs->findFolder('/data/compiled/template/platform',FileSystem::FIND_AUTO_CREATE)
+				, 'oc'
+		) ;
 		
 		// public folder
 		$aPublicFolders = $aPlatform->publicFolders() ;
