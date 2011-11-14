@@ -20,10 +20,17 @@ require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
 
 
 $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;
-
+$aSetting = $aPlatform->setting() ;
 
 // 数据库
-DB::singleton()->setDriver( new PDODriver("mysql:host=192.168.1.1;dbname=oc2",'root','1') ) ;
+$sDBConfig = $aSetting->item('/platform/db','config','alpha') ;
+DB::singleton()->setDriver(
+		new PDODriver(
+			$aSetting->item('/platform/db/'.$sDBConfig,'dsn')
+			, $aSetting->item('/platform/db/'.$sDBConfig,'username')
+			, $aSetting->item('/platform/db/'.$sDBConfig,'password')
+		)
+) ;
 
 // 会话
 Session::setSingleton( new OriginalSession() ) ;

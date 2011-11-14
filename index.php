@@ -38,6 +38,7 @@ else
 	echo "<h1>Page Not Found</h1>" ;
 }
 
+echo $aPlatform->signature() ;
 //echo microtime(1) - $t, "<br />\r\n" ;
 //echo $aPlatform->classLoader()->totalLoadTime() ;
 ?>

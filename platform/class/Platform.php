@@ -46,11 +46,11 @@ class Platform extends Application
 	public function signature()
 	{
 		$aSetting = $this->setting() ;
-		if( !$sSignature = $aSetting->item('/','signature') )
+		if( !$sSignature = $aSetting->item('/platform','signature') )
 		{
 			$sSignature = md5( microtime() . rand(0,100000) ) ;
-			$aSetting->setItem('/','signature',$sSignature) ;
-			$aSetting->saveKey('/') ;
+			$aSetting->setItem('/platform','signature',$sSignature) ;
+			$aSetting->saveKey('/platform') ;
 		}
 		
 		return $sSignature ;
