@@ -43,6 +43,19 @@ class Platform extends Application
 		return $this->aExtensionManager ;
 	}
 	
+	public function signature()
+	{
+		$aSetting = $this->setting() ;
+		if( !$sSignature = $aSetting->item('/','signature') )
+		{
+			$sSignature = md5( microtime() . rand(0,100000) ) ;
+			$aSetting->setItem('/','signature',$sSignature) ;
+			$aSetting->saveKey('/') ;
+		}
+		
+		return $sSignature ;
+	}
+	
 	private $sExtensionsFolder = 'extensions' ;
 	private $aExtensionManager ;
 	private $aStaticPageManager ;
