@@ -26,7 +26,7 @@ class ExtensionMetainfo extends Object
 	{
 		if( !$aExtFolder = Application::singleton()->fileSystem()->findFolder($sExtPath) )
 		{
-			throw new ExtensionException("扩展路径无效：%s",$sExtPath) ;
+			throw new ExtensionException("无法读取扩展信息，扩展路径无效：%s",$sExtPath) ;
 		}
 		
 		if( !$aMetainfoFile = $aExtFolder->findFile('metainfo.xml') )
