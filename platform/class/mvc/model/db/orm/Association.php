@@ -1,9 +1,9 @@
 <?php
 namespace oc\mvc\model\db\orm;
 
-use jc\mvc\model\db\orm\Prototype;
+use jc\mvc\model\db\orm\Association as JcAssociation ;
 
-class Association
+class Association extends JcAssociation
 {
 	public function build(array & $arrConfig,$sNamespace='*')
 	{
@@ -18,4 +18,3 @@ class Association
 		parent::build($arrConfig,$sNamespace) ;
 	}
 }
-?>

@@ -71,6 +71,7 @@ class PlatformFactory extends HttpAppFactory
 		
 		// bean classes
 		BeanFactory::singleton()->registerBeanClass('oc\\mvc\\model\\db\\orm\\Prototype','prototype') ;
+		BeanFactory::singleton()->registerBeanClass('oc\\mvc\\model\\db\\orm\\Association','association') ;
 		
 		// 默认的控制器
 		$aAccessRouter = $aPlatform->accessRouter() ;
