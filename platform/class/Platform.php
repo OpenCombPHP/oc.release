@@ -1,6 +1,7 @@
 <?php
 namespace oc ;
 
+use jc\util\Version;
 use oc\ext\ExtensionManager;
 use oc\ext\ExtensionMetainfo;
 use oc\resrc\ResourceManager;
@@ -11,6 +12,24 @@ use oc\system\PlatformFactory ;
 
 class Platform extends Application
 {
+	const version = '0.2.0.0' ;
+	
+	public function version($bString=false)
+	{
+		if($bString)
+		{
+			return self::version ;
+		}
+		else
+		{
+			if( !$this->aVersion )
+			{
+				$this->aVersion = Version::FromString(self::version) ;
+			}
+			return $this->aVersion ;
+		}
+	}
+	
 	public function load()
 	{
 		// 加载扩展
@@ -59,6 +78,7 @@ class Platform extends Application
 	private $sExtensionsFolder = 'extensions' ;
 	private $aExtensionManager ;
 	private $aStaticPageManager ;
+	private $aVersion ;
 }
 
 ?>
