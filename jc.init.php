@@ -28,7 +28,7 @@ $aDBDriver = new PDODriver(
 		$aSetting->item('/platform/db/'.$sDBConfig,'dsn')
 		, $aSetting->item('/platform/db/'.$sDBConfig,'username')
 		, $aSetting->item('/platform/db/'.$sDBConfig,'password')
-		, $aSetting->item('/platform/db/'.$sDBConfig,'options',array(PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"))
+		, $aSetting->item('/platform/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"))
 ) ;
 DB::singleton()->setDriver($aDBDriver) ;
 
