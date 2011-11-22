@@ -1,7 +1,7 @@
 <?php
 namespace oc\mvc\controller ;
 
-use oc\mvc\controller\Controller;
+use jc\mvc\controller\Controller;
 
 class DefaultController extends Controller
 {
