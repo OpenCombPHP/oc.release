@@ -35,6 +35,5 @@ DB::singleton()->setDriver($aDBDriver) ;
 // 会话
 Session::setSingleton( new OriginalSession() ) ;
 
-
 return $aPlatform ;
 ?>

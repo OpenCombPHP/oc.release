@@ -38,7 +38,18 @@ class Platform extends Application
 		{
 			$aExtensions->loadExtension($sExtName) ;
 		}
-		//foreach($this->extensions()->installExtension() as )
+		
+		// 计算/设置 类签名
+		$aSetting = $this->setting() ;
+		$aCompiler = $this->classLoader()->compiler() ;
+		if( !$sClassSignture = $aSetting->item('/platform/class','signture') )
+		{
+			$aSetting->setItem('/platform/class','signture',$aCompiler->strategySignature(true)) ;
+		}
+		else
+		{
+			$aCompiler->setStrategySignature($sClassSignture) ;
+		}
 	}
 		
 	public function extensionsUrl()
