@@ -1,10 +1,10 @@
 <?php 
-namespace oc ;
+namespace org\opencomb ;
 
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\fs\imp\LocalFileSystem;
-use oc\Platform;
-use oc\system\PlatformFactory;
+use org\opencomb\Platform;
+use org\opencomb\system\PlatformFactory;
 use org\jecat\framework\session\OriginalSession;
 use org\jecat\framework\session\Session;
 use org\jecat\framework\db\DB;

@@ -1,7 +1,7 @@
 <?php
-namespace oc\system ;
+namespace org\opencomb\system ;
 
-use oc\ext\Extension;
+use org\opencomb\ext\Extension;
 use org\jecat\framework\system\Request ;
 use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
@@ -20,7 +20,7 @@ class AccessRouter extends JcAccessRouter
     		
 	    	if( !$sExtensionName )
 	    	{
-	    		$sExtensionName = 'oc' ;
+	    		$sExtensionName = 'org.opencomb' ;
 	    	}
     	}
     	
@@ -40,7 +40,7 @@ class AccessRouter extends JcAccessRouter
     		
 	    	if( !$sExtensionName )
 	    	{
-	    		$sExtensionName = 'oc' ;
+	    		$sExtensionName = 'org.opencomb' ;
 	    	}
     	}
     	

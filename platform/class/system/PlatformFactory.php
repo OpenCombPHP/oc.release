@@ -1,16 +1,16 @@
 <?php
-namespace oc\system ;
+namespace org\opencomb\system ;
 
 use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\bean\BeanFactory;
-use oc\Platform;
+use org\opencomb\Platform;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\system\Application;
-use oc\resrc\ResourceManager;
+use org\opencomb\resrc\ResourceManager;
 use org\jecat\framework\resrc\HtmlResourcePool;
 use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ;
-use oc\ui\SourceFileManager;
+use org\opencomb\ui\SourceFileManager;
 use org\jecat\framework\system\HttpAppFactory;
 use org\jecat\framework\system\CoreApplication;
 use org\jecat\framework\lang\oop\ClassLoader;
@@ -33,10 +33,10 @@ class PlatformFactory extends HttpAppFactory
 
 		// 模板引擎宏
 		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
+				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
 		MvcUIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
+				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
 		
 		// 模板文件
@@ -52,17 +52,17 @@ class PlatformFactory extends HttpAppFactory
 		$aSrcFileMgr->addFolder(
 				$aFileSystem->findFolder('/platform/template')
 				, $aFileSystem->findFolder('/data/compiled/template/platform',FileSystem::FIND_AUTO_CREATE)
-				, 'oc'
+				, 'org.opencomb'
 		) ;
 		
 		// public folder
 		$aPublicFolders = $aPlatform->publicFolders() ;
-		$aPublicFolders->addFolder($aFileSystem->findFolder('/public/platform'),'oc') ;
+		$aPublicFolders->addFolder($aFileSystem->findFolder('/public/platform'),'org.opencomb') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 		
 		// bean classes
-		BeanFactory::singleton()->registerBeanClass('oc\\mvc\\model\\db\\orm\\Prototype','prototype') ;
-		BeanFactory::singleton()->registerBeanClass('oc\\mvc\\model\\db\\orm\\Association','association') ;
+		BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Prototype','prototype') ;
+		BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Association','association') ;
 						
 		return $aPlatform ;
 	}
@@ -72,7 +72,7 @@ class PlatformFactory extends HttpAppFactory
 		$aClassLoader = parent::createClassLoader() ;
 		
 		// class
-		$aClassLoader->addPackage( 'oc', '/platform/class', '/data/compiled/class/platform' ) ;
+		$aClassLoader->addPackage( 'org\\opencomb', '/platform/class' ) ;
 		$aClassLoader->enableClassCompile(true) ;
 		
 		return $aClassLoader ;
@@ -81,7 +81,7 @@ class PlatformFactory extends HttpAppFactory
 	public function createAccessRouter()
 	{
 		$aAccessRouter = parent::createAccessRouter() ;
-		$aAccessRouter->setDefaultController('oc\\mvc\\controller\\DefaultController') ;
+		$aAccessRouter->setDefaultController('org\\opencomb\\mvc\\controller\\DefaultController') ;
 		return $aAccessRouter ;
 	}
 }

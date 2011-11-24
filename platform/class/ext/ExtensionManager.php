@@ -1,5 +1,5 @@
 <?php
-namespace oc\ext ;
+namespace org\opencomb\ext ;
 
 use org\jecat\framework\fs\FileSystem;
 
@@ -9,13 +9,13 @@ use org\jecat\framework\bean\BeanFactory;
 
 use org\jecat\framework\mvc\view\UIFactory;
 
-use oc\ext\ExtensionManager;
+use org\opencomb\ext\ExtensionManager;
 use org\jecat\framework\db\ExecuteException;
 use org\jecat\framework\util\VersionExcetion;
 use org\jecat\framework\util\Version;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\setting\Setting;
-use oc\Platform;
+use org\opencomb\Platform;
 use org\jecat\framework\lang\Object;
 
 class ExtensionManager extends Object
@@ -97,10 +97,8 @@ class ExtensionManager extends Object
 		{
 			list($sNamespace,$sPackagePath) = $arrPackage ;
 			
-			$sPackageCompiledPath = "/data/compiled/class/extensions/{$sName}/{$sVersion}/".str_replace('\\','.',$sNamespace) ;
 			$sPackagePath = $aExtMeta->installPath().$sPackagePath ;
-			
-			ClassLoader::singleton()->addPackage( $sNamespace, $sPackagePath, $sPackageCompiledPath ) ;
+			ClassLoader::singleton()->addPackage( $sNamespace, $sPackagePath ) ;
 			
 			$this->arrExtensionPackages[$sNamespace] = $sName ;
 		}

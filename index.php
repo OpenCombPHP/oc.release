@@ -1,5 +1,5 @@
 <?php
-namespace oc ;
+namespace org\opencomb ;
 
 // 初始化 jcat 框架
 use org\jecat\framework\system\Request;
@@ -7,9 +7,9 @@ use org\jecat\framework\system\AccessRouter;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\fs\imp\LocalFileSystem;
 use org\jecat\framework\fs\File;
-use oc\mvc\model\db\orm\PAMap;
+use org\opencomb\mvc\model\db\orm\PAMap;
 use org\jecat\framework\mvc\model\db\orm\PrototypeAssociationMap;
-use oc\ext\ExtensionMetainfo;
+use org\opencomb\ext\ExtensionMetainfo;
 
 $t = microtime(1) ;
 

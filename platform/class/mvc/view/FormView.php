@@ -1,5 +1,5 @@
 <?php
-namespace oc\mvc\view ;
+namespace org\opencomb\mvc\view ;
 
 use org\jecat\framework\mvc\view\FormView as JcFormView ;
 

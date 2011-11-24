@@ -1,5 +1,5 @@
 <?php
-namespace oc\ext ;
+namespace org\opencomb\ext ;
 
 use org\jecat\framework\fs\FileSystem;
 
@@ -8,11 +8,11 @@ use org\jecat\framework\util\VersionExcetion;
 use org\jecat\framework\util\String;
 
 use org\jecat\framework\util\Version;
-use oc\ext\coreuser\subscribe\Create;
+use org\opencomb\ext\coreuser\subscribe\Create;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\system\Application;
 use org\jecat\framework\resrc\HtmlResourcePool;
-use oc\Platform;
+use org\opencomb\Platform;
 use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\resrc\htmlresrc\HtmlResourcePoolFactory;
 use org\jecat\framework\lang\Object;
@@ -154,7 +154,7 @@ class ExtensionMetainfo extends Object
 	
 	public function className()
 	{
-		return $this->sClassName?: 'oc\\ext\\Extension' ;
+		return $this->sClassName?: 'org\\opencomb\\ext\\Extension' ;
 	}
 	
 	/**

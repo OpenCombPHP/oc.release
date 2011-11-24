@@ -1,9 +1,9 @@
 <?php
-namespace oc\ext ;
+namespace org\opencomb\ext ;
 
-use oc\ext\ExtensionMetainfo;
+use org\opencomb\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
-use oc\Platform;
+use org\opencomb\Platform;
 use org\jecat\framework\lang\Object;
 
 class Extension extends Object 
@@ -53,7 +53,7 @@ class Extension extends Object
 			if( !empty($arrCall['object']) )
 			{
 				$sClass = get_class($arrCall['object']) ;
-				if( substr($sClass,0,7)=='oc\\ext\\' and $nEndPos=strpos($sClass,'\\',7) )
+				if( substr($sClass,0,7)=='org\\opencomb\\ext\\' and $nEndPos=strpos($sClass,'\\',7) )
 				{
 					return substr($sClass,7,$nEndPos-7) ;
 				}

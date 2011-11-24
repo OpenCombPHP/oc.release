@@ -1,5 +1,5 @@
 <?php
-namespace oc\ext ;
+namespace org\opencomb\ext ;
 
 use org\jecat\framework\lang\Exception;
 

@@ -1,18 +1,18 @@
 <?php
-namespace oc ;
+namespace org\opencomb ;
 
 use org\jecat\framework\setting\Setting;
 
 use org\jecat\framework\lang\oop\ClassLoader;
 
 use org\jecat\framework\util\Version;
-use oc\ext\ExtensionManager;
-use oc\ext\ExtensionMetainfo;
-use oc\resrc\ResourceManager;
+use org\opencomb\ext\ExtensionManager;
+use org\opencomb\ext\ExtensionMetainfo;
+use org\opencomb\resrc\ResourceManager;
 use org\jecat\framework\resrc\HtmlResourcePool;
 use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\system\Application;
-use oc\system\PlatformFactory ;
+use org\opencomb\system\PlatformFactory ;
 
 class Platform extends Application
 {
@@ -57,7 +57,7 @@ class Platform extends Application
 	}
 	
 	/**
-	 * @return oc\ext\ExtensionManager 
+	 * @return org\opencomb\ext\ExtensionManager 
 	 */
 	public function extensions()
 	{
