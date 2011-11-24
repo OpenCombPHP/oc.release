@@ -45,7 +45,7 @@ class PlatformFactory extends HttpAppFactory
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
 		$aSrcFileMgr->addFolder(
-				$aFileSystem->findFolder('/framework/src/template')
+				$aFileSystem->findFolder('/framework/template')
 				, $aFileSystem->findFolder('/data/compiled/template/framework',FileSystem::FIND_AUTO_CREATE)
 				, 'jc'
 		) ;

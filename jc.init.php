@@ -16,8 +16,8 @@ error_reporting(E_ALL^E_STRICT) ;
 
 
 require_once __DIR__."/framework/inc.entrance.php" ;
-require_once __DIR__."/framework/src/lib.php/system/HttpAppFactory.php" ;
-require_once __DIR__."/framework/src/lib.php/fs/imp/LocalFileSystem.php" ;
+require_once __DIR__."/framework/class/system/HttpAppFactory.php" ;
+require_once __DIR__."/framework/class/fs/imp/LocalFileSystem.php" ;
 require_once __DIR__."/platform/class/Platform.php" ;
 require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
 
