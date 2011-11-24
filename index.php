@@ -42,6 +42,6 @@ else
 }
 
 //echo $aPlatform->signature() ;
-//echo microtime(1) - $t, "<br />\r\n" ;
-//echo ClassLoader::singleton()->totalLoadTime() ;
+echo $aPlatform->uptime(true),'<br />' ;
+echo ClassLoader::singleton()->totalLoadTime() ;
 ?>

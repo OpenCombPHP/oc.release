@@ -67,9 +67,26 @@ class PlatformFactory extends HttpAppFactory
 		return $aPlatform ;
 	}
 	
-	public function createClassLoader()
+	static private $arrSystemSleepObject = array(
+			''		
+	) ;
+	
+	private function restorePlatformFromCache()
 	{
-		$aClassLoader = parent::createClassLoader() ;
+		
+	}
+	
+	public function createClassLoader(Platform $aApp)
+	{
+		$aCache = $aApp->cache() ;
+		
+		if( $aClassLoader=$aCache->item('/system/objects/classLoader') )
+		{
+			return $aClassLoader ;
+		}
+		
+		// 重建缓存
+		$aClassLoader = parent::createClassLoader($aApp) ;
 		
 		// class
 		$aClassLoader->addPackage( 'org\\opencomb', '/platform/class' ) ;
@@ -78,9 +95,9 @@ class PlatformFactory extends HttpAppFactory
 		return $aClassLoader ;
 	}
 	
-	public function createAccessRouter()
+	public function createAccessRouter(Platform $aApp)
 	{
-		$aAccessRouter = parent::createAccessRouter() ;
+		$aAccessRouter = parent::createAccessRouter($aApp) ;
 		$aAccessRouter->setDefaultController('org\\opencomb\\mvc\\controller\\DefaultController') ;
 		return $aAccessRouter ;
 	}
