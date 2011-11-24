@@ -1,20 +1,20 @@
 <?php
 namespace oc\system ;
 
-use jc\fs\FileSystem;
-use jc\bean\BeanFactory;
+use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\bean\BeanFactory;
 use oc\Platform;
-use jc\lang\Object;
-use jc\system\Application;
+use org\jecat\framework\lang\Object;
+use org\jecat\framework\system\Application;
 use oc\resrc\ResourceManager;
-use jc\resrc\HtmlResourcePool;
-use jc\ui\xhtml\UIFactory ;
-use jc\mvc\view\UIFactory as MvcUIFactory ;
+use org\jecat\framework\resrc\HtmlResourcePool;
+use org\jecat\framework\ui\xhtml\UIFactory ;
+use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ;
 use oc\ui\SourceFileManager;
-use jc\system\HttpAppFactory;
-use jc\system\CoreApplication;
-use jc\lang\oop\ClassLoader;
-use jc\system\AccessRouter as JcAccessRouter;
+use org\jecat\framework\system\HttpAppFactory;
+use org\jecat\framework\system\CoreApplication;
+use org\jecat\framework\lang\oop\ClassLoader;
+use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
 class PlatformFactory extends HttpAppFactory
 {
@@ -32,10 +32,10 @@ class PlatformFactory extends HttpAppFactory
 		$aFileSystem = FileSystem::singleton() ;
 
 		// 模板引擎宏
-		UIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
+		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
 				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
-		MvcUIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
+		MvcUIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
 				'/', "oc\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
 		
@@ -47,7 +47,7 @@ class PlatformFactory extends HttpAppFactory
 		$aSrcFileMgr->addFolder(
 				$aFileSystem->findFolder('/framework/template')
 				, $aFileSystem->findFolder('/data/compiled/template/framework',FileSystem::FIND_AUTO_CREATE)
-				, 'jc'
+				, 'org.jecat.framework'
 		) ;
 		$aSrcFileMgr->addFolder(
 				$aFileSystem->findFolder('/platform/template')

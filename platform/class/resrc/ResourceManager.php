@@ -1,9 +1,9 @@
 <?php
 namespace oc\resrc ;
 
-use jc\fs\IFolder;
+use org\jecat\framework\fs\IFolder;
 use oc\ext\Extension ;
-use jc\resrc\ResourceManager as JsResourceManager ;
+use org\jecat\framework\resrc\ResourceManager as JsResourceManager ;
 
 class ResourceManager extends JsResourceManager
 {
@@ -38,7 +38,7 @@ class ResourceManager extends JsResourceManager
 	}
 	
 	/**
-	 * @return jc\fs\IFile
+	 * @return org\jecat\framework\fs\IFile
 	 */
 	public function find($sFilename,$sNamespace='*')
 	{

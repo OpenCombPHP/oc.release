@@ -2,9 +2,9 @@
 namespace oc\ext ;
 
 use oc\ext\ExtensionMetainfo;
-use jc\system\Application;
+use org\jecat\framework\system\Application;
 use oc\Platform;
-use jc\lang\Object;
+use org\jecat\framework\lang\Object;
 
 class Extension extends Object 
 {

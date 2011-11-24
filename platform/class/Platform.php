@@ -1,17 +1,17 @@
 <?php
 namespace oc ;
 
-use jc\setting\Setting;
+use org\jecat\framework\setting\Setting;
 
-use jc\lang\oop\ClassLoader;
+use org\jecat\framework\lang\oop\ClassLoader;
 
-use jc\util\Version;
+use org\jecat\framework\util\Version;
 use oc\ext\ExtensionManager;
 use oc\ext\ExtensionMetainfo;
 use oc\resrc\ResourceManager;
-use jc\resrc\HtmlResourcePool;
-use jc\ui\xhtml\UIFactory ;
-use jc\system\Application;
+use org\jecat\framework\resrc\HtmlResourcePool;
+use org\jecat\framework\ui\xhtml\UIFactory ;
+use org\jecat\framework\system\Application;
 use oc\system\PlatformFactory ;
 
 class Platform extends Application

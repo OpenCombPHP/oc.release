@@ -1,22 +1,22 @@
 <?php
 namespace oc\ext ;
 
-use jc\fs\FileSystem;
+use org\jecat\framework\fs\FileSystem;
 
-use jc\lang\oop\ClassLoader;
+use org\jecat\framework\lang\oop\ClassLoader;
 
-use jc\bean\BeanFactory;
+use org\jecat\framework\bean\BeanFactory;
 
-use jc\mvc\view\UIFactory;
+use org\jecat\framework\mvc\view\UIFactory;
 
 use oc\ext\ExtensionManager;
-use jc\db\ExecuteException;
-use jc\util\VersionExcetion;
-use jc\util\Version;
-use jc\lang\Exception;
-use jc\setting\Setting;
+use org\jecat\framework\db\ExecuteException;
+use org\jecat\framework\util\VersionExcetion;
+use org\jecat\framework\util\Version;
+use org\jecat\framework\lang\Exception;
+use org\jecat\framework\setting\Setting;
 use oc\Platform;
-use jc\lang\Object;
+use org\jecat\framework\lang\Object;
 
 class ExtensionManager extends Object
 {

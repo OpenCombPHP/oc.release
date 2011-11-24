@@ -1,7 +1,7 @@
 <?php
 namespace oc\ext ;
 
-use jc\lang\Exception;
+use org\jecat\framework\lang\Exception;
 
 class ExtensionException extends Exception
 {

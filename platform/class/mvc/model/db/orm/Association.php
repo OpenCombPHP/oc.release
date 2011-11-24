@@ -1,7 +1,7 @@
 <?php
 namespace oc\mvc\model\db\orm;
 
-use jc\mvc\model\db\orm\Association as JcAssociation ;
+use org\jecat\framework\mvc\model\db\orm\Association as JcAssociation ;
 
 class Association extends JcAssociation
 {

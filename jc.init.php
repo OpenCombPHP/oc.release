@@ -1,14 +1,14 @@
 <?php 
 namespace oc ;
 
-use jc\setting\Setting;
-use jc\fs\imp\LocalFileSystem;
+use org\jecat\framework\setting\Setting;
+use org\jecat\framework\fs\imp\LocalFileSystem;
 use oc\Platform;
 use oc\system\PlatformFactory;
-use jc\session\OriginalSession;
-use jc\session\Session;
-use jc\db\DB;
-use jc\db\driver\PDODriver;
+use org\jecat\framework\session\OriginalSession;
+use org\jecat\framework\session\Session;
+use org\jecat\framework\db\DB;
+use org\jecat\framework\db\driver\PDODriver;
 
 
 ini_set('display_errors',1) ;

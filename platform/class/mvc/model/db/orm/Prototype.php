@@ -1,7 +1,7 @@
 <?php
 namespace oc\mvc\model\db\orm ;
 
-use jc\mvc\model\db\orm\Prototype as JcPrototype ;
+use org\jecat\framework\mvc\model\db\orm\Prototype as JcPrototype ;
 
 class Prototype extends JcPrototype
 {

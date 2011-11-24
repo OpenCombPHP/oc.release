@@ -2,13 +2,13 @@
 namespace oc ;
 
 // 初始化 jcat 框架
-use jc\system\Request;
-use jc\system\AccessRouter;
-use jc\lang\oop\ClassLoader;
-use jc\fs\imp\LocalFileSystem;
-use jc\fs\File;
+use org\jecat\framework\system\Request;
+use org\jecat\framework\system\AccessRouter;
+use org\jecat\framework\lang\oop\ClassLoader;
+use org\jecat\framework\fs\imp\LocalFileSystem;
+use org\jecat\framework\fs\File;
 use oc\mvc\model\db\orm\PAMap;
-use jc\mvc\model\db\orm\PrototypeAssociationMap;
+use org\jecat\framework\mvc\model\db\orm\PrototypeAssociationMap;
 use oc\ext\ExtensionMetainfo;
 
 $t = microtime(1) ;

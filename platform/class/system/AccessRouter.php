@@ -2,8 +2,8 @@
 namespace oc\system ;
 
 use oc\ext\Extension;
-use jc\system\Request ;
-use jc\system\AccessRouter as JcAccessRouter;
+use org\jecat\framework\system\Request ;
+use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
 class AccessRouter extends JcAccessRouter
 {

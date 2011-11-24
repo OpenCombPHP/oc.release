@@ -1,21 +1,21 @@
 <?php
 namespace oc\ext ;
 
-use jc\fs\FileSystem;
+use org\jecat\framework\fs\FileSystem;
 
-use jc\util\VersionExcetion;
+use org\jecat\framework\util\VersionExcetion;
 
-use jc\util\String;
+use org\jecat\framework\util\String;
 
-use jc\util\Version;
+use org\jecat\framework\util\Version;
 use oc\ext\coreuser\subscribe\Create;
-use jc\lang\Exception;
-use jc\system\Application;
-use jc\resrc\HtmlResourcePool;
+use org\jecat\framework\lang\Exception;
+use org\jecat\framework\system\Application;
+use org\jecat\framework\resrc\HtmlResourcePool;
 use oc\Platform;
-use jc\ui\xhtml\UIFactory ;
-use jc\resrc\htmlresrc\HtmlResourcePoolFactory;
-use jc\lang\Object;
+use org\jecat\framework\ui\xhtml\UIFactory ;
+use org\jecat\framework\resrc\htmlresrc\HtmlResourcePoolFactory;
+use org\jecat\framework\lang\Object;
 
 class ExtensionMetainfo extends Object
 {
@@ -158,7 +158,7 @@ class ExtensionMetainfo extends Object
 	}
 	
 	/**
-	 * @return jc\util\Version
+	 * @return org\jecat\framework\util\Version
 	 */
 	public function version()
 	{
@@ -273,7 +273,7 @@ class ExtensionMetainfo extends Object
 	
 	/**
 	 * 
-	 * @return jc\fs\IFolder 
+	 * @return org\jecat\framework\fs\IFolder 
 	 */
 	public function publicDataFolder()
 	{

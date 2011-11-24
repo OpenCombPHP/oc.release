@@ -1,10 +1,10 @@
 <?php
 namespace oc\ui\xhtml\compiler ;
 
-use jc\ui\TargetCodeOutputStream;
-use jc\ui\IObject;
-use jc\ui\CompilerManager;
-use jc\ui\xhtml\compiler\macro\PathMacroCompiler as JcPathMacroCompiler;
+use org\jecat\framework\ui\TargetCodeOutputStream;
+use org\jecat\framework\ui\IObject;
+use org\jecat\framework\ui\CompilerManager;
+use org\jecat\framework\ui\xhtml\compiler\macro\PathMacroCompiler as JcPathMacroCompiler;
 
 class PathMacroCompiler extends JcPathMacroCompiler
 {
@@ -31,7 +31,7 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		
 		if($sExtension)
 		{
-			$aDev->write( "if(\$aBelongsExt=\\jc\\system\\Application::singleton()->extensions()->extension('$sExtension')){\r\n" ) ;
+			$aDev->write( "if(\$aBelongsExt=\\org\\jecat\\framework\\system\\Application::singleton()->extensions()->extension('$sExtension')){\r\n" ) ;
 			$aDev->write( "	\$aDevice->write(\$aBelongsExt->url()) ;" ) ;
 			$aDev->write( "}" ) ;
 		}

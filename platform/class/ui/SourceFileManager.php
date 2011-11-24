@@ -1,10 +1,10 @@
 <?php
 namespace oc\ui ;
 
-use jc\fs\IFolder;
-use jc\fs\Dir;
+use org\jecat\framework\fs\IFolder;
+use org\jecat\framework\fs\Dir;
 use oc\ext\Extension ;
-use jc\ui\SourceFileManager as JcSourceFileManager ;
+use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager ;
 
 class SourceFileManager extends JcSourceFileManager
 {
