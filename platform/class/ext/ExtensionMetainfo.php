@@ -24,7 +24,7 @@ class ExtensionMetainfo extends Object
 	 */
 	static public function load($sExtPath)
 	{
-		if( !$aExtFolder = Application::singleton()->fileSystem()->findFolder($sExtPath) )
+		if( !$aExtFolder = FileSystem::singleton()->findFolder($sExtPath) )
 		{
 			throw new ExtensionException("无法读取扩展信息，扩展路径无效：%s",$sExtPath) ;
 		}
@@ -214,7 +214,7 @@ class ExtensionMetainfo extends Object
 		}
 		
 		$sPath = '/data/compiled/class/extensions/'.$this->sName.'/'.$this->version() ;
-		if( !$aFolder=$aPlatform->fileSystem()->find($sPath) and !$aFolder=$aPlatform->fileSystem()->createFolder($sPath) )
+		if( !$aFolder=FileSystem::singleton()->find($sPath) and !$aFolder=FileSystem::singleton()->createFolder($sPath) )
 		{
 			throw new Exception(
 				"无法为扩展(%s)创建class编译目录：%s，请检查文件系统上的权限。"
@@ -231,7 +231,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		$aClassFolder = $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/class') ;
+		$aClassFolder = FileSystem::singleton()->find('/extensions/'.$this->sName.'/class') ;
 		
 		if(!$aClassFolder)
 		{
@@ -248,7 +248,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/ui/template') ;
+		return FileSystem::singleton()->find('/extensions/'.$this->sName.'/ui/template') ;
 	}
 	
 	public function resourceUiJsFolder(Platform $aPlatform=null)
@@ -258,7 +258,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/ui/js') ;
+		return FileSystem::singleton()->find('/extensions/'.$this->sName.'/ui/js') ;
 	}
 	
 	public function resourceUiCssFolder(Platform $aPlatform=null)
@@ -268,7 +268,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return $aPlatform->fileSystem()->find('/extensions/'.$this->sName.'/ui/css') ;
+		return FileSystem::singleton()->find('/extensions/'.$this->sName.'/ui/css') ;
 	}
 	
 	/**
@@ -277,7 +277,7 @@ class ExtensionMetainfo extends Object
 	 */
 	public function publicDataFolder()
 	{
-		$aFilesystem = Application::singleton()->fileSystem() ;
+		$aFilesystem = FileSystem::singleton() ;
 		
 		if( !$aFolder=$aFilesystem->find('/data/public/'.$this->sName) )
 		{

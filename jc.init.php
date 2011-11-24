@@ -1,6 +1,8 @@
 <?php 
 namespace oc ;
 
+use jc\setting\Setting;
+use jc\fs\imp\LocalFileSystem;
 use oc\Platform;
 use oc\system\PlatformFactory;
 use jc\session\OriginalSession;
@@ -15,12 +17,12 @@ error_reporting(E_ALL^E_STRICT) ;
 
 require_once __DIR__."/framework/inc.entrance.php" ;
 require_once __DIR__."/framework/src/lib.php/system/HttpAppFactory.php" ;
+require_once __DIR__."/framework/src/lib.php/fs/imp/LocalFileSystem.php" ;
 require_once __DIR__."/platform/class/Platform.php" ;
 require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
 
-
 $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;
-$aSetting = $aPlatform->setting() ;
+$aSetting = Setting::singleton() ;
 
 // 数据库
 $sDBConfig = $aSetting->item('/platform/db','config','alpha') ;

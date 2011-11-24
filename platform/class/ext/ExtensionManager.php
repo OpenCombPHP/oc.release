@@ -1,6 +1,10 @@
 <?php
 namespace oc\ext ;
 
+use jc\fs\FileSystem;
+
+use jc\lang\oop\ClassLoader;
+
 use jc\bean\BeanFactory;
 
 use jc\mvc\view\UIFactory;
@@ -86,8 +90,7 @@ class ExtensionManager extends Object
 		}
 		$sVersion = $aExtMeta->version()->toString(false) ;
 		$aPlatform = $this->application() ;
-		$aPlatformFs = $aPlatform->fileSystem() ;
-		$sPlatformDir = $aPlatform->applicationDir() ;
+		$aPlatformFs = FileSystem::singleton() ;
 
 		// 加载类包
 		foreach($aExtMeta->pakcageIterator() as $arrPackage)
@@ -97,7 +100,7 @@ class ExtensionManager extends Object
 			$sPackageCompiledPath = "/data/compiled/class/extensions/{$sName}/{$sVersion}/".str_replace('\\','.',$sNamespace) ;
 			$sPackagePath = $aExtMeta->installPath().$sPackagePath ;
 			
-			$aPlatform->classLoader()->addPackage( $sNamespace, $sPackagePath, $sPackageCompiledPath ) ;
+			ClassLoader::singleton()->addPackage( $sNamespace, $sPackagePath, $sPackageCompiledPath ) ;
 			
 			$this->arrExtensionPackages[$sNamespace] = $sName ;
 		}

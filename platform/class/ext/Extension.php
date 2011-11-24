@@ -13,10 +13,6 @@ class Extension extends Object
 		$this->aMetainfo = $aMeta ;
 	}
 
-	public function url()
-	{
-		return $this->application()->extensionsUrl() . $this->metainfo()->installFolderPath() ;
-	}
 	public function publicFilesUrl()
 	{}
 	

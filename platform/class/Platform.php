@@ -1,6 +1,10 @@
 <?php
 namespace oc ;
 
+use jc\setting\Setting;
+
+use jc\lang\oop\ClassLoader;
+
 use jc\util\Version;
 use oc\ext\ExtensionManager;
 use oc\ext\ExtensionMetainfo;
@@ -40,8 +44,8 @@ class Platform extends Application
 		}
 		
 		// 计算/设置 类签名
-		$aSetting = $this->setting() ;
-		$aCompiler = $this->classLoader()->compiler() ;
+		$aSetting = Setting::singleton() ;
+		$aCompiler = ClassLoader::singleton()->compiler() ;
 		if( !$sClassSignture = $aSetting->item('/platform/class','signture') )
 		{
 			$aSetting->setItem('/platform/class','signture',$aCompiler->strategySignature(true)) ;
@@ -51,15 +55,6 @@ class Platform extends Application
 			$aCompiler->setStrategySignature($sClassSignture) ;
 		}
 	}
-		
-	public function extensionsUrl()
-	{
-		return $this->sExtensionsFolder.'/' ;
-	}
-	public function extensionsDir()
-	{
-		return $this->applicationDir() . $this->sExtensionsFolder . '/' ;
-	}
 	
 	/**
 	 * @return oc\ext\ExtensionManager 
@@ -68,14 +63,14 @@ class Platform extends Application
 	{
 		if( !$this->aExtensionManager )
 		{
-			$this->aExtensionManager = new ExtensionManager($this->setting()) ;
+			$this->aExtensionManager = new ExtensionManager(Setting::singleton()) ;
 		}
 		return $this->aExtensionManager ;
 	}
 	
 	public function signature()
 	{
-		$aSetting = $this->setting() ;
+		$aSetting = Setting::singleton() ;
 		if( !$sSignature = $aSetting->item('/platform','signature') )
 		{
 			$sSignature = md5( microtime() . rand(0,100000) ) ;

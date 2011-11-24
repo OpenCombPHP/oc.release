@@ -2,9 +2,7 @@
 namespace oc\system ;
 
 use jc\fs\FileSystem;
-
 use jc\bean\BeanFactory;
-
 use oc\Platform;
 use jc\lang\Object;
 use jc\system\Application;
@@ -16,6 +14,7 @@ use oc\ui\SourceFileManager;
 use jc\system\HttpAppFactory;
 use jc\system\CoreApplication;
 use jc\lang\oop\ClassLoader;
+use jc\system\AccessRouter as JcAccessRouter;
 
 class PlatformFactory extends HttpAppFactory
 {
@@ -24,21 +23,13 @@ class PlatformFactory extends HttpAppFactory
 		return Object::singleton($bCreateNew,null,__CLASS__) ;
 	}
 	
-	public function create($sAppDirPath)
+	public function create($sApplicationRootPath)
 	{
-		$aPlatform = new Platform($sAppDirPath) ;
+		$aPlatform = new Platform() ;
+
+		$this->buildApplication($aPlatform,$sApplicationRootPath) ;
 		
-		$this->build($aPlatform) ;
-	
-		// 设置单件
-		if( !Application::singleton(false) )
-		{
-			Application::setSingleton($aPlatform) ;
-		}
-		
-		// app dir
-		$aFs = $aPlatform->fileSystem() ;
-		$aPlatform->setApplicationDir($sAppDirPath) ;
+		$aFileSystem = FileSystem::singleton() ;
 
 		// 模板引擎宏
 		UIFactory::singleton()->compilerManager()->compilerByName('jc\\ui\xhtml\\Macro')->setSubCompiler(
@@ -54,50 +45,44 @@ class PlatformFactory extends HttpAppFactory
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
 		$aSrcFileMgr->addFolder(
-				$aFs->findFolder('/framework/src/template')
-				, $aFs->findFolder('/data/compiled/template/framework',FileSystem::FIND_AUTO_CREATE)
+				$aFileSystem->findFolder('/framework/src/template')
+				, $aFileSystem->findFolder('/data/compiled/template/framework',FileSystem::FIND_AUTO_CREATE)
 				, 'jc'
 		) ;
 		$aSrcFileMgr->addFolder(
-				$aFs->findFolder('/platform/template')
-				, $aFs->findFolder('/data/compiled/template/platform',FileSystem::FIND_AUTO_CREATE)
+				$aFileSystem->findFolder('/platform/template')
+				, $aFileSystem->findFolder('/data/compiled/template/platform',FileSystem::FIND_AUTO_CREATE)
 				, 'oc'
 		) ;
 		
 		// public folder
 		$aPublicFolders = $aPlatform->publicFolders() ;
-		$aPublicFolders->addFolder($aFs->findFolder('/public/platform'),'oc') ;
+		$aPublicFolders->addFolder($aFileSystem->findFolder('/public/platform'),'oc') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 		
 		// bean classes
 		BeanFactory::singleton()->registerBeanClass('oc\\mvc\\model\\db\\orm\\Prototype','prototype') ;
 		BeanFactory::singleton()->registerBeanClass('oc\\mvc\\model\\db\\orm\\Association','association') ;
-		
-		// 默认的控制器
-		$aAccessRouter = $aPlatform->accessRouter() ;
-		$aAccessRouter->setDefaultController('oc\\mvc\\controller\\DefaultController') ;
-				
+						
 		return $aPlatform ;
 	}
 	
-	public function createClassLoader(CoreApplication $aApp)
+	public function createClassLoader()
 	{
-		$aClassLoader = new ClassLoader(
-			$aApp->application()->fileSystem()->findFile("/classpath.php") 
-		) ;
+		$aClassLoader = parent::createClassLoader() ;
 		
 		// class
-		$aClassLoader->addPackage( 'jc', '/framework/src/lib.php', '/data/compiled/class/framework' ) ;
 		$aClassLoader->addPackage( 'oc', '/platform/class', '/data/compiled/class/platform' ) ;
-
 		$aClassLoader->enableClassCompile(true) ;
 		
 		return $aClassLoader ;
 	}
 	
-	public function createAccessRouter(CoreApplication $aApp)
+	public function createAccessRouter()
 	{
-		return new AccessRouter() ;
+		$aAccessRouter = parent::createAccessRouter() ;
+		$aAccessRouter->setDefaultController('oc\\mvc\\controller\\DefaultController') ;
+		return $aAccessRouter ;
 	}
 }
 

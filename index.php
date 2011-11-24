@@ -2,6 +2,9 @@
 namespace oc ;
 
 // 初始化 jcat 框架
+use jc\system\Request;
+use jc\system\AccessRouter;
+use jc\lang\oop\ClassLoader;
 use jc\fs\imp\LocalFileSystem;
 use jc\fs\File;
 use oc\mvc\model\db\orm\PAMap;
@@ -15,11 +18,11 @@ $t = microtime(1) ;
 $aPlatform = require 'jc.init.php' ;
 
 // 启用class编译
-$aPlatform->classLoader()->enableClassCompile() ;
+ClassLoader::singleton()->enableClassCompile() ;
 
 /*
 $aFile = new File(__DIR__.'/extensions/blog/class/Blog.php') ;
-$aPlatform->classLoader()->compiler()->compile($aFile->openReader(),$aPlatform->response()->printer()) ;
+ClassLoader::singleton()->compiler()->compile($aFile->openReader(),$aPlatform->response()->printer()) ;
 exit() ;
 */
 
@@ -27,7 +30,7 @@ exit() ;
 $aPlatform->load() ;
 
 // 根据路由设置创建控制器 并 执行
-$aController = $aPlatform->accessRouter()->createRequestController($aPlatform->request()) ;
+$aController = AccessRouter::singleton()->createRequestController(Request::singleton()) ;
 if($aController)
 {
 	$aController->mainRun() ;
@@ -40,5 +43,5 @@ else
 
 //echo $aPlatform->signature() ;
 //echo microtime(1) - $t, "<br />\r\n" ;
-//echo $aPlatform->classLoader()->totalLoadTime() ;
+//echo ClassLoader::singleton()->totalLoadTime() ;
 ?>
