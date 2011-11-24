@@ -85,6 +85,9 @@ class Platform extends Application
 		return $sSignature ;
 	}
 	
+	/**
+	 * @return org\jecat\cache\ICache 
+	 */
 	public function cache()
 	{
 		if(!$this->aCache)
