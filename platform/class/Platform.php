@@ -40,13 +40,6 @@ class Platform extends Application
 	
 	public function load()
 	{
-		// 加载扩展
-		$aExtensions = $this->extensions() ;
-		foreach($aExtensions->enableExtensionNameIterator() as $sExtName)
-		{
-			$aExtensions->loadExtension($sExtName) ;
-		}
-		
 		// 计算/设置 类签名
 		$aSetting = Setting::singleton() ;
 		$aCompiler = ClassLoader::singleton()->compiler() ;

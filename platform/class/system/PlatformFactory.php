@@ -59,34 +59,28 @@ class PlatformFactory extends HttpAppFactory
 				
 			// 模板文件
 			JcSourceFileManager::setSingleton($this->createUISourceFileManager($aFileSystem)) ;
+			
+			// 初始化系统无须store/restore的部分
+			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem) ;
+			
+			// 加载所有扩展
+			$aExtMgr = $aPlatform->extensions() ;
+			foreach($aExtMgr->enableExtensionNameIterator() as $sExtName)
+			{
+				$aExtMgr->loadExtension($sExtName) ;
+			}
+			
+			// store !
+			$this->storePlatformToCache($aPlatform->cache()) ;
 		}			
 
+		else 
+		{
+			// 初始化系统无须store/restore的部分
+			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem) ;
+		} 
 		
-		// 其他初始化 
-		// ----------------------
 		
-		// 模板引擎宏
-		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
-		) ;
-		MvcUIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
-		) ;
-		
-		// public folder
-		$aPublicFolders = $aPlatform->publicFolders() ;
-		$aPublicFolders->addFolder($aFileSystem->findFolder('/public/platform'),'org.opencomb') ;
-		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
-		
-		// bean classes
-		BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Prototype','prototype') ;
-		BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Association','association') ;
-		
-		// Request
-		Request::setSingleton( $this->createRequest($aPlatform) ) ;
-		
-		// Response
-		Response::setSingleton( $this->createResponse($aPlatform) ) ;
 		
 		if($aOriApp)
 		{
@@ -100,14 +94,14 @@ class PlatformFactory extends HttpAppFactory
 			'org\\jecat\\framework\\lang\\oop\\ClassLoader' ,
 			'org\\jecat\\framework\\fs\\FileSystem' ,
 			'org\\jecat\\framework\\system\\AccessRouter' ,
-			'org\\jecat\\framework\\locale\\LocalManager' ,
+			'org\\jecat\\framework\\locale\\LocaleManager' ,
 			'org\\jecat\\framework\\setting\\Setting' ,
 			'org\\jecat\\framework\\ui\\xhtml\\UIFactory' ,
 			'org\\jecat\\framework\\mvc\\view\\UIFactory' ,
 			'org\\jecat\\framework\\ui\\xhtml\\UIFactory' ,
-			'org\\jecat\\ui\\SourceFileManager' ,
+			'org\\jecat\\framework\\ui\\SourceFileManager' ,
 	) ;
-	static public function storePlatformToCache(Cache $aCache)
+	static public function storePlatformToCache(ICache $aCache)
 	{
 		foreach(self::$arrSystemSleepObject as $sClass)
 		{
@@ -135,6 +129,32 @@ class PlatformFactory extends HttpAppFactory
 	static private function platformObjectCacheStorePath($sClass)
 	{
 		return "/system/objects/".str_replace('\\','.',$sClass) ;
+	}
+	
+	private function initPlatformUnrestorableSystem(Platform $aPlatform,FileSystem $aFileSystem)
+	{
+		// 模板引擎宏
+		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
+				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
+		) ;
+		MvcUIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
+				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
+		) ;
+		
+		// public folder
+		$aPublicFolders = $aPlatform->publicFolders() ;
+		$aPublicFolders->addFolder($aFileSystem->findFolder('/public/platform'),'org.opencomb') ;
+		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
+		
+		// bean classes
+		BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Prototype','prototype') ;
+		BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Association','association') ;
+		
+		// Request
+		Request::setSingleton( $this->createRequest($aPlatform) ) ;
+		
+		// Response
+		Response::setSingleton( $this->createResponse($aPlatform) ) ;
 	}
 	
 	public function createClassLoader(Platform $aApp)
