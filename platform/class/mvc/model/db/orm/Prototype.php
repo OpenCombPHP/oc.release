@@ -5,7 +5,7 @@ use org\jecat\framework\mvc\model\db\orm\Prototype as JcPrototype ;
 
 class Prototype extends JcPrototype
 {
-	public function build(array & $arrConfig,$sNamespace='*')
+	public function buildBean(array & $arrConfig,$sNamespace='*',\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
 	{
 		if(empty($arrConfig['disableTableTrans']))
 		{
@@ -20,7 +20,7 @@ class Prototype extends JcPrototype
 			}
 		}
 		
-		parent::build($arrConfig,$sNamespace) ;
+		parent::buildBean($arrConfig,$sNamespace) ;
 	}
 	
 	static public function transTableName($sTableName,$sNamespace)

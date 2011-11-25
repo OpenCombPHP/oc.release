@@ -29,7 +29,7 @@ class PlatformFactory extends HttpAppFactory
 		return Object::singleton($bCreateNew,null,__CLASS__) ;
 	}
 	
-	public function create($sApplicationRootPath)
+	public function create($sApplicationRootPath,$bRestore=true)
 	{
 		$aPlatform = new Platform() ;
 		
@@ -41,7 +41,7 @@ class PlatformFactory extends HttpAppFactory
 		
 		
 		// 从缓存中恢复 platform ---------------
-		if( !self::restorePlatformFromCache($aPlatform->cache()) )
+		if( !$bRestore or !self::restorePlatformFromCache($aPlatform->cache()) )
 		{
 			// 重建 platform
 			// --------------------------
@@ -92,7 +92,7 @@ class PlatformFactory extends HttpAppFactory
 		} 
 		
 		// 配置 
-		ClassLoader::singleton() -> setEnableClassCache( Setting::singleton()->item('/platform/class','enableClassPathCache',true) ) ;
+		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/platform/class','enableClassPathCache',true) ) ;
 		
 		
 		if($aOriApp)
@@ -114,6 +114,7 @@ class PlatformFactory extends HttpAppFactory
 			'org\\jecat\\framework\\ui\\xhtml\\UIFactory' ,
 			'org\\jecat\\framework\\ui\\SourceFileManager' ,
 			'org\\jecat\\framework\\bean\\BeanFactory' ,
+			'org\\jecat\\framework\\lang\\aop\\AOP' ,
 			'org\\opencomb\\ext\\ExtensionManager' ,
 	) ;
 	static public function storePlatformToCache(ICache $aCache)

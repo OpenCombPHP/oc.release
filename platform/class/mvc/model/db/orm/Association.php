@@ -5,7 +5,7 @@ use org\jecat\framework\mvc\model\db\orm\Association as JcAssociation ;
 
 class Association extends JcAssociation
 {
-	public function build(array & $arrConfig,$sNamespace='*')
+	public function buildBean(array & $arrConfig,$sNamespace='*',\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
 	{
 		if(empty($arrConfig['disableBridgeTableTrans']))
 		{
@@ -15,6 +15,6 @@ class Association extends JcAssociation
 			}
 		}
 		
-		parent::build($arrConfig,$sNamespace) ;
+		parent::buildBean($arrConfig,$sNamespace) ;
 	}
 }
