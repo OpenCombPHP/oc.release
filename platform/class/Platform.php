@@ -58,11 +58,7 @@ class Platform extends Application
 	 */
 	public function extensions()
 	{
-		if( !$this->aExtensionManager )
-		{
-			$this->aExtensionManager = new ExtensionManager(Setting::singleton()) ;
-		}
-		return $this->aExtensionManager ;
+		return ExtensionManager::singleton() ;
 	}
 	
 	public function signature()

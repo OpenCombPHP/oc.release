@@ -20,8 +20,13 @@ use org\jecat\framework\lang\Object;
 
 class ExtensionManager extends Object
 {
-	public function __construct(Setting $aSetting)
+	public function __construct(Setting $aSetting=null)
 	{
+		if(!$aSetting)
+		{
+			$aSetting = Setting::singleton() ;
+		}
+		
 		$this->arrInstalledExtensions = array() ;
 		
 		foreach( $aSetting->item("/extensions",'installeds')?: array()  as $sExtPath )
@@ -119,7 +124,7 @@ class ExtensionManager extends Object
 			UIFactory::singleton()->sourceFileManager()->addFolder($aFolder,$aCompiledFolder,$sNamespace) ;	
 		}
 		
-		// 注册 js/css 目录
+		// 注册 public 目录
 		foreach($aExtMeta->publicFolderIterator() as $arrPublicFolder)
 		{
 			list($sFolder,$sNamespace) = $arrPublicFolder ;
