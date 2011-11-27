@@ -78,6 +78,9 @@ class PlatformFactory extends HttpAppFactory
 				$aExtMgr->loadExtension($sExtName) ;
 			}
 			
+			// 计算 UI template 的编译策略签名
+			UIFactory::singleton()->calculateCompileStrategySignture() ;
+			
 			// store all !
 			$this->storePlatformToCache($aPlatform->cache()) ;
 		}			
