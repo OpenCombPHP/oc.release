@@ -38,6 +38,8 @@ class Extension extends Object
 	public function load()
 	{}
 	
+	public function active(Platform $aPlatform)
+	{}
 	
 	static public function retraceExtensionName($arrStack=null)
 	{

@@ -94,6 +94,11 @@ class PlatformFactory extends HttpAppFactory
 		// 配置 
 		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/platform/class','enableClassPathCache',true) ) ;
 		
+		// 激活所有扩展
+		foreach($aPlatform->extensions()->iterator() as $aExtension)
+		{
+			$aExtension->load() ;
+		}
 		
 		if($aOriApp)
 		{
