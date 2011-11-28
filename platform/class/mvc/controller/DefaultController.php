@@ -5,9 +5,13 @@ use org\jecat\framework\mvc\controller\Controller;
 
 class DefaultController extends Controller
 {
-	protected function init()
+	public function createBeanConfig()
 	{
-		$this->createView("defaultView", "oc:Welcome.template.html") ;
+		return array(
+			'view:welcome' => array(
+				'template' => "org.opencomb:Welcome.template.html" ,
+			) ,
+		) ;
 	}
 }
 

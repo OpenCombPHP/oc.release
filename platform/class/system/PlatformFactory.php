@@ -29,7 +29,7 @@ class PlatformFactory extends HttpAppFactory
 		return Object::singleton($bCreateNew,null,__CLASS__) ;
 	}
 	
-	public function create($sApplicationRootPath,$bRestore=true)
+	public function create($sApplicationRootPath)
 	{
 		$aPlatform = new Platform() ;
 		
@@ -39,9 +39,12 @@ class PlatformFactory extends HttpAppFactory
 		$aFileSystem = $this->createFileSystem($aPlatform,$sApplicationRootPath) ;
 		FileSystem::setSingleton($aFileSystem) ;
 		
+		// setting
+		$aSetting = $this->createSetting($aPlatform) ;
+		Setting::setSingleton($aSetting) ;
 		
 		// 从缓存中恢复 platform ---------------
-		if( !$bRestore or !self::restorePlatformFromCache($aPlatform->cache()) )
+		if( !$aSetting->item('/platform','restore',true) or !self::restorePlatformFromCache($aPlatform->cache()) )
 		{
 			// 重建 platform
 			// --------------------------
@@ -57,9 +60,6 @@ class PlatformFactory extends HttpAppFactory
 			
 			// LocalManager
 			LocaleManager::setSingleton($this->createLocaleManager($aPlatform)) ;
-			
-			// setting
-			Setting::setSingleton($this->createSetting($aPlatform)) ;
 				
 			// 模板文件
 			JcSourceFileManager::setSingleton($this->createUISourceFileManager($aFileSystem)) ;
@@ -100,7 +100,7 @@ class PlatformFactory extends HttpAppFactory
 		// 激活所有扩展
 		foreach($aPlatform->extensions()->iterator() as $aExtension)
 		{
-			$aExtension->load() ;
+			$aExtension->active($aPlatform) ;
 		}
 		
 		if($aOriApp)

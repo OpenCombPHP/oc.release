@@ -20,8 +20,15 @@ require_once __DIR__."/framework/class/system/HttpAppFactory.php" ;
 require_once __DIR__."/framework/class/fs/imp/LocalFileSystem.php" ;
 require_once __DIR__."/framework/class/cache/ICache.php" ;
 require_once __DIR__."/framework/class/cache/FSCache.php" ;
+require_once __DIR__."/framework/class/setting/ISetting.php" ;
+require_once __DIR__."/framework/class/setting/Setting.php" ;
+require_once __DIR__."/framework/class/setting/IKey.php" ;
+require_once __DIR__."/framework/class/setting/Key.php" ;
+require_once __DIR__."/framework/class/setting/imp/FsSetting.php" ;
+require_once __DIR__."/framework/class/setting/imp/FsKey.php" ;
 require_once __DIR__."/platform/class/Platform.php" ;
 require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
+
 
 $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;
 $aSetting = Setting::singleton() ;
