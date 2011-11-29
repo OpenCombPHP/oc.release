@@ -44,7 +44,7 @@ class PlatformFactory extends HttpAppFactory
 		Setting::setSingleton($aSetting) ;
 		
 		// 从缓存中恢复 platform ---------------
-		if( !$aSetting->item('/platform','restore',true) or !self::restorePlatformFromCache($aPlatform->cache()) )
+		if( !$aSetting->item('/platform','restore',true) or !self::restorePlatformFromCache($aPlatform->cache(),$aPlatform) )
 		{
 			// 重建 platform
 			// --------------------------
@@ -82,7 +82,7 @@ class PlatformFactory extends HttpAppFactory
 			UIFactory::singleton()->calculateCompileStrategySignture() ;
 			
 			// store all !
-			$this->storePlatformToCache($aPlatform->cache()) ;
+			$this->storePlatformToCache($aPlatform->cache(),$aPlatform) ;
 		}			
 
 		else 
@@ -113,26 +113,26 @@ class PlatformFactory extends HttpAppFactory
 	
 	static private $arrSystemSleepObject = array(
 			'org\\jecat\\framework\\lang\\oop\\ClassLoader' ,
-			'org\\jecat\\framework\\fs\\FileSystem' ,
 			'org\\jecat\\framework\\system\\AccessRouter' ,
 			'org\\jecat\\framework\\locale\\LocaleManager' ,
 			'org\\jecat\\framework\\setting\\Setting' ,
 			'org\\jecat\\framework\\ui\\xhtml\\UIFactory' ,
 			'org\\jecat\\framework\\mvc\\view\\UIFactory' ,
-			'org\\jecat\\framework\\ui\\xhtml\\UIFactory' ,
 			'org\\jecat\\framework\\ui\\SourceFileManager' ,
 			'org\\jecat\\framework\\bean\\BeanFactory' ,
 			'org\\jecat\\framework\\lang\\aop\\AOP' ,
 			'org\\opencomb\\ext\\ExtensionManager' ,
 	) ;
-	static public function storePlatformToCache(ICache $aCache)
+	static public function storePlatformToCache(ICache $aCache,Platform $aPlatform)
 	{
 		foreach(self::$arrSystemSleepObject as $sClass)
 		{
 			$aCache->setItem(self::platformObjectCacheStorePath($sClass),$sClass::singleton()) ;
 		}
+		
+		$aCache->setItem(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder"),$aPlatform->publicFolders()) ;
 	}
-	static private function restorePlatformFromCache(ICache $aCache)
+	static private function restorePlatformFromCache(ICache $aCache,Platform $aPlatform)
 	{
 		foreach(self::$arrSystemSleepObject as $sClass)
 		{
@@ -143,10 +143,18 @@ class PlatformFactory extends HttpAppFactory
 			}
 		}
 		
+		$aPublicFolders = $aCache->item(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder")) ;
+		if( !$aPublicFolders or !($aPublicFolders instanceof Object) )
+		{
+			return false ;
+		}
+		
 		foreach($arrInstances as $sClass=>$aIns)
 		{
 			$sClass::setSingleton($aIns) ;
 		}
+		
+		$aPlatform->setPublicFolders($aPublicFolders) ;
 		
 		return true ;
 	}
