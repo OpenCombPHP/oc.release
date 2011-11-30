@@ -174,7 +174,7 @@ class ExtensionManager extends Object
 			}
 		}
 	}
-	
+		
 	private $arrEnableExtensiongNames = array() ;
 	
 	private $arrInstalledExtensions = array() ;

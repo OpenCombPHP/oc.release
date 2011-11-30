@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\ext ;
 
+use org\jecat\framework\setting\Setting;
 use org\opencomb\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
 use org\opencomb\Platform;
@@ -13,18 +14,28 @@ class Extension extends Object
 		$this->aMetainfo = $aMeta ;
 	}
 
-	public function publicFilesUrl()
+	public function setting()
+	{
+		return Setting::singleton()->separate('extensions/'.$this->aMetainfo->name()) ;
+	}
+	public function cache()
 	{}
-	
-	public function settings()
+	/**
+	 * @return org\jecat\framework\fs\IFolder
+	 */
+	public function publicFolder()
+	{
+		//IFolder
+	}
+	/**
+	 * @return org\jecat\framework\fs\IFolder
+	 */
+	public function dataFolder()
 	{}
-	public function publicFiles()
-	{}
-	public function dataFiles()
-	{}
-	public function cacheFiles()
-	{}
-	public function temporaryFiles()
+	/**
+	 * @return org\jecat\framework\fs\IFolder
+	 */
+	public function temporaryFolder()
 	{}
 
 	/**
