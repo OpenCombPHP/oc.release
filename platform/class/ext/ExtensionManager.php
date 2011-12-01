@@ -153,10 +153,9 @@ class ExtensionManager extends Object
 		}
 		$aExtension = new $sClass($aExtMeta) ;
 		$aExtension->setApplication($aPlatform) ;
+		$this->add($aExtension) ;
 				
 		$aExtension->load() ;
-		
-		$this->add($aExtension) ;
 		
 		return $aExtension ;
 	}
