@@ -22,6 +22,18 @@ class Platform extends Application
 {
 	const version = '0.2.0.0' ;
 	
+	/**
+	 * @return Platform
+	 */
+	static public function singleton()
+	{
+		return parent::singleton() ;
+	}
+	static public function setSingleton(self $aInstance=null)
+	{
+		parent::singleton($aInstance) ;
+	}
+	
 	public function version($bString=false)
 	{
 		if($bString)
