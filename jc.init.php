@@ -47,4 +47,4 @@ DB::singleton()->setDriver($aDBDriver) ;
 Session::setSingleton( new OriginalSession() ) ;
 
 return $aPlatform ;
-?>
+

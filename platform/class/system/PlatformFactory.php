@@ -44,7 +44,7 @@ class PlatformFactory extends HttpAppFactory
 		Setting::setSingleton($aSetting) ;
 		
 		// 从缓存中恢复 platform ---------------
-		if( !$aSetting->item('/platform','restore',true) or !self::restorePlatformFromCache($aPlatform->cache(),$aPlatform) )
+		if( !$aSetting->item('/platform','serialize',true) or !self::restorePlatformFromCache($aPlatform->cache(),$aPlatform) )
 		{
 			// 重建 platform
 			// --------------------------
