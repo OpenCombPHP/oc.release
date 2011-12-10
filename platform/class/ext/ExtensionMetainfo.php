@@ -43,19 +43,19 @@ class ExtensionMetainfo extends Object
 		}
 		
 		// 检查必须的参数
-		foreach( array('name','version') as $sNodeName )
+		foreach( array('name','version','title') as $sNodeName )
 		{
 			if(empty($aDomMetainfo->$sNodeName))
 			{
 				throw new ExtensionException(
-						"扩展 metainfo 文件内容无效，缺少必须的  元素：%s"
-						, array($aMetainfoFile->url(),$sNodeName)
+						"扩展 metainfo 文件内容无效，缺少必须的 %s 元素：%s"
+						, array($sNodeName,$aMetainfoFile->url())
 				) ;
 			}
 		}
 
 		// --------------
-		// name,version,class,sExtensionPath
+		// name,version,class,title,sExtensionPath
 		$sExtName = strval($aDomMetainfo->name) ;
 		try{
 			$aExtMetainfo = new self(
@@ -73,6 +73,7 @@ class ExtensionMetainfo extends Object
 					, $e
 			) ;
 		}
+		$aExtMetainfo->sTitle = (string)$aDomMetainfo->title ;
 		
 		// package
 		foreach($aDomMetainfo->xpath('/Extension/package') as $aPackage)
@@ -150,6 +151,11 @@ class ExtensionMetainfo extends Object
 	public function name()
 	{
 		return $this->sName ;
+	}
+	
+	public function title()
+	{
+		return $this->sTitle ;
 	}
 	
 	public function className()
@@ -300,6 +306,7 @@ class ExtensionMetainfo extends Object
 	
 	private $sName ;
 	private $aVersion ;
+	private $sTitle ;
 	private $sClassName ;
 	
 	private $arrPackages ;
