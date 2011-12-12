@@ -1,6 +1,10 @@
 <?php
 namespace org\opencomb\system ;
 
+use org\jecat\framework\session\OriginalSession;
+use org\jecat\framework\session\Session;
+use org\jecat\framework\db\DB;
+use org\jecat\framework\db\driver\PDODriver;
 use org\jecat\framework\cache\ICache;
 use org\jecat\framework\system\Response;
 use org\jecat\framework\system\Request;
@@ -65,7 +69,7 @@ class PlatformFactory extends HttpAppFactory
 			JcSourceFileManager::setSingleton($this->createUISourceFileManager($aFileSystem)) ;
 			
 			// 初始化系统无须store/restore的部分
-			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem) ;
+			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem,$aSetting) ;
 			
 			// BeanFactory 类别名
 			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Prototype','prototype') ;
@@ -88,7 +92,7 @@ class PlatformFactory extends HttpAppFactory
 		else 
 		{			
 			// 初始化系统无须store/restore的部分
-			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem) ;
+			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem,$aSetting) ;
 			
 			// (request/respone 需要在ClassLoader之后)
 			$this->initPlatformRequestResponse($aPlatform) ;
@@ -181,8 +185,21 @@ class PlatformFactory extends HttpAppFactory
 		// Response
 		Response::setSingleton( $this->createResponse($aPlatform) ) ;
 	}
-	private function initPlatformUnrestorableSystem(Platform $aPlatform,FileSystem $aFileSystem)
+	private function initPlatformUnrestorableSystem(Platform $aPlatform,FileSystem $aFileSystem,Setting $aSetting)
 	{
+		// 数据库
+		$sDBConfig = $aSetting->item('/platform/db','config','alpha') ;
+		$aDBDriver = new PDODriver(
+				$aSetting->item('/platform/db/'.$sDBConfig,'dsn')
+				, $aSetting->item('/platform/db/'.$sDBConfig,'username')
+				, $aSetting->item('/platform/db/'.$sDBConfig,'password')
+				, $aSetting->item('/platform/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"))
+		) ;
+		DB::singleton()->setDriver($aDBDriver) ;
+
+		// 会话
+		Session::setSingleton( new OriginalSession() ) ;
+
 		// 模板引擎宏
 		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
 				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"

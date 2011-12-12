@@ -5,10 +5,6 @@ use org\jecat\framework\setting\Setting;
 use org\jecat\framework\fs\imp\LocalFileSystem;
 use org\opencomb\Platform;
 use org\opencomb\system\PlatformFactory;
-use org\jecat\framework\session\OriginalSession;
-use org\jecat\framework\session\Session;
-use org\jecat\framework\db\DB;
-use org\jecat\framework\db\driver\PDODriver;
 
 
 ini_set('display_errors',1) ;
@@ -33,18 +29,6 @@ require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
 $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;
 $aSetting = Setting::singleton() ;
 
-// 数据库
-$sDBConfig = $aSetting->item('/platform/db','config','alpha') ;
-$aDBDriver = new PDODriver(
-		$aSetting->item('/platform/db/'.$sDBConfig,'dsn')
-		, $aSetting->item('/platform/db/'.$sDBConfig,'username')
-		, $aSetting->item('/platform/db/'.$sDBConfig,'password')
-		, $aSetting->item('/platform/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"))
-) ;
-DB::singleton()->setDriver($aDBDriver) ;
-
-// 会话
-Session::setSingleton( new OriginalSession() ) ;
 
 return $aPlatform ;
 

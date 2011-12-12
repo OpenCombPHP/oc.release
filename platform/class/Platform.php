@@ -51,19 +51,7 @@ class Platform extends Application
 	}
 	
 	public function load()
-	{
-		// 计算/设置 类签名
-		$aSetting = Setting::singleton() ;
-		$aCompiler = ClassLoader::singleton()->compiler() ;
-		if( !$sClassSignture = $aSetting->item('/platform/class','signture') )
-		{
-			$aSetting->setItem('/platform/class','signture',$aCompiler->strategySignature(true)) ;
-		}
-		else
-		{
-			$aCompiler->setStrategySignature($sClassSignture) ;
-		}
-	}
+	{}
 	
 	/**
 	 * @return org\opencomb\ext\ExtensionManager 
