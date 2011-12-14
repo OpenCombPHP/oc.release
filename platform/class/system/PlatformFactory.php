@@ -250,16 +250,8 @@ class PlatformFactory extends HttpAppFactory
 		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
-		$aSrcFileMgr->addFolder(
-				$aFileSystem->findFolder('/framework/template')
-				, $aFileSystem->findFolder('/data/compiled/template/framework',FileSystem::FIND_AUTO_CREATE)
-				, 'org.jecat.framework'
-		) ;
-		$aSrcFileMgr->addFolder(
-				$aFileSystem->findFolder('/platform/template')
-				, $aFileSystem->findFolder('/data/compiled/template/platform',FileSystem::FIND_AUTO_CREATE)
-				, 'org.opencomb'
-		) ;
+		$aSrcFileMgr->addFolder( $aFileSystem->findFolder('/framework/template'), 'org.jecat.framework' ) ;
+		$aSrcFileMgr->addFolder( $aFileSystem->findFolder('/platform/template') , 'org.opencomb' ) ;
 		
 		return $aSrcFileMgr ;
 	}

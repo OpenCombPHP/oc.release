@@ -116,12 +116,7 @@ class ExtensionManager extends Object
 			{
 				throw new ExtensionException("扩展 %s 的模板目录 %s 不存在",array($sName,$sFolder)) ;
 			}
-			$sCompiledPath = "/data/compiled/template/extensions/{$sName}/{$sVersion}/".str_replace('\\','.',$sNamespace) ;
-			if( !$aCompiledFolder=$aPlatformFs->findFolder($sCompiledPath) and !$aCompiledFolder=$aPlatformFs->createFolder($sCompiledPath) )
-			{
-				throw new ExtensionException("无法为扩展 %s 创建模板编译目录:%s",array($sName,$sCompiledPath)) ;
-			}
-			UIFactory::singleton()->sourceFileManager()->addFolder($aFolder,$aCompiledFolder,$sNamespace) ;	
+			UIFactory::singleton()->sourceFileManager()->addFolder($aFolder,$sNamespace) ;	
 		}
 		
 		// 注册 public 目录

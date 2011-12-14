@@ -8,16 +8,13 @@ use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager ;
 
 class SourceFileManager extends JcSourceFileManager
 {
-	public function addFolder(IFolder $aFolder,IFolder $aCompiled=null,$sExtensionName=null)
+	public function addFolder(IFolder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
 			$sExtensionName = Extension::retraceExtensionName() ;
 		}
-		
-		$aFolder->setProperty('compiled',$aCompiled) ;
-		
-		parent::addFolder($aFolder,$aCompiled,$sExtensionName) ;
+		parent::addFolder($aFolder,$sExtensionName) ;
 	}
 	
 	public function removeFolder(IFolder $aFolder,$sExtensionName=null)
