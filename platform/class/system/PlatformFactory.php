@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\system ;
 
+use org\opencomb\ext\Extension;
 use org\jecat\framework\session\OriginalSession;
 use org\jecat\framework\session\Session;
 use org\jecat\framework\db\DB;
@@ -105,6 +106,9 @@ class PlatformFactory extends HttpAppFactory
 		foreach($aPlatform->extensions()->iterator() as $aExtension)
 		{
 			$aExtension->active($aPlatform) ;
+
+			// 注册 Extension::flyweight()
+			Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
 		}
 		
 		if($aOriApp)

@@ -156,7 +156,7 @@ class ExtensionManager extends Object
 		$this->add($aExtension) ;
 				
 		$aExtension->load() ;
-		
+				
 		return $aExtension ;
 	}
 	
