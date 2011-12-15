@@ -6,6 +6,7 @@ use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
 use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
+use org\jecat\framework\fs\FileSystem ;
 
 class Extension extends Object 
 {
@@ -26,6 +27,8 @@ class Extension extends Object
 	public function publicFolder()
 	{
 		//IFolder
+		$strPath = '/data/public/'.$this->metainfo()->name().'/';
+		return FileSystem::singleton()->findFolder($strPath,FileSystem::FIND_AUTO_CREATE);
 	}
 	/**
 	 * @return org\jecat\framework\fs\IFolder
