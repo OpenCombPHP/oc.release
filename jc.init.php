@@ -1,10 +1,10 @@
 <?php 
-namespace org\opencomb ;
+namespace org\opencomb\platform ;
 
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\fs\imp\LocalFileSystem;
-use org\opencomb\Platform;
-use org\opencomb\system\PlatformFactory;
+use org\opencomb\platform\Platform;
+use org\opencomb\platform\system\PlatformFactory;
 
 
 ini_set('display_errors',1) ;

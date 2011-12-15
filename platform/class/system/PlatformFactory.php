@@ -1,7 +1,7 @@
 <?php
-namespace org\opencomb\system ;
+namespace org\opencomb\platform\system ;
 
-use org\opencomb\ext\Extension;
+use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\session\OriginalSession;
 use org\jecat\framework\session\Session;
 use org\jecat\framework\db\DB;
@@ -13,15 +13,15 @@ use org\jecat\framework\setting\Setting;
 use org\jecat\framework\locale\LocaleManager;
 use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\bean\BeanFactory;
-use org\opencomb\Platform;
+use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\system\Application;
-use org\opencomb\resrc\ResourceManager;
+use org\opencomb\platform\resrc\ResourceManager;
 use org\jecat\framework\resrc\HtmlResourcePool;
 use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ;
 use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager ;
-use org\opencomb\ui\SourceFileManager;
+use org\opencomb\platform\ui\SourceFileManager;
 use org\jecat\framework\system\HttpAppFactory;
 use org\jecat\framework\system\CoreApplication;
 use org\jecat\framework\lang\oop\ClassLoader;
@@ -73,8 +73,8 @@ class PlatformFactory extends HttpAppFactory
 			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem,$aSetting) ;
 			
 			// BeanFactory 类别名
-			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Prototype','prototype') ;
-			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\mvc\\model\\db\\orm\\Association','association') ;
+			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Prototype','prototype') ;
+			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Association','association') ;
 			
 			// 加载所有扩展
 			$aExtMgr = $aPlatform->extensions() ;
@@ -129,7 +129,7 @@ class PlatformFactory extends HttpAppFactory
 			'org\\jecat\\framework\\ui\\SourceFileManager' ,
 			'org\\jecat\\framework\\bean\\BeanFactory' ,
 			'org\\jecat\\framework\\lang\\aop\\AOP' ,
-			'org\\opencomb\\ext\\ExtensionManager' ,
+			'org\\opencomb\\platform\\ext\\ExtensionManager' ,
 	) ;
 	static public function storePlatformToCache(ICache $aCache,Platform $aPlatform)
 	{
@@ -206,10 +206,10 @@ class PlatformFactory extends HttpAppFactory
 
 		// 模板引擎宏
 		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
+				'/', "org\\opencomb\\platform\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
 		MvcUIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
-				'/', "org\\opencomb\\ui\\xhtml\\compiler\\PathMacroCompiler"
+				'/', "org\\opencomb\\platform\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
 		
 		// public folder
@@ -231,7 +231,7 @@ class PlatformFactory extends HttpAppFactory
 		$aClassLoader = parent::createClassLoader($aApp) ;
 		
 		// class
-		$aClassLoader->addPackage( 'org\\opencomb', '/platform/class' ) ;
+		$aClassLoader->addPackage( 'org\\opencomb\\platform', '/platform/class' ) ;
 		$aClassLoader->enableClassCompile(true) ;
 		
 		return $aClassLoader ;
@@ -240,7 +240,7 @@ class PlatformFactory extends HttpAppFactory
 	public function createAccessRouter(Platform $aApp)
 	{
 		$aAccessRouter = parent::createAccessRouter($aApp) ;
-		$aAccessRouter->setDefaultController('org\\opencomb\\mvc\\controller\\DefaultController') ;
+		$aAccessRouter->setDefaultController('org\\opencomb\\platform\\mvc\\controller\\DefaultController') ;
 		return $aAccessRouter ;
 	}
 	

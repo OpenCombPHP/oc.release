@@ -1,10 +1,10 @@
 <?php
-namespace org\opencomb\ext ;
+namespace org\opencomb\platform\ext ;
 
 use org\jecat\framework\setting\Setting;
-use org\opencomb\ext\ExtensionMetainfo;
+use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
-use org\opencomb\Platform;
+use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
 
 class Extension extends Object 
@@ -66,7 +66,7 @@ class Extension extends Object
 			if( !empty($arrCall['object']) )
 			{
 				$sClass = get_class($arrCall['object']) ;
-				if( substr($sClass,0,7)=='org\\opencomb\\ext\\' and $nEndPos=strpos($sClass,'\\',7) )
+				if( substr($sClass,0,7)=='org\\opencomb\\platform\\ext\\' and $nEndPos=strpos($sClass,'\\',7) )
 				{
 					return substr($sClass,7,$nEndPos-7) ;
 				}

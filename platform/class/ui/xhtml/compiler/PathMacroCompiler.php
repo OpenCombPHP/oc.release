@@ -1,5 +1,5 @@
 <?php
-namespace org\opencomb\ui\xhtml\compiler ;
+namespace org\opencomb\platform\ui\xhtml\compiler ;
 
 use org\jecat\framework\ui\TargetCodeOutputStream;
 use org\jecat\framework\ui\IObject;

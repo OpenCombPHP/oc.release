@@ -1,9 +1,9 @@
 <?php
-namespace org\opencomb\ui ;
+namespace org\opencomb\platform\ui ;
 
 use org\jecat\framework\fs\IFolder;
 use org\jecat\framework\fs\Dir;
-use org\opencomb\ext\Extension ;
+use org\opencomb\platform\ext\Extension ;
 use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager ;
 
 class SourceFileManager extends JcSourceFileManager

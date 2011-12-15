@@ -1,5 +1,5 @@
 <?php
-namespace org\opencomb\ext ;
+namespace org\opencomb\platform\ext ;
 
 use org\jecat\framework\fs\FileSystem;
 
@@ -9,13 +9,13 @@ use org\jecat\framework\bean\BeanFactory;
 
 use org\jecat\framework\mvc\view\UIFactory;
 
-use org\opencomb\ext\ExtensionManager;
+use org\opencomb\platform\ext\ExtensionManager;
 use org\jecat\framework\db\ExecuteException;
 use org\jecat\framework\util\VersionExcetion;
 use org\jecat\framework\util\Version;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\setting\Setting;
-use org\opencomb\Platform;
+use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
 
 class ExtensionManager extends Object

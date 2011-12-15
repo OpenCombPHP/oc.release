@@ -1,8 +1,8 @@
 <?php
-namespace org\opencomb\resrc ;
+namespace org\opencomb\platform\resrc ;
 
 use org\jecat\framework\fs\IFolder;
-use org\opencomb\ext\Extension ;
+use org\opencomb\platform\ext\Extension ;
 use org\jecat\framework\resrc\ResourceManager as JsResourceManager ;
 
 class ResourceManager extends JsResourceManager

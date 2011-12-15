@@ -1,5 +1,5 @@
 <?php
-namespace org\opencomb\mvc\controller ;
+namespace org\opencomb\platform\mvc\controller ;
 
 use org\jecat\framework\mvc\controller\Controller;
 

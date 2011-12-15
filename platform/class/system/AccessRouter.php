@@ -1,7 +1,7 @@
 <?php
-namespace org\opencomb\system ;
+namespace org\opencomb\platform\system ;
 
-use org\opencomb\ext\Extension;
+use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\system\Request ;
 use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
