@@ -82,6 +82,11 @@ class Platform extends Application
 		return $this->aCache ;
 	}
 	
+	public function isDebugging()
+	{
+		return (bool)Setting::singleton()->item('/platform/debug','stat') ;
+	}
+	
 	private $sExtensionsFolder = 'extensions' ;
 	private $aExtensionManager ;
 	private $aStaticPageManager ;
