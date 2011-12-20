@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform ;
 
+use org\jecat\framework\util\VersionCompat;
+
 use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\Setting;
@@ -17,6 +19,7 @@ use org\opencomb\platform\system\PlatformFactory ;
 class Platform extends Application
 {
 	const version = '0.2.0.0' ;
+	const version_compat = "" ;
 	
 	/**
 	 * @return Platform
@@ -30,6 +33,9 @@ class Platform extends Application
 		parent::singleton($aInstance) ;
 	}
 	
+	/**
+	 * @return org\jecat\framework\util\Version
+	 */
 	public function version($bString=false)
 	{
 		if($bString)
@@ -44,6 +50,24 @@ class Platform extends Application
 			}
 			return $this->aVersion ;
 		}
+	}
+	/**
+	 * @return org\jecat\framework\util\VersionCompat
+	 */
+	public function versionCompat()
+	{
+		if(!$this->aVersionCompat)
+		{
+			// 当前版本
+			$this->aVersionCompat->addCompatibleVersion( $this->version() ) ;
+			
+			// 其它兼容版本
+			if( self::version_compat )
+			{
+				$this->aVersionCompat->addFromString(self::version_compat) ;
+			}
+		}
+		return $this->aVersionCompat ;
 	}
 	
 	public function load()
@@ -91,6 +115,7 @@ class Platform extends Application
 	private $aExtensionManager ;
 	private $aStaticPageManager ;
 	private $aVersion ;
+	private $aVersionCompat ;
 	private $aCache ;
 }
 

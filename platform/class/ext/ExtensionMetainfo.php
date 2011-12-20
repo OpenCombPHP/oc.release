@@ -1,6 +1,14 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\opencomb\platform\ext\dependence\Dependence;
+
+use org\jecat\framework\util\VersionCompat;
+
+use org\jecat\framework\lang\Type;
+
+use org\jecat\framework\fs\IFolder;
+
 use org\jecat\framework\fs\FileSystem;
 
 use org\jecat\framework\util\VersionExcetion;
@@ -20,13 +28,27 @@ use org\jecat\framework\lang\Object;
 class ExtensionMetainfo extends Object
 {
 	/**
+	 * @param $extensionFoler	string,IFolder
 	 * @return ExtensionMetainfo
 	 */
-	static public function load($sExtPath)
+	static public function load($extensionFoler)
 	{
-		if( !$aExtFolder = FileSystem::singleton()->findFolder($sExtPath) )
+		if( is_string($extensionFoler) )
 		{
-			throw new ExtensionException("无法读取扩展信息，扩展路径无效：%s",$sExtPath) ;
+			$sExtPath = $extensionFoler ;
+			if( !$aExtFolder = FileSystem::singleton()->findFolder($sExtPath) )
+			{
+				throw new ExtensionException("无法读取扩展信息，扩展路径无效：%s",$sExtPath) ;
+			}
+		}
+		else if( $extensionFoler instanceof IFolder )
+		{
+			$sExtPath = $extensionFoler->path() ;
+			$aExtFolder = $extensionFoler ;
+		}
+		else
+		{
+			throw new Exception("参数 \$extensionFoler 类型无效，必须是 string, IFolder 类型，传入类型为 %s",Type::reflectType($extensionFoler)) ;
 		}
 		
 		if( !$aMetainfoFile = $aExtFolder->findFile('metainfo.xml') )
@@ -75,7 +97,64 @@ class ExtensionMetainfo extends Object
 		}
 		$aExtMetainfo->sTitle = (string)$aDomMetainfo->title ;
 		
+		// compat version
+		$aExtMetainfo->aVersionCompat = new VersionCompat() ;
+		$aExtMetainfo->aVersionCompat->addCompatibleVersion($aExtMetainfo->version()) ;
+		
+		// priority
+		if(!empty($aDomMetainfo->priority))
+		{
+			$nPriority = (int) $aDomMetainfo->priority ;
+			if( $nPriority<1 or $nPriority>9 )
+			{
+				throw new ExtensionException(
+						"扩展 metainfo 文件中的 priority 节点必须是一个大于0，小于9的整数，扩展 %s 提供的内容为：%s"
+						, array($aDomMetainfo->name,$aDomMetainfo->priority)
+				) ;
+			}
+			$aExtMetainfo->nPriority = $nPriority ;
+		}
+		
+		
+		// data version, setup, upgrades
+		// --------------
+		//  data version
+		if(!empty($aDomMetainfo->data->version))
+		{
+			$aExtMetainfo->aDataVersion = Version::FromString((string)$aDomMetainfo->data->version) ;
+		}
+		else
+		{
+			$aExtMetainfo->aDataVersion = clone $aExtMetainfo->aVersion ;
+		}
+		//  data setup
+		if(!empty($aDomMetainfo->data->setup))
+		{
+			$aExtMetainfo->sDataSetupClass = (string)$aDomMetainfo->data->setup ;
+		}
+		//  data upgrade
+		if(!empty($aDomMetainfo->data->upgrader))
+		{
+			foreach($aDomMetainfo->xpath('/data/upgrader') as $aUpgrader)
+			{
+				if(empty($aUpgrader['from']))
+				{
+					throw new ExtensionException("扩展%s的metainfo.xml文件中 data/upgrader 节点缺少 from 属性",$aDomMetainfo->name) ;
+				}
+				if(empty($aUpgrader['to']))
+				{
+					throw new ExtensionException("扩展%s的metainfo.xml文件中 data/upgrader 节点缺少 to 属性",$aDomMetainfo->name) ;
+				}
+				$aExtMetainfo->arrDataUpgraderClasses[] = array(
+							'from' => Version::FromString((string)$aUpgrader['from']) ,
+							'to' => Version::FromString((string)$aUpgrader['to']) ,
+							'class' => (string)$aUpgrader
+				) ;
+			}
+		}
+		
 		// package
+		// --------------
 		foreach($aDomMetainfo->xpath('/Extension/package') as $aPackage)
 		{
 			if(empty($aPackage['folder']))
@@ -96,6 +175,7 @@ class ExtensionMetainfo extends Object
 		}
 	
 		// template
+		// --------------
 		foreach($aDomMetainfo->xpath('/Extension/template') as $nIdx=>$aNode)
 		{
 			if(empty($aNode['folder']))
@@ -109,6 +189,7 @@ class ExtensionMetainfo extends Object
 		}
 		
 		// public folder
+		// --------------
 		foreach($aDomMetainfo->xpath('/Extension/publicFolder') as $nIdx=>$aNode)
 		{
 			if(empty($aNode['folder']))
@@ -122,6 +203,7 @@ class ExtensionMetainfo extends Object
 		}
 		
 		// bean folder
+		// --------------
 		foreach($aDomMetainfo->xpath('/Extension/beanFolder') as $nIdx=>$aNode)
 		{
 			if(empty($aNode['folder']))
@@ -134,6 +216,13 @@ class ExtensionMetainfo extends Object
 			$aExtMetainfo->arrBeanFolders[] = array($sFolder,$sNamespace) ;
 		}
 		
+		// dependence
+		// --------------
+		try{
+			$aExtMetainfo->aDenpendence = Dependence::loadFromXml($aDomMetainfo) ;
+		}catch(Exception $e){
+			throw new ExtensionException("扩展%s的metainfo.xml存在错误",$aDomMetainfo->name,$e) ;
+		}
 		
 		return $aExtMetainfo ;
 	}
@@ -171,10 +260,19 @@ class ExtensionMetainfo extends Object
 		return $this->aVersion ;
 	}
 	
+	/**
+	 * @return org\jecat\framework\util\VersionCompat
+	 */
+	public function versionCompat()
+	{
+		return $this->aVersionCompat ;
+	}
+	
 	public function installPath()
 	{
 		return $this->sExtensionPath ;
-	}	
+	}
+	
 	
 	/**
 	 * @return \Iterator
@@ -293,6 +391,39 @@ class ExtensionMetainfo extends Object
 		return $aFolder ;
 	}
 	
+	public function priority()
+	{
+		$this->nPriority ;
+	}
+	
+	/**
+	 * @return org\jecat\framework\util\Version
+	 */
+	public function dataVersion()
+	{
+		$this->aDataVersion ;
+	}
+	
+	public function dataSetupClass()
+	{
+		$this->sDataSetupClass ;
+	}
+	
+	public function dataUpgradeClassIterator()
+	{
+		return new \ArrayIterator($this->arrDataUpgraderClasses) ;
+	}
+	
+	/**
+	 * @return org\opencomb\platform\ext\dependence\Dependence
+	 */
+	public function denpendence()
+	{
+		return $this->aDenpendence ;
+	}
+	
+	
+	
 	static public function formatPath($sPath)
 	{
 		$sPath = FileSystem::formatPath(strval($sPath)) ;
@@ -306,13 +437,21 @@ class ExtensionMetainfo extends Object
 	
 	private $sName ;
 	private $aVersion ;
+	private $aVersionCompat ;
 	private $sTitle ;
 	private $sClassName ;
+	private $nPriority = 3 ;
+	
+	private $aDataVersion ;
+	private $sDataSetupClass ;
+	private $arrDataUpgraderClasses = array() ;
 	
 	private $arrPackages ;
 	private $arrTemplateFolders = array() ;
 	private $arrPublicFolders = array() ;
 	private $arrBeanFolders = array() ;
+	
+	private $aDenpendence ;
 	
 }
 
