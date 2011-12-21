@@ -2,19 +2,12 @@
 namespace org\opencomb\platform\ext ;
 
 use org\opencomb\platform\ext\dependence\Dependence;
-
 use org\jecat\framework\util\VersionCompat;
-
 use org\jecat\framework\lang\Type;
-
 use org\jecat\framework\fs\IFolder;
-
 use org\jecat\framework\fs\FileSystem;
-
 use org\jecat\framework\util\VersionExcetion;
-
 use org\jecat\framework\util\String;
-
 use org\jecat\framework\util\Version;
 use org\opencomb\platform\ext\coreuser\subscribe\Create;
 use org\jecat\framework\lang\Exception;
@@ -96,6 +89,7 @@ class ExtensionMetainfo extends Object
 			) ;
 		}
 		$aExtMetainfo->sTitle = (string)$aDomMetainfo->title ;
+		$aExtMetainfo->sDescription = (string)$aDomMetainfo->description ;
 		
 		// compat version
 		$aExtMetainfo->aVersionCompat = new VersionCompat() ;
@@ -219,7 +213,7 @@ class ExtensionMetainfo extends Object
 		// dependence
 		// --------------
 		try{
-			$aExtMetainfo->aDenpendence = Dependence::loadFromXml($aDomMetainfo) ;
+			$aExtMetainfo->aDependence = Dependence::loadFromXml($aDomMetainfo) ;
 		}catch(Exception $e){
 			throw new ExtensionException("扩展%s的metainfo.xml存在错误",$aDomMetainfo->name,$e) ;
 		}
@@ -245,6 +239,11 @@ class ExtensionMetainfo extends Object
 	public function title()
 	{
 		return $this->sTitle ;
+	}
+	
+	public function description()
+	{
+		return $this->sDescription ;
 	}
 	
 	public function className()
@@ -417,9 +416,9 @@ class ExtensionMetainfo extends Object
 	/**
 	 * @return org\opencomb\platform\ext\dependence\Dependence
 	 */
-	public function denpendence()
+	public function dependence()
 	{
-		return $this->aDenpendence ;
+		return $this->aDependence ;
 	}
 	
 	
@@ -439,6 +438,7 @@ class ExtensionMetainfo extends Object
 	private $aVersion ;
 	private $aVersionCompat ;
 	private $sTitle ;
+	private $sDescription ;
 	private $sClassName ;
 	private $nPriority = 3 ;
 	
@@ -451,7 +451,7 @@ class ExtensionMetainfo extends Object
 	private $arrPublicFolders = array() ;
 	private $arrBeanFolders = array() ;
 	
-	private $aDenpendence ;
+	private $aDependence ;
 	
 }
 

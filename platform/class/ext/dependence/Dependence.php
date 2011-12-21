@@ -36,6 +36,11 @@ class Dependence
 		}
 	}
 	
+	public function iterator()
+	{
+		return new \ArrayIterator($this->arrRequires) ;
+	}
+	
 	private $arrRequires = array() ;
 	
 }
