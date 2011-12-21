@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\opencomb\platform\ext\ExtensionLoader;
+
 use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\session\OriginalSession;
 use org\jecat\framework\session\Session;
@@ -77,11 +79,7 @@ class PlatformFactory extends HttpAppFactory
 			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Association','association') ;
 			
 			// 加载所有扩展
-			$aExtMgr = $aPlatform->extensions() ;
-			foreach($aExtMgr->enableExtensionNameIterator() as $sExtName)
-			{
-				$aExtMgr->loadExtension($sExtName) ;
-			}
+			ExtensionLoader::singleton()->loadAllExtensions($aPlatform->extensions()) ;
 			
 			// 计算 UI template 的编译策略签名
 			UIFactory::singleton()->calculateCompileStrategySignture() ;

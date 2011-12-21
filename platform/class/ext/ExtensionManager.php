@@ -1,14 +1,6 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\jecat\framework\fs\FileSystem;
-
-use org\jecat\framework\lang\oop\ClassLoader;
-
-use org\jecat\framework\bean\BeanFactory;
-
-use org\jecat\framework\mvc\view\UIFactory;
-
 use org\opencomb\platform\ext\ExtensionManager;
 use org\jecat\framework\db\ExecuteException;
 use org\jecat\framework\util\VersionExcetion;
@@ -32,17 +24,12 @@ class ExtensionManager extends Object
 		foreach( $aSetting->item("/extensions",'installeds')?: array()  as $sExtPath )
 		{		
 			$aExtension = ExtensionMetainfo::load($sExtPath) ;
-			$this->arrInstalledExtensions[ $aExtension->name() ] = $aExtension ;
+			$this->addInstalledExtension($aExtension) ;
 		}
 		
 		$this->arrEnableExtensiongNames = $aSetting->item("/extensions",'enable') ?: array() ;
 		
 		$this->aSetting = $aSetting ;
-	}
-	
-	public function installExtension()
-	{
-		// todo
 	}
 	
 	/**
@@ -64,10 +51,30 @@ class ExtensionManager extends Object
 	/**
 	 * \Iterator
 	 */
-	public function enableExtensionNameIterator()
+	public function extensionPriorities()
 	{
-		return new \ArrayIterator($this->arrEnableExtensiongNames) ;
+		return array_keys($this->arrEnableExtensiongNames) ;
 	}
+	
+	/**
+	 * \Iterator
+	 */
+	public function enableExtensionNameIterator($nPriority=-1)
+	{
+		if($nPriority<0)
+		{
+			return new \ArrayIterator(
+					call_user_func_array('array_merge',$this->arrEnableExtensiongNames)
+			) ;
+		}
+		else 
+		{
+			return isset($this->arrEnableExtensiongNames[$nPriority])?
+						new \ArrayIterator($this->arrEnableExtensiongNames[$nPriority]) :
+						new \EmptyIterator() ;
+		}
+	}
+	
 	
 	/**
 	 * \Iterator
@@ -86,73 +93,10 @@ class ExtensionManager extends Object
 	{
 		$this->arrExtensionInstances[$aExt->metainfo()->name()] = $aExt ;
 	}
-
-	public function loadExtension($sName)
+	
+	public function registerPackageNamespace($sNamespace,$sExtName)
 	{
-		if(!$aExtMeta = $this->extensionMetainfo($sName))
-		{
-			throw new ExtensionException("扩展尚未安装：%s，无法完成加载",$sName) ;
-		}
-		$sVersion = $aExtMeta->version()->toString(false) ;
-		$aPlatform = $this->application() ;
-		$aPlatformFs = FileSystem::singleton() ;
-
-		// 加载类包
-		foreach($aExtMeta->pakcageIterator() as $arrPackage)
-		{
-			list($sNamespace,$sPackagePath) = $arrPackage ;
-			
-			$sPackagePath = $aExtMeta->installPath().$sPackagePath ;
-			ClassLoader::singleton()->addPackage( $sNamespace, $sPackagePath ) ;
-			
-			$this->arrExtensionPackages[$sNamespace] = $sName ;
-		}
-		
-		// 注册模板目录
-		foreach($aExtMeta->templateFolderIterator() as $arrTemplateFolder)
-		{
-			list($sFolder,$sNamespace) = $arrTemplateFolder ;
-			if( !$aFolder=$aPlatformFs->findFolder( $aExtMeta->installPath().$sFolder ) )
-			{
-				throw new ExtensionException("扩展 %s 的模板目录 %s 不存在",array($sName,$sFolder)) ;
-			}
-			UIFactory::singleton()->sourceFileManager()->addFolder($aFolder,$sNamespace) ;	
-		}
-		
-		// 注册 public 目录
-		foreach($aExtMeta->publicFolderIterator() as $arrPublicFolder)
-		{
-			list($sFolder,$sNamespace) = $arrPublicFolder ;
-			if( !$aFolder=$aPlatformFs->findFolder( $aExtMeta->installPath().$sFolder ) )
-			{
-				throw new ExtensionException("扩展 %s 的公共文件目录 %s 不存在",array($sName,$sFolder)) ;
-			}
-			$aPlatform->publicFolders()->addFolder($aFolder,$sNamespace) ;
-		}
-		
-		// 注册 bean 目录
-		foreach($aExtMeta->beanFolderIterator() as $arrFolder)
-		{
-			list($sFolder,$sNamespace) = $arrFolder ;
-			if( !$aFolder=$aPlatformFs->findFolder( $aExtMeta->installPath().$sFolder ) )
-			{
-				throw new ExtensionException("扩展 %s 的bean目录 %s 不存在",array($sName,$sFolder)) ;
-			}
-			BeanFactory::singleton()->beanFolders()->addFolder($aFolder,$sNamespace) ;
-		}
-		
-		$sClass = $aExtMeta->className() ;
-		if(!class_exists($sClass))
-		{
-			throw new ExtensionException("找不到扩展 %s 指定的扩展类: %s",array($sName,$sClass)) ;
-		}
-		$aExtension = new $sClass($aExtMeta) ;
-		$aExtension->setApplication($aPlatform) ;
-		$this->add($aExtension) ;
-				
-		$aExtension->load() ;
-				
-		return $aExtension ;
+		$this->arrExtensionPackages[$sNamespace] = $sExtName ;
 	}
 	
 	public function extensionNameByClass($sClass)
@@ -169,6 +113,14 @@ class ExtensionManager extends Object
 		}
 	}
 		
+	public function addInstalledExtension(ExtensionMetainfo $aExtMetainfo)
+	{
+		if( !isset($this->arrInstalledExtensions[$aExtMetainfo->name()]) )
+		{
+			$this->arrInstalledExtensions[$aExtMetainfo->name()] = $aExtMetainfo ;
+		}
+	}
+	
 	private $arrEnableExtensiongNames = array() ;
 	
 	private $arrInstalledExtensions = array() ;

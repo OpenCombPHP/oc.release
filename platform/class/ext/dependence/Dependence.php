@@ -1,8 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext\dependence ;
 
+use org\opencomb\platform\Platform;
 use org\jecat\framework\util\VersionScope;
-
 use org\opencomb\platform\ext\ExtensionMetainfo;
 
 class Dependence
@@ -26,6 +26,14 @@ class Dependence
 	public function addRequire(RequireItem $aRequire)
 	{
 		$this->arrRequires[] = $aRequire ;
+	}
+	
+	public function check(Platform $aPlatform,$bExtensionEnabled)
+	{
+		foreach($this->arrRequires as $aRequeir)
+		{
+			$aRequeir->check($aPlatform,$bExtensionEnabled) ;
+		}
 	}
 	
 	private $arrRequires = array() ;

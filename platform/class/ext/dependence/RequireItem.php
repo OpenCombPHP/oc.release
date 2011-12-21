@@ -44,7 +44,7 @@ class RequireItem
 		$this->aRequireVersionScope = $aVersionScope ;
 	}
 
-	public function check(Platform $aPlatform)
+	public function check(Platform $aPlatform,$bExtensionEnabled)
 	{
 		switch ($this->sType)
 		{

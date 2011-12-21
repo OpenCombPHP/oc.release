@@ -55,6 +55,16 @@ class Extension extends Object
 	public function active(Platform $aPlatform)
 	{}
 	
+	public function setRuntimePriority($nPriority)
+	{
+		$this->nRuntimePriority = $nPriority ;
+	}
+	
+	public function runtimePriority()
+	{
+		return $this->nRuntimePriority ;
+	}
+	
 	static public function retraceExtensionName($arrStack=null)
 	{
 		if(!$arrStack)
@@ -98,6 +108,8 @@ class Extension extends Object
 	}
 	
 	private $aMetainfo ;
+	
+	private $nRuntimePriority = -1 ;
 }
 
 ?>
