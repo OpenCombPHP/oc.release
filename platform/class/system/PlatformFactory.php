@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\jecat\framework\lang\compile\CompilerFactory;
+
 use org\opencomb\platform\ext\ExtensionLoader;
 
 use org\opencomb\platform\ext\Extension;
@@ -84,6 +86,10 @@ class PlatformFactory extends HttpAppFactory
 			// 计算 UI template 的编译策略签名
 			UIFactory::singleton()->calculateCompileStrategySignture() ;
 			
+			// 计算class签名
+			$sSignture = ClassLoader::singleton()->compiler()->strategySignature(true) ;
+			$aSetting->setItem('/platform/class','signture',$sSignture) ;
+			
 			// store all !
 			$this->storePlatformToCache($aPlatform->cache(),$aPlatform) ;
 		}			
@@ -141,6 +147,13 @@ class PlatformFactory extends HttpAppFactory
 	}
 	static private function restorePlatformFromCache(ICache $aCache,Platform $aPlatform)
 	{
+		// 设置 class signture
+		if( $sSignture = Setting::singleton()->item('/platform/class','signture',null) )
+		{
+			CompilerFactory::singleton()->setStrategySignature($sSignture) ;
+		}
+		 
+		// 恢复各个对像
 		foreach(self::$arrSystemSleepObject as $sClass)
 		{
 			$arrInstances[$sClass] = $aCache->item( self::platformObjectCacheStorePath($sClass) ) ;
@@ -150,19 +163,22 @@ class PlatformFactory extends HttpAppFactory
 			}
 		}
 		
+		// 恢复 public folder 对像
 		$aPublicFolders = $aCache->item(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder")) ;
 		if( !$aPublicFolders or !($aPublicFolders instanceof Object) )
 		{
 			return false ;
 		}
 		
+		// 设置所有对像的单例
 		foreach($arrInstances as $sClass=>$aIns)
 		{
 			$sClass::setSingleton($aIns) ;
 		}
 		
+		// 设置 public folder
 		$aPlatform->setPublicFolders($aPublicFolders) ;
-		
+		 
 		return true ;
 	}
 	static public function clearRestoreCache(Platform $aPlatform)
