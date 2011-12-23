@@ -125,6 +125,7 @@ class PlatformFactory extends HttpAppFactory
 			'org\\jecat\\framework\\ui\\xhtml\\UIFactory' ,
 			'org\\jecat\\framework\\mvc\\view\\UIFactory' ,
 			'org\\jecat\\framework\\ui\\SourceFileManager' ,
+			'org\\jecat\\framework\\ui\\xhtml\\weave\\WeaveManager' ,
 			'org\\jecat\\framework\\bean\\BeanFactory' ,
 			'org\\jecat\\framework\\lang\\aop\\AOP' ,
 			'org\\opencomb\\platform\\ext\\ExtensionManager' ,
