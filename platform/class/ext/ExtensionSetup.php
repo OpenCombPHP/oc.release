@@ -26,7 +26,7 @@ class ExtensionSetup extends Object
 		{
 			if( $aExtMeta->version()->compare($aInstalled->version())==0 )
 			{
-				throw new Exception("安装扩展操作退出，无法重复安装扩展：%s(%s version:%s)",array($aExtMeta->title(),$aExtMeta->name(),$aExtMeta->version())) ;
+				throw new Exception("安装扩展操作退出，无法重复安装扩展：%s(%s version:%s installed version:%s)",array($aExtMeta->title(),$aExtMeta->name(),$aExtMeta->version(),$aInstalled->version())) ;
 			}
 		}
 		
@@ -85,7 +85,7 @@ class ExtensionSetup extends Object
 		
 		// 设置 setting
 		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
-		$arrEnable[] = $sExtName ;
+		$arrEnable[3][] = $sExtName ;
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
 		
 	}
@@ -95,9 +95,12 @@ class ExtensionSetup extends Object
 		
 	}
 	
+	/**
+	 *  @param $bEnable bool 安装时为false,激活时为true
+	 */
 	public function checkDependence(ExtensionMetainfo $aExtMeta,$bEnable)
 	{
-		if( $aDenpendence = $aExtMeta->denpendence() )
+		if( $aDenpendence = $aExtMeta->dependence() )
 		{
 			$aDenpendence->check(Platform::singleton(),$bEnable) ;
 		}

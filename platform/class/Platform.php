@@ -58,6 +58,7 @@ class Platform extends Application
 	{
 		if(!$this->aVersionCompat)
 		{
+			$this->aVersionCompat = new VersionCompat;
 			// 当前版本
 			$this->aVersionCompat->addCompatibleVersion( $this->version() ) ;
 			

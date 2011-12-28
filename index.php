@@ -41,7 +41,9 @@ else
 	echo "<h1>Page Not Found</h1>" ;
 }
 
-//echo $aPlatform->signature() ;
-echo $aPlatform->uptime(true),'<br />' ;
-echo ClassLoader::singleton()->totalLoadTime() ;
+if(empty($_GET['noframe'])){
+	//echo $aPlatform->signature() ;
+	echo $aPlatform->uptime(true),'<br />' ;
+	echo ClassLoader::singleton()->totalLoadTime() ;
+}
 ?>

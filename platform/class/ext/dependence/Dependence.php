@@ -21,6 +21,8 @@ class Dependence
 			
 			$aDependence->addRequire($aRequire) ;
 		}
+		
+		return $aDependence ;
 	}
 	
 	public function addRequire(RequireItem $aRequire)

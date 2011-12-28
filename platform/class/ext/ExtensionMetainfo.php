@@ -3,6 +3,7 @@ namespace org\opencomb\platform\ext ;
 
 use org\opencomb\platform\ext\dependence\Dependence;
 use org\jecat\framework\util\VersionCompat;
+use org\jecat\framework\util\VersionScope;
 use org\jecat\framework\lang\Type;
 use org\jecat\framework\fs\IFolder;
 use org\jecat\framework\fs\FileSystem;
@@ -94,6 +95,14 @@ class ExtensionMetainfo extends Object
 		// compat version
 		$aExtMetainfo->aVersionCompat = new VersionCompat() ;
 		$aExtMetainfo->aVersionCompat->addCompatibleVersion($aExtMetainfo->version()) ;
+		if(!empty($aDomMetainfo->versionCompat)){
+			$strVersionCompat = (string)$aDomMetainfo->versionCompat;
+			$arrVersionCompat = preg_split('/[\s]+/',$strVersionCompat,-1,PREG_SPLIT_NO_EMPTY);
+			foreach($arrVersionCompat as $strScope){
+				$aVersionScope = VersionScope::fromString($strScope);
+				$aExtMetainfo->aVersionCompat->addCompatibleVersionScope($aVersionScope);
+			}
+		}
 		
 		// priority
 		if(!empty($aDomMetainfo->priority))
@@ -215,7 +224,7 @@ class ExtensionMetainfo extends Object
 		try{
 			$aExtMetainfo->aDependence = Dependence::loadFromXml($aDomMetainfo) ;
 		}catch(Exception $e){
-			throw new ExtensionException("扩展%s的metainfo.xml存在错误",$aDomMetainfo->name,$e) ;
+			throw new ExtensionException("扩展%s的metainfo.xml存在错误:%s",array($aDomMetainfo->name,$e->message())) ;
 		}
 		
 		return $aExtMetainfo ;

@@ -4,6 +4,7 @@ namespace org\opencomb\platform\ext\dependence ;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\util\VersionScope;
 use org\jecat\framework\util\Version;
+use org\jecat\framework\util\VersionCompat;
 use org\opencomb\platform\Platform;
 use org\opencomb\platform\ext\ExtensionMetainfo;
 
@@ -23,7 +24,7 @@ class RequireItem
 			self::TYPE_EXTENSION ,
 	) ;
 	
-	public function __construct($sType,$sItemName,$aVersionScope)
+	public function __construct($sType,$sItemName,VersionScope $aVersionScope)
 	{
 		if( !in_array($sType,self::$arrTypes) )
 		{
@@ -33,10 +34,9 @@ class RequireItem
 		{
 			throw new Exception("当依赖类型为%s时，必须item属性",$sType) ;
 		}
-		
 		$this->sType = $sType ;
 		$this->sItemName = $sItemName ;
-		$this->aVersionScope = $aVersionScope ;
+		$this->aRequireVersionScope = $aVersionScope ;
 	}
 	
 	public function setVersionScope(VersionScope $aVersionScope)
@@ -49,29 +49,48 @@ class RequireItem
 		switch ($this->sType)
 		{
 			case self::TYPE_LANGUAGE :
+				return $this->checkLanguageVersion();
 				break ;
 			case self::TYPE_LANGUAGE_MODULE :
+				return $this->checkLanguageModuleVersion();
 				break ;
 			case self::TYPE_FRAMEWORK :
 				return $this->checkVersion(Version::FromString(\org\jecat\framework\VERSION)) ;
 				break ;
-				
 			case self::TYPE_PLATFORM :
-				return $this->checkVersion($aPlatform->versionCompat()) ;
-				
+				return $this->checkVersion($aPlatform->version()) ;
+				break;
 			case self::TYPE_EXTENSION :
 				$aExtMeta = $aPlatform->extensions()->extensionMetainfo($this->itemName()) ;
 				if(!$aExtMeta)
 				{
+					throw new Exception('request extension `'.$this->itemName().'` failed : not exist.');
 					return false ;
 				}
 				return $this->checkVersion( $aExtMeta->versionCompat() ) ;
 		}
 	}
 	
-	public function checkVersion(VersionCompat $aVersionCompat)
+	public function checkVersion($aVersion)
 	{
-		
+		if($aVersion instanceof VersionCompat){
+			if(!$aVersion->check($this->aRequireVersionScope)){
+				throw new Exception(
+					'request `'.$this->type().':'.$this->itemName().'` version failed . '.
+					'request for `'.$this->aRequireVersionScope.'` and provide is `'.$aVersion.'`'
+				);
+				return false;
+			}
+		}else if($aVersion instanceof Version){
+			if(!$this->aRequireVersionScope->isInScope($aVersion)){
+				throw new Exception(
+					'request `'.$this->type().':'.$this->itemName().'` version failed . '.
+					'request for `'.$this->aRequireVersionScope.'` and provide is `'.$aVersion.'`'
+				);
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public function itemName()
@@ -81,6 +100,35 @@ class RequireItem
 	public function type()
 	{
 		return $this->sType ;
+	}
+	
+	private function checkLanguageVersion(){
+		if($this->itemName() !== 'php'){
+			throw new Exception('request language failed . not support '.$this->itemName());
+			return false;
+		}else{
+			preg_match('|[\d\.]*|',phpversion(),$sPhpVersion);
+			$aPhpVersion = Version::fromString($sPhpVersion[0]);
+			if(!$this->aRequireVersionScope->isInScope($aPhpVersion)){
+				throw new Exception('request `'.$this->itemName().'` version failed . request for `'.$this->aRequireVersionScope.'` and provide is `'.$aPhpVersion.'`');
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private function checkLanguageModuleVersion(){
+		$sPhpVersion = phpversion($this->itemName());
+		if(empty($sPhpVersion)){
+			throw new Exception('request language module `'.$this->itemName().'` failed : not exist.');
+		}
+		preg_match('|[\d\.]*|',$sPhpVersion,$arrMatch);
+		$aPhpVersion = Version::fromString($arrMatch[0]);
+		if(!$this->aRequireVersionScope->isInScope($aPhpVersion)){
+			throw new Exception('request `'.$this->itemName().'` version failed . request for `'.$this->aRequireVersionScope.'` and provide is `'.$aPhpVersion.'`');
+			return false;
+		}
+		return true;
 	}
 	
 	private $sType ;
