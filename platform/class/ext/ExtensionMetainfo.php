@@ -401,7 +401,7 @@ class ExtensionMetainfo extends Object
 	
 	public function priority()
 	{
-		$this->nPriority ;
+		return $this->nPriority ;
 	}
 	
 	/**
@@ -409,12 +409,12 @@ class ExtensionMetainfo extends Object
 	 */
 	public function dataVersion()
 	{
-		$this->aDataVersion ;
+		return $this->aDataVersion ;
 	}
 	
 	public function dataSetupClass()
 	{
-		$this->sDataSetupClass ;
+		return $this->sDataSetupClass ;
 	}
 	
 	public function dataUpgradeClassIterator()

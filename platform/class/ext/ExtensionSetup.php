@@ -10,6 +10,7 @@ use org\jecat\framework\setting\Setting;
 use org\jecat\framework\fs\IFolder;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\lang\Object;
+use org\jecat\framework\message\MessageQueue;
 
 class ExtensionSetup extends Object
 {
@@ -65,7 +66,7 @@ class ExtensionSetup extends Object
 		return $aExtMeta ;
 	}
 	
-	public function enable($sExtName)
+	public function enable($sExtName , MessageQueue $aMessageQueue)
 	{
 		$aExtMgr = ExtensionManager::singleton() ;
 		
@@ -88,6 +89,12 @@ class ExtensionSetup extends Object
 		$arrEnable[3][] = $sExtName ;
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
 		
+		// 执行 setup
+		$sSetupClassName = $aExtMeta ->dataSetupClass() ;
+		if(is_string($sSetupClassName)){
+			$aSetup = new $sSetupClassName ;
+			return $aSetup->install($aMessageQueue,$aExtMeta);
+		}
 	}
 	
 	public function disable($sExtName)
