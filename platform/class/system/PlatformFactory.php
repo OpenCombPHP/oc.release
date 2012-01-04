@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\jecat\framework\lang\aop\AOP;
+
 use org\jecat\framework\lang\compile\CompilerFactory;
 
 use org\opencomb\platform\ext\ExtensionLoader;
@@ -52,8 +54,10 @@ class PlatformFactory extends HttpAppFactory
 		$aSetting = $this->createSetting($aPlatform) ;
 		Setting::setSingleton($aSetting) ;
 		
+		$aPlatformSerializer = PlatformSerializer::singleton() ;
+		
 		// 从缓存中恢复 platform ---------------
-		if( !$aSetting->item('/platform','serialize',true) or !self::restorePlatformFromCache($aPlatform->cache(),$aPlatform) )
+		if( !$aSetting->item('/platform','serialize',true) or !$aPlatformSerializer->restore($aPlatform,$aPlatform->cache()) )
 		{
 			// 重建 platform
 			// --------------------------
@@ -84,36 +88,41 @@ class PlatformFactory extends HttpAppFactory
 			ExtensionLoader::singleton()->loadAllExtensions($aPlatform->extensions()) ;
 			
 			// 计算 UI template 的编译策略签名
-			UIFactory::singleton()->calculateCompileStrategySignture() ;
+			UIFactory::singleton()->calculateCompileStrategySignture() ;			
+			
+			// 激活所有扩展
+			$this->enableExtensions($aPlatform) ;
 			
 			// 计算class签名
 			$sSignture = ClassLoader::singleton()->compiler()->strategySignature(true) ;
 			$aSetting->setItem('/platform/class','signture',$sSignture) ;
 			
 			// store all !
-			$this->storePlatformToCache($aPlatform->cache(),$aPlatform) ;
+			$aPlatformSerializer->addSystemSingletons() ;
+			$aPlatformSerializer->store($aPlatform,$aPlatform->cache()) ;
 		}			
 
 		else 
-		{			
+		{
 			// 初始化系统无须store/restore的部分
 			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem,$aSetting) ;
 			
 			// (request/respone 需要在ClassLoader之后)
 			$this->initPlatformRequestResponse($aPlatform) ;
+			
+			// 激活所有扩展
+			$this->enableExtensions($aPlatform) ;
+			
+			// 设置 class signture
+			if( $sSignture = Setting::singleton()->item('/platform/class','signture',null) )
+			{
+				ClassLoader::singleton()->compiler()->setStrategySignature($sSignture) ;
+			}
 		} 
 		
 		// 配置 
 		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/platform/class','enableClassPathCache',true) ) ;
 		
-		// 激活所有扩展
-		foreach($aPlatform->extensions()->iterator() as $aExtension)
-		{
-			$aExtension->active($aPlatform) ;
-
-			// 注册 Extension::flyweight()
-			Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
-		}
 		
 		if($aOriApp)
 		{
@@ -123,64 +132,17 @@ class PlatformFactory extends HttpAppFactory
 		return $aPlatform ;
 	}
 	
-	static private $arrSystemSleepObject = array(
-			'org\\jecat\\framework\\lang\\oop\\ClassLoader' ,
-			'org\\jecat\\framework\\system\\AccessRouter' ,
-			'org\\jecat\\framework\\locale\\LocaleManager' ,
-			'org\\jecat\\framework\\setting\\Setting' ,
-			'org\\jecat\\framework\\ui\\xhtml\\UIFactory' ,
-			'org\\jecat\\framework\\mvc\\view\\UIFactory' ,
-			'org\\jecat\\framework\\ui\\SourceFileManager' ,
-			'org\\jecat\\framework\\ui\\xhtml\\weave\\WeaveManager' ,
-			'org\\jecat\\framework\\bean\\BeanFactory' ,
-			'org\\jecat\\framework\\lang\\aop\\AOP' ,
-			'org\\opencomb\\platform\\ext\\ExtensionManager' ,
-	) ;
-	static public function storePlatformToCache(ICache $aCache,Platform $aPlatform)
+	private function enableExtensions(Platform $aPlatform)
 	{
-		foreach(self::$arrSystemSleepObject as $sClass)
+		foreach($aPlatform->extensions()->iterator() as $aExtension)
 		{
-			$aCache->setItem(self::platformObjectCacheStorePath($sClass),$sClass::singleton()) ;
+			$aExtension->active($aPlatform) ;
+
+			// 注册 Extension::flyweight()
+			Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
 		}
-		
-		$aCache->setItem(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder"),$aPlatform->publicFolders()) ;
 	}
-	static private function restorePlatformFromCache(ICache $aCache,Platform $aPlatform)
-	{
-		// 设置 class signture
-		if( $sSignture = Setting::singleton()->item('/platform/class','signture',null) )
-		{
-			CompilerFactory::singleton()->setStrategySignature($sSignture) ;
-		}
-		 
-		// 恢复各个对像
-		foreach(self::$arrSystemSleepObject as $sClass)
-		{
-			$arrInstances[$sClass] = $aCache->item( self::platformObjectCacheStorePath($sClass) ) ;
-			if( !$arrInstances[$sClass] or !($arrInstances[$sClass] instanceof Object) )
-			{
-				return false ;
-			}
-		}
-		
-		// 恢复 public folder 对像
-		$aPublicFolders = $aCache->item(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder")) ;
-		if( !$aPublicFolders or !($aPublicFolders instanceof Object) )
-		{
-			return false ;
-		}
-		
-		// 设置所有对像的单例
-		foreach($arrInstances as $sClass=>$aIns)
-		{
-			$sClass::setSingleton($aIns) ;
-		}
-		
-		// 设置 public folder
-		$aPlatform->setPublicFolders($aPublicFolders) ;
-		 
-		return true ;
-	}
+	
 	static public function clearRestoreCache(Platform $aPlatform)
 	{
 		$aCache = $aPlatform->cache() ;
@@ -190,10 +152,6 @@ class PlatformFactory extends HttpAppFactory
 		}
 		
 		$aCache->delete(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder")) ;
-	}
-	static private function platformObjectCacheStorePath($sClass)
-	{
-		return "/system/objects/".str_replace('\\','.',$sClass) ;
 	}
 	
 	private function initPlatformRequestResponse(Platform $aPlatform)

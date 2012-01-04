@@ -24,6 +24,7 @@ require_once __DIR__."/framework/class/setting/imp/FsSetting.php" ;
 require_once __DIR__."/framework/class/setting/imp/FsKey.php" ;
 require_once __DIR__."/platform/class/Platform.php" ;
 require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
+require_once __DIR__."/platform/class/system/PlatformSerializer.php" ;
 
 
 $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;

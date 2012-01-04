@@ -74,15 +74,7 @@ class ExtensionLoader extends Object
 			BeanFactory::singleton()->beanFolders()->addFolder($aFolder,$sNamespace) ;
 		}
 		
-		$sClass = $aExtMeta->className() ;
-		if(!class_exists($sClass))
-		{
-			throw new ExtensionException("找不到扩展 %s 指定的扩展类: %s",array($sName,$sClass)) ;
-		}
-		$aExtension = new $sClass($aExtMeta) ;
-		$aExtension->setApplication($aPlatform) ;
-		$aExtensionManager->add($aExtension) ;
-				
+		$aExtension = $aExtensionManager->extension($sName) ;
 		$aExtension->load() ;
 				
 		

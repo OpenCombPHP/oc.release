@@ -10,7 +10,7 @@ use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
 
-class ExtensionManager extends Object
+class ExtensionManager extends Object implements \Serializable
 {
 	public function __construct(Setting $aSetting=null)
 	{
@@ -86,7 +86,21 @@ class ExtensionManager extends Object
 	
 	public function extension($sName) 
 	{
-		return isset($this->arrExtensionInstances[$sName])? $this->arrExtensionInstances[$sName]: null ;
+		if( !isset($this->arrExtensionInstances[$sName]) )
+		{
+			if( !$aExtMeta = $this->extensionMetainfo($sName) )
+			{
+				return null ;
+			}
+			$sClass = $aExtMeta->className() ;
+			if(!class_exists($sClass))
+			{
+				throw new ExtensionException("找不到扩展 %s 指定的扩展类: %s",array($sName,$sClass)) ;
+			}
+			$aExtension = new $sClass($aExtMeta) ;
+			$this->add($aExtension) ; 
+		}
+		return $this->arrExtensionInstances[$sName] ;
 	}
 	
 	public function add(Extension $aExt)
@@ -119,6 +133,27 @@ class ExtensionManager extends Object
 		{
 			$this->arrInstalledExtensions[$aExtMetainfo->name()] = $aExtMetainfo ;
 		}
+	}
+	
+	public function serialize()
+	{
+		$arrData = array(
+				'arrEnableExtensiongNames' => &$this->arrEnableExtensiongNames ,
+				'arrInstalledExtensions' => &$this->arrInstalledExtensions ,
+				'arrExtensionPackages' => &$this->arrExtensionPackages ,
+		) ;
+		
+		return serialize($arrData) ;
+	}
+	
+	public function unserialize($serialized)
+	{
+		$this->__construct() ;
+	
+		$arrData = unserialize($serialized) ;
+		$this->arrEnableExtensiongNames =& $arrData['arrEnableExtensiongNames'] ;
+		$this->arrInstalledExtensions =& $arrData['arrInstalledExtensions'] ;
+		$this->arrExtensionPackages =& $arrData['arrExtensionPackages'] ;
 	}
 	
 	private $arrEnableExtensiongNames = array() ;
