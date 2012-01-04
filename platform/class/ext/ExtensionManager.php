@@ -10,7 +10,7 @@ use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
 
-class ExtensionManager extends Object implements \Serializable
+class ExtensionManager extends Object
 {
 	public function __construct(Setting $aSetting=null)
 	{
@@ -133,27 +133,6 @@ class ExtensionManager extends Object implements \Serializable
 		{
 			$this->arrInstalledExtensions[$aExtMetainfo->name()] = $aExtMetainfo ;
 		}
-	}
-	
-	public function serialize()
-	{
-		$arrData = array(
-				'arrEnableExtensiongNames' => &$this->arrEnableExtensiongNames ,
-				'arrInstalledExtensions' => &$this->arrInstalledExtensions ,
-				'arrExtensionPackages' => &$this->arrExtensionPackages ,
-		) ;
-		
-		return serialize($arrData) ;
-	}
-	
-	public function unserialize($serialized)
-	{
-		$this->__construct() ;
-	
-		$arrData = unserialize($serialized) ;
-		$this->arrEnableExtensiongNames =& $arrData['arrEnableExtensiongNames'] ;
-		$this->arrInstalledExtensions =& $arrData['arrInstalledExtensions'] ;
-		$this->arrExtensionPackages =& $arrData['arrExtensionPackages'] ;
 	}
 	
 	private $arrEnableExtensiongNames = array() ;

@@ -78,7 +78,17 @@ class PlatformSerializer extends Object
 			{
 				return false ;
 			}
-			$arrInfo['instance'] = $aInstance ;
+		
+			// set flyweight
+			if($flyweightKey)
+			{
+				$sClass::setFlyweight($aInstance,$flyweightKey) ;
+			}
+			// set singleton
+			else
+			{
+				$sClass::setSingleton($aInstance) ;
+			}
 		}
 		
 		// 恢复 public folder 对像
@@ -86,24 +96,6 @@ class PlatformSerializer extends Object
 		if( !$aPublicFolders or !($aPublicFolders instanceof Object) )
 		{
 			return false ;
-		}
-		
-		// ------------------------------------------
-		// 设置 singleton 或 flyweight
-		foreach($arrInstanceInfos as &$arrInfo)
-		{
-			list($sClass,$flyweightKey,) = $arrInfo ;
-			
-			// flyweight
-			if($flyweightKey)
-			{
-				$sClass::setFlyweight($arrInfo['instance'],$flyweightKey) ;
-			}
-			// singleton
-			else
-			{
-				$sClass::setSingleton($arrInfo['instance']) ;
-			}
 		}
 			
 		// 设置 public folder
@@ -114,13 +106,7 @@ class PlatformSerializer extends Object
 	
 	public function clearRestoreCache(Platform $aPlatform)
 	{
-		$aCache = $aPlatform->cache() ;
-		foreach(self::$arrSystemSleepObject as $sClass)
-		{
-			$aCache->delete( self::platformObjectCacheStorePath($sClass) ) ;
-		}
-	
-		$aCache->delete(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder")) ;
+		$aPlatform->cache()->delete('/system/objects') ;
 	}
 	
 	public function cacheStorePath($sClass,$flyweightKey=null)
