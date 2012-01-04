@@ -54,11 +54,11 @@ class PlatformFactory extends HttpAppFactory
 		$aSetting = $this->createSetting($aPlatform) ;
 		Setting::setSingleton($aSetting) ;
 		
-		$aPlatformSerializer = PlatformSerializer::singleton() ;
+		$aPlatformSerializer = PlatformSerializer::singleton(true,$aPlatform) ;
 		
 		// 从缓存中恢复 platform ---------------
-		if( !$aSetting->item('/platform','serialize',true) or !$aPlatformSerializer->restore($aPlatform,$aPlatform->cache()) )
-		{
+		if( !$aSetting->item('/platform','serialize',true) or !$aPlatformSerializer->restore() )
+		{			
 			// 重建 platform
 			// --------------------------
 			
@@ -84,6 +84,9 @@ class PlatformFactory extends HttpAppFactory
 			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Prototype','prototype') ;
 			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Association','association') ;
 			
+			// store system objects !
+			$aPlatformSerializer->addSystemSingletons() ;
+			
 			// 加载所有扩展
 			ExtensionLoader::singleton()->loadAllExtensions($aPlatform->extensions()) ;
 			
@@ -96,10 +99,6 @@ class PlatformFactory extends HttpAppFactory
 			// 计算class签名
 			$sSignture = ClassLoader::singleton()->compiler()->strategySignature(true) ;
 			$aSetting->setItem('/platform/class','signture',$sSignture) ;
-			
-			// store all !
-			$aPlatformSerializer->addSystemSingletons() ;
-			$aPlatformSerializer->store($aPlatform,$aPlatform->cache()) ;
 		}			
 
 		else 

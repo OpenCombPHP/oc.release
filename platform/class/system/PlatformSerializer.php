@@ -6,7 +6,34 @@ use org\jecat\framework\cache\ICache;
 use org\jecat\framework\lang\Object;
 
 class PlatformSerializer extends Object
-{	
+{
+	public function __construct(Platform $aPlatform)
+	{
+		$this->aPlatform = $aPlatform ;
+	}
+	
+	public function __destruct()
+	{
+		if($this->bNeedStore)
+		{
+			$this->store() ;
+		}
+	}
+	
+	public function addSystemObject(Object $aObject,$sClass=null,$flyweightKey=null)
+	{
+		if(!$sClass)
+		{
+			$sClass = get_class($aObject) ;
+		}
+		
+		$this->arrSystemObjects[] = array(
+				$aObject, $sClass, &$flyweightKey
+		) ;
+
+		$this->bNeedStore = true ;
+	}
+	
 	public function addSystemSingletons()
 	{
 		$arrClasses = array(
@@ -27,20 +54,12 @@ class PlatformSerializer extends Object
 		}
 	}
 	
-	public function addSystemObject(Object $aObject,$sClass=null,$flyweightKey=null)
+	public function store()
 	{
-		if(!$sClass)
-		{
-			$sClass = get_class($aObject) ;
-		}
+		$aOriPlatform = Platform::switchSingleton($this->aPlatform) ;
 		
-		$this->arrSystemObjects[] = array(
-				$aObject, $sClass, &$flyweightKey
-		) ;
-	}
-	
-	public function store(Platform $aPlatform,ICache $aCache)
-	{
+		$aCache = $this->aPlatform->cache() ;
+		
 		$arrInstanceInfos = array() ;
 		
 		// 缓存对像
@@ -56,14 +75,26 @@ class PlatformSerializer extends Object
 		$aCache->setItem($this->cacheStorePath('platform-serialize-info',null),$arrInstanceInfos) ;
 		
 		// 保存 platform 的 publicFolder 对像
-		$aCache->setItem($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder'),$aPlatform->publicFolders()) ;
+		$aCache->setItem($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder'),$this->aPlatform->publicFolders()) ;
+		
+		$this->bNeedStore = false ;
+		
+		// 还原 platform 
+		Platform::switchSingleton($aOriPlatform) ;
 	}
 	
-	public function restore(Platform $aPlatform,ICache $aCache)
+	public function restore()
 	{
+		$aOriPlatform = Platform::switchSingleton($this->aPlatform) ;
+		
+		$aCache = $this->aPlatform->cache() ;
+		
 		// 恢复对像信息
 		if( !$arrInstanceInfos=$aCache->item($this->cacheStorePath('platform-serialize-info',null)) )
 		{
+			// 还原 platform 
+			Platform::switchSingleton($aOriPlatform) ;
+			
 			return false ;
 		}
 		
@@ -76,6 +107,9 @@ class PlatformSerializer extends Object
 			$aInstance = $aCache->item( $this->cacheStorePath($sClass) ) ;
 			if( !$aInstance or !($aInstance instanceof Object) )
 			{
+				// 还原 platform 
+				Platform::switchSingleton($aOriPlatform) ;
+				
 				return false ;
 			}
 		
@@ -95,18 +129,24 @@ class PlatformSerializer extends Object
 		$aPublicFolders = $aCache->item($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder')) ;
 		if( !$aPublicFolders or !($aPublicFolders instanceof Object) )
 		{
+			// 还原 platform 
+			Platform::switchSingleton($aOriPlatform) ;
+			
 			return false ;
 		}
 			
 		// 设置 public folder
-		$aPlatform->setPublicFolders($aPublicFolders) ;
+		$this->aPlatform->setPublicFolders($aPublicFolders) ;
 	
+		// 还原 platform 
+		Platform::switchSingleton($aOriPlatform) ;
+			
 		return true ;
 	}
 	
-	public function clearRestoreCache(Platform $aPlatform)
+	public function clearRestoreCache()
 	{
-		$aPlatform->cache()->delete('/system/objects') ;
+		$this->aPlatform->cache()->delete('/system/objects') ;
 	}
 	
 	public function cacheStorePath($sClass,$flyweightKey=null)
@@ -119,4 +159,6 @@ class PlatformSerializer extends Object
 	}
 	
 	private $arrSystemObjects ;
+	
+	private $bNeedStore = false ;
 }
