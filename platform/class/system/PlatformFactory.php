@@ -142,17 +142,6 @@ class PlatformFactory extends HttpAppFactory
 		}
 	}
 	
-	static public function clearRestoreCache(Platform $aPlatform)
-	{
-		$aCache = $aPlatform->cache() ;
-		foreach(self::$arrSystemSleepObject as $sClass)
-		{
-			$aCache->delete( self::platformObjectCacheStorePath($sClass) ) ;
-		}
-		
-		$aCache->delete(self::platformObjectCacheStorePath("org\\opencomb\\platform\\publicFolder")) ;
-	}
-	
 	private function initPlatformRequestResponse(Platform $aPlatform)
 	{
 		// Request
