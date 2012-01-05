@@ -1,7 +1,7 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\opencomb\platform\system\PlatformFactory;
+use org\opencomb\platform\system\PlatformSerializer;
 
 use org\opencomb\platform\Platform;
 
@@ -58,7 +58,7 @@ class ExtensionSetup extends Object
 		$aExtMgr->addInstalledExtension($aExtMeta) ;
 		
 		// 清理系统缓存
-		PlatformFactory::singleton()->clearRestoreCache(Platform::singleton()) ;
+		PlatformSerializer::singleton()->clearRestoreCache() ;
 		
 		// 卸载新扩展的类包
 		$this->unloadClassPackages($aExtMeta) ;
@@ -70,10 +70,12 @@ class ExtensionSetup extends Object
 	{
 		$aExtMgr = ExtensionManager::singleton() ;
 		
-		// 已经安装
-		if($aExtMgr->extension($sExtName))
-		{
-			return ;
+		// 已经激活
+		foreach($aExtMgr->enableExtensionNameIterator() as $enableExtensionName){
+			if($enableExtensionName == $sExtName){
+				throw new Exception("启用扩展失败，指定的扩展已经激活：%s",$sExtName) ;
+				return ;
+			}
 		}
 		
 		if( !$aExtMeta = $aExtMgr->extensionMetainfo($sExtName) )
@@ -86,7 +88,7 @@ class ExtensionSetup extends Object
 		
 		// 设置 setting
 		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
-		$arrEnable[3][] = $sExtName ;
+		$arrEnable[$aExtMeta->priority()][] = $sExtName ;
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
 		
 		// 执行 setup
