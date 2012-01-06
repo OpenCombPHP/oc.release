@@ -58,6 +58,10 @@ class ExtensionMetainfo extends Object
 			throw new ExtensionException("扩展 metainfo 文件内容无效：%s",$aMetainfoFile->url()) ;
 		}
 		
+		return self::loadFromXML($aDomMetainfo , $sExtPath);
+	}
+	
+	static public function loadFromXML(\SimpleXMLElement $aDomMetainfo ,$sExtPath = ''){
 		// 检查必须的参数
 		foreach( array('name','version','title') as $sNodeName )
 		{
