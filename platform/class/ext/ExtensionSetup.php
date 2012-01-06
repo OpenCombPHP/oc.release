@@ -1,8 +1,6 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\opencomb\platform\system\PlatformSerializer;
-
 use org\opencomb\platform\Platform;
 
 use org\jecat\framework\setting\Setting;
@@ -11,16 +9,18 @@ use org\jecat\framework\fs\IFolder;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\message\MessageQueue;
+use org\jecat\framework\message\Message;
+use org\jecat\framework\lang\oop\ClassLoader ;
+use org\jecat\framework\fs\FileSystem;
 
 class ExtensionSetup extends Object
 {
-	public function install(IFolder $aExtensionFolder)
+	public function install(IFolder $aExtensionFolder , MessageQueue $aMessageQueue)
 	{
 		$aExtMgr = ExtensionManager::singleton() ;
 		
 		// 读取扩展的 metainfo 
 		$aExtMeta = ExtensionMetainfo::load($aExtensionFolder) ;
-		
 		
 		// 检查扩展是否已经安装
 		if( $aInstalled=$aExtMgr->extensionMetainfo( $aExtMeta->name() ) )
@@ -40,13 +40,13 @@ class ExtensionSetup extends Object
 		// 资源升级
 		if( $aInstalled or $this->dataVersion($aExtMeta->name()) )	// 已经安装同名扩展，或系统中保留此扩展数据
 		{
-			$this->upgradeData($aExtMeta) ;
+			$this->upgradeData($aExtMeta , $aMessageQueue) ;
 		}
 		
 		// 安装资源
 		else
 		{
-			$this->installData($aExtMeta) ;
+			$this->installData($aExtMeta , $aMessageQueue) ;
 		}
 		
 		// 设置 setting
@@ -57,16 +57,13 @@ class ExtensionSetup extends Object
 		// 添加扩展的安装信息
 		$aExtMgr->addInstalledExtension($aExtMeta) ;
 		
-		// 清理系统缓存
-		PlatformSerializer::singleton()->clearRestoreCache() ;
-		
 		// 卸载新扩展的类包
 		$this->unloadClassPackages($aExtMeta) ;
 		
 		return $aExtMeta ;
 	}
 	
-	public function enable($sExtName , MessageQueue $aMessageQueue)
+	public function enable($sExtName)
 	{
 		$aExtMgr = ExtensionManager::singleton() ;
 		
@@ -90,13 +87,6 @@ class ExtensionSetup extends Object
 		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
 		$arrEnable[$aExtMeta->priority()][] = $sExtName ;
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
-		
-		// 执行 setup
-		$sSetupClassName = $aExtMeta ->dataSetupClass() ;
-		if(is_string($sSetupClassName)){
-			$aSetup = new $sSetupClassName ;
-			return $aSetup->install($aMessageQueue,$aExtMeta);
-		}
 	}
 	
 	public function disable($sExtName)
@@ -119,12 +109,34 @@ class ExtensionSetup extends Object
 	
 	private function loadClassPackages(ExtensionMetainfo $aExtMeta)
 	{
-	
+		$aClassLoader = ClassLoader::singleton();
+		// ClassLoader 中已有的package的path
+		$arrClassLoaderPackagePath = array();
+		foreach($aClassLoader->packageIterator() as $package){
+			$arrClassLoaderPackagePath [] = $package->folder()->path() ;
+		}
+		// 加载class
+		$aExtFolder = FileSystem::singleton()->findFolder($aExtMeta->installPath());
+		foreach( $aExtMeta->pakcageIterator() as $package){
+			// $package[0] 是 namespace
+			// $package[1] 是 文件夹，从$aExtMeta->installPath()算起
+			$sSourceFolder = $aExtFolder->path().$package[1];
+			if(in_array($sSourceFolder,$arrClassLoaderPackagePath)){
+				continue;
+			}
+			$this->arrLoadedClassPackages[] = $aClassLoader->addPackage($package[0],$sSourceFolder);
+		}
 	}
 	private function unloadClassPackages(ExtensionMetainfo $aExtMeta)
 	{
-		
+		$aClassLoader = ClassLoader::singleton();
+		foreach( $this->arrLoadedClassPackages as $package){
+			$aClassLoader->removePackage($package);
+		}
 	}
+	
+	// for function loadClassPackages() and unloadClassPackages()
+	private $arrLoadedClassPackages = array ();
 	
 	/**
 	 * 查看扩展数据的版本（包括已卸载扩展保留在系统中的数据）
@@ -145,10 +157,13 @@ class ExtensionSetup extends Object
 	/**
 	 * 安装资源
 	 */
-	private function installData(ExtensionMetainfo $aExtMeta)
+	private function installData(ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
 		$sDataSetupClass = $aExtMeta->dataSetupClass() ;
-		
+		if(is_string($sDataSetupClass)){
+			$aSetup = new $sDataSetupClass ;
+			$aSetup->install($aMessageQueue,$aExtMeta);
+		}
 	}
 	
 }
