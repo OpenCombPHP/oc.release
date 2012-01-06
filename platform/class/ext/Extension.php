@@ -27,7 +27,7 @@ class Extension extends Object
 	public function publicFolder()
 	{
 		//IFolder
-		$strPath = '/data/public/'.$this->metainfo()->name().'/';
+		$strPath = '/data/public/'.$this->metainfo()->name();
 		return FileSystem::singleton()->findFolder($strPath,FileSystem::FIND_AUTO_CREATE);
 	}
 	/**
