@@ -11,33 +11,30 @@ class PathMacroCompiler extends JcPathMacroCompiler
 	
 	public function compile(IObject $aObject,TargetCodeOutputStream $aDev,CompilerManager $aCompilerManager)
 	{
-		$sExtension = null ;
-
 		$sContents = trim($aObject->source()) ;
 		
-		if( $sContents=='ext')
+		if(substr($sContents,0,2)=='*.')
 		{
-			$sExtension = $aObject->root()->ns() ;
-		}
-		else if( substr($sContents,0,4)=='ext.' )
-		{
-			$sExtension = substr($sContents,4) ;
-			if( $sExtension=='*' )
-			{
-				$sExtension = $aObject->root()->ns() ;
-			}
-			$sExtension = addslashes($sExtension) ;
-		}
-		
-		if($sExtension)
-		{
-			$aDev->write( "if(\$aBelongsExt=\\org\\jecat\\framework\\system\\Application::singleton()->extensions()->extension('$sExtension')){\r\n" ) ;
-			$aDev->write( "	\$aDevice->write(\$aBelongsExt->url()) ;" ) ;
-			$aDev->write( "}" ) ;
+			parent::compile($aObject,$aDev,$aCompilerManager) ;
 		}
 		else
 		{
-			parent::compile($aObject,$aDev,$aCompilerManager) ;
+			@list($sNamespace,$sPath) = explode(':',$sContents,2) ;
+			if(!$sNamespace)
+			{
+				$sNamespace = $aObject->root()->ns() ;
+			}
+			
+			if(!$sPath)
+			{
+				$aDev->output( "无效的{/}宏：".$sContents ) ;
+			}
+			else
+			{
+				$aDev->write( "if(\$aFile=\\org\\opencomb\\platform\\Platform::singleton()->publicFolders()->find(\"$sPath\",\"$sNamespace\")){\r\n" ) ;
+				$aDev->write( "	\$aDevice->write(\$aFile->httpUrl()) ;" ) ;
+				$aDev->write( "}" ) ;
+			}
 		}
 	}
 }
