@@ -25,6 +25,10 @@ class Prototype extends JcPrototype
 	
 	static public function transTableName($sTableName,$sNamespace)
 	{
+		if(strpos($sTableName,':')!==false)
+		{
+			list($sNamespace,$sTableName) = explode(':',$sTableName) ;
+		}
 		return $sNamespace . '_' . $sTableName ;
 	}
 }
