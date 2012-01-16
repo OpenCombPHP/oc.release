@@ -102,6 +102,10 @@ class RequireItem
 		return $this->sType ;
 	}
 	
+	public function versionScope(){
+		return $this->aRequireVersionScope ;
+	}
+	
 	private function checkLanguageVersion(){
 		if($this->itemName() !== 'php'){
 			throw new Exception('request language failed . not support '.$this->itemName());
