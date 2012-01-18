@@ -126,7 +126,26 @@ class ExtensionManager extends Object
 			}
 		}
 	}
-		
+	
+	public function extensionNameByNamespace($sNs)
+	{
+		$nNsLen = strlen($sNs) ;
+			
+		for(end($this->arrExtensionPackages);$sNamespace=key($this->arrExtensionPackages);prev($this->arrExtensionPackages))
+		{
+			$nNamespaceLen = strlen($sNamespace) ;
+			if( $nNsLen >= $nNamespaceLen 
+				and substr($sNs,0,$nNamespaceLen)==$sNamespace 
+				and (
+					substr($sNs,$nNamespaceLen,1)=='\\'
+					or $nNsLen == $nNamespaceLen )
+				)
+			{
+				return current($this->arrExtensionPackages) ;
+			}
+		}
+	}
+	
 	public function addInstalledExtension(ExtensionMetainfo $aExtMetainfo)
 	{
 		if( !isset($this->arrInstalledExtensions[$aExtMetainfo->name()]) )
