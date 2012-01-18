@@ -2,7 +2,7 @@
 namespace org\opencomb\platform ;
 
 // 初始化 jcat 框架
-use org\jecat\framework\system\Request;
+use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\system\AccessRouter;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\fs\imp\LocalFileSystem;

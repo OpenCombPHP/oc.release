@@ -2,7 +2,7 @@
 namespace org\opencomb\platform\system ;
 
 use org\opencomb\platform\ext\Extension;
-use org\jecat\framework\system\Request ;
+use org\jecat\framework\mvc\controller\Request ;
 use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
 class AccessRouter extends JcAccessRouter

@@ -2,19 +2,16 @@
 namespace org\opencomb\platform\system ;
 
 use org\jecat\framework\lang\aop\AOP;
-
 use org\jecat\framework\lang\compile\CompilerFactory;
-
 use org\opencomb\platform\ext\ExtensionLoader;
-
 use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\session\OriginalSession;
 use org\jecat\framework\session\Session;
 use org\jecat\framework\db\DB;
 use org\jecat\framework\db\driver\PDODriver;
 use org\jecat\framework\cache\ICache;
-use org\jecat\framework\system\Response;
-use org\jecat\framework\system\Request;
+use org\jecat\framework\mvc\controller\Response;
+use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\locale\LocaleManager;
 use org\jecat\framework\fs\FileSystem;
