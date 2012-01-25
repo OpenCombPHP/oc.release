@@ -32,7 +32,7 @@ use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
 class PlatformFactory extends HttpAppFactory
 {
-	static public function singleton($bCreateNew=true)
+	static public function singleton($bCreateNew=true,$createArgvs=null,$sClass=null)
 	{
 		return Object::singleton($bCreateNew,null,__CLASS__) ;
 	}

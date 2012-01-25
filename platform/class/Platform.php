@@ -24,7 +24,7 @@ class Platform extends Application
 	/**
 	 * @return Platform
 	 */
-	static public function singleton()
+	static public function singleton($bCreateNew=true,$createArgvs=null,$sClass=null)
 	{
 		return parent::singleton() ;
 	}
