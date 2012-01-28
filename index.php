@@ -46,4 +46,4 @@ if(empty($_GET['noframe'])){
 	echo $aPlatform->uptime(true),'<br />' ;
 	echo ClassLoader::singleton()->totalLoadTime() ;
 }
-?>
+

@@ -12,21 +12,30 @@ use org\jecat\framework\lang\Object;
 
 class ExtensionManager extends Object
 {
+	/**
+	 * @example /配置/读取系统的配置
+	 * @forwiki /配置
+	 * @param Setting $aSetting
+	 */
 	public function __construct(Setting $aSetting=null)
 	{
 		if(!$aSetting)
 		{
+			// 取得 Setting 的单例对象
 			$aSetting = Setting::singleton() ;
 		}
 		
 		$this->arrInstalledExtensions = array() ;
 		
+		// 取得Setting中的item数据：已安装扩展的路径数组
+		// 如果指定的item不存在返回 null （该item以数组形式保存在 setting中） 。
 		foreach( $aSetting->item("/extensions",'installeds')?: array()  as $sExtPath )
-		{		
+		{
 			$aExtension = ExtensionMetainfo::load($sExtPath) ;
 			$this->addInstalledExtension($aExtension) ;
 		}
 		
+		// 取得Settnig中的另一项item数据：激活使用的扩展名称数组
 		$this->arrEnableExtensiongNames = $aSetting->item("/extensions",'enable') ?: array() ;
 		
 		$this->aSetting = $aSetting ;

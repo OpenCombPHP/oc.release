@@ -16,6 +16,9 @@ use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\opencomb\platform\resrc\ResourceManager;
 use org\opencomb\platform\system\PlatformFactory ;
 
+/**
+ * @wiki /蜂巢/平台
+ */
 class Platform extends Application
 {
 	const version = '0.2.0.0' ;
