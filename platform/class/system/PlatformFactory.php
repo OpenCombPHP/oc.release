@@ -85,13 +85,13 @@ class PlatformFactory extends HttpAppFactory
 			$aPlatformSerializer->addSystemSingletons() ;
 			
 			// 加载所有扩展
-			ExtensionLoader::singleton()->loadAllExtensions($aPlatform->extensions()) ;
+			ExtensionLoader::singleton()->loadAllExtensions($aPlatform,$aPlatform->extensions()) ;
 			
 			// 计算 UI template 的编译策略签名
 			UIFactory::singleton()->calculateCompileStrategySignture() ;			
 			
 			// 激活所有扩展
-			$this->enableExtensions($aPlatform) ;
+			ExtensionLoader::singleton()->enableExtensions($aPlatform,$aPlatform->extensions()) ;
 			
 			// 计算class签名
 			$sSignture = ClassLoader::singleton()->compiler()->strategySignature(true) ;
@@ -126,17 +126,6 @@ class PlatformFactory extends HttpAppFactory
 		}
 		
 		return $aPlatform ;
-	}
-	
-	private function enableExtensions(Platform $aPlatform)
-	{
-		foreach($aPlatform->extensions()->iterator() as $aExtension)
-		{
-			$aExtension->active($aPlatform) ;
-
-			// 注册 Extension::flyweight()
-			Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
-		}
 	}
 	
 	private function initPlatformRequestResponse(Platform $aPlatform)

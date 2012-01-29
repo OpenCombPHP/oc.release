@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\lang\oop\ClassLoader;
@@ -9,18 +10,18 @@ use org\jecat\framework\mvc\view\UIFactory;
 
 class ExtensionLoader extends Object
 {
-	public function loadAllExtensions(ExtensionManager $aExtensionManager)
+	public function loadAllExtensions(Platform $aPlatform,ExtensionManager $aExtensionManager)
 	{
 		foreach($aExtensionManager->extensionPriorities() as $nPriority)
 		{
 			foreach($aExtensionManager->enableExtensionNameIterator($nPriority) as $sExtName)
 			{
-				$this->loadExtension($aExtensionManager,$sExtName,$nPriority) ;
+				$this->loadExtension($aPlatform,$aExtensionManager,$sExtName,$nPriority) ;
 			}
 		}
 	}
 	
-	public function loadExtension(ExtensionManager $aExtensionManager,$sName,$nPriority=-1)
+	public function loadExtension(Platform $aPlatform,ExtensionManager $aExtensionManager,$sName,$nPriority=-1)
 	{
 		if(!$aExtMeta = $aExtensionManager->extensionMetainfo($sName))
 		{
@@ -74,9 +75,14 @@ class ExtensionLoader extends Object
 			BeanFactory::singleton()->beanFolders()->addFolder($aFolder,$sNamespace) ;
 		}
 		
+		// 建立扩展实例
 		$aExtension = $aExtensionManager->extension($sName) ;
-		$aExtension->load() ;
-				
+		
+		// 注册 Extension::flyweight()
+		Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
+		
+		// 执行扩展的加载函数
+		$aExtension->load($aPlatform) ;
 		
 		// 设置 priority
 		if( $nPriority<0 )
@@ -88,6 +94,15 @@ class ExtensionLoader extends Object
 		
 		return $aExtension ;
 	}
+	
+	
+	public function enableExtensions(Platform $aPlatform,ExtensionManager $aExtensionManager)
+	{
+		foreach($aExtensionManager->iterator() as $aExtension)
+		{
+			$aExtension->active($aPlatform) ;
+		}
+	}
+	
 }
 
-?>
