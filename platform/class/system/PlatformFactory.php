@@ -107,7 +107,7 @@ class PlatformFactory extends HttpAppFactory
 			$this->initPlatformRequestResponse($aPlatform) ;
 			
 			// 激活所有扩展
-			$this->enableExtensions($aPlatform) ;
+			ExtensionLoader::singleton()->enableExtensions($aPlatform,$aPlatform->extensions()) ;
 			
 			// 设置 class signture
 			if( $sSignture = Setting::singleton()->item('/platform/class','signture',null) )

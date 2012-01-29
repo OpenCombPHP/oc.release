@@ -100,6 +100,13 @@ class ExtensionLoader extends Object
 	{
 		foreach($aExtensionManager->iterator() as $aExtension)
 		{
+			// 注册 Extension::flyweight()
+			$sExtensionName = $aExtension->metainfo()->name() ;
+			if( !Extension::flyweight($sExtensionName,false) )
+			{
+				Extension::setFlyweight($aExtension,$sExtensionName) ;
+			}
+			
 			$aExtension->active($aPlatform) ;
 		}
 	}
