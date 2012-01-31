@@ -5,6 +5,16 @@ use org\jecat\framework\mvc\model\db\orm\Prototype as JcPrototype ;
 
 class Prototype extends JcPrototype
 {
+	static public function createBean(array & $arrConfig,$sNamespace='*',$bBuildAtOnce,\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
+	{
+		if( !empty($arrConfig['table']) )
+		{
+			self::transTableNameRef($arrConfig['table'],$sNamespace) ;
+			$arrConfig['tableTransed'] = true ;
+		}
+			
+		return parent::createBean($arrConfig,$sNamespace,$bBuildAtOnce,$aBeanFactory) ;
+	}
 	public function buildBean(array & $arrConfig,$sNamespace='*',\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
 	{
 		if(empty($arrConfig['disableTableTrans']))
@@ -14,9 +24,9 @@ class Prototype extends JcPrototype
 				$arrConfig['table'] = $arrConfig['name'] ;
 			}
 			
-			if( !empty($arrConfig['table']) )
+			if( !empty($arrConfig['table']) and empty($arrConfig['tableTransed']) )
 			{
-				$arrConfig['table'] = self::transTableName($arrConfig['table'],$sNamespace) ;
+				self::transTableNameRef($arrConfig['table'],$sNamespace) ;
 			}
 		}
 		
@@ -25,11 +35,15 @@ class Prototype extends JcPrototype
 	
 	static public function transTableName($sTableName,$sNamespace)
 	{
+		return self::transTableNameRef($sTableName,$sNamespace);
+	}
+	static public function transTableNameRef(&$sTableName,&$sNamespace)
+	{
 		if(strpos($sTableName,':')!==false)
 		{
 			list($sNamespace,$sTableName) = explode(':',$sTableName) ;
 		}
-		return $sNamespace . '_' . $sTableName ;
+		return $sTableName = $sNamespace . '_' . $sTableName ;
 	}
 }
 
