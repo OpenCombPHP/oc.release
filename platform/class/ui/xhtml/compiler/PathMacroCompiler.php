@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\platform\ui\xhtml\compiler ;
 
+use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\ui\TargetCodeOutputStream;
 use org\jecat\framework\ui\IObject;
 use org\jecat\framework\ui\CompilerManager;
@@ -9,13 +10,13 @@ use org\jecat\framework\ui\xhtml\compiler\macro\PathMacroCompiler as JcPathMacro
 class PathMacroCompiler extends JcPathMacroCompiler
 {
 	
-	public function compile(IObject $aObject,TargetCodeOutputStream $aDev,CompilerManager $aCompilerManager)
+	public function compile(IObject $aObject,ObjectContainer $aObjectContainer,TargetCodeOutputStream $aDev,CompilerManager $aCompilerManager)
 	{
 		$sContents = trim($aObject->source()) ;
 		
 		if(substr($sContents,0,2)=='*.')
 		{
-			parent::compile($aObject,$aDev,$aCompilerManager) ;
+			parent::compile($aObject,$aObjectContainer,$aDev,$aCompilerManager) ;
 		}
 		else
 		{
