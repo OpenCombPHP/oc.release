@@ -9,7 +9,7 @@ class Prototype extends JcPrototype
 	{
 		if( !empty($arrConfig['table']) )
 		{
-			self::transTableNameRef($arrConfig['table'],$sNamespace) ;
+			$arrConfig['table'] = self::transTableName($arrConfig['table'],$sNamespace) ;
 			$arrConfig['tableTransed'] = true ;
 		}
 			
@@ -26,7 +26,7 @@ class Prototype extends JcPrototype
 			
 			if( !empty($arrConfig['table']) and empty($arrConfig['tableTransed']) )
 			{
-				self::transTableNameRef($arrConfig['table'],$sNamespace) ;
+				$arrConfig['table'] = self::transTableName($arrConfig['table'],$sNamespace) ;
 			}
 		}
 		

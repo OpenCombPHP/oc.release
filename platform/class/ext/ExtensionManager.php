@@ -13,7 +13,7 @@ use org\jecat\framework\lang\Object;
 class ExtensionManager extends Object
 {
 	/**
-	 * @example /配置/读取系统的配置
+	 * @example /配置/读取item
 	 * @forwiki /配置
 	 * @param Setting $aSetting
 	 */
