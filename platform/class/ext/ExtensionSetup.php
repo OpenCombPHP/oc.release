@@ -93,9 +93,17 @@ class ExtensionSetup extends Object
 		$aExtMgr->addEnableExtension($aExtMeta);
 	}
 	
-	public function uninstall($sExtName)
+	const TYPE_KEEP = 'keep';
+	const TYPE_REMOVE = 'remove';
+	public function uninstall($sExtName , $sCode ,$sData)
 	{
 		$aExtensionManager = ExtensionManager::singleton();
+		
+		if( !$aExtMeta = $aExtensionManager->extensionMetainfo($sExtName) )
+		{
+			throw new Exception("卸载扩展失败，指定的扩展尚未安装：%s",$sExtName) ;
+		}
+		
 		// check dependence
 		$arrDependence = array();
 		foreach($aExtensionManager->iterator() as $aExtension){
@@ -118,6 +126,46 @@ class ExtensionSetup extends Object
 			);
 			return FALSE;
 		}
+		
+		// code
+		switch($sCode){
+		case self::TYPE_KEEP:
+			break;
+		case self::TYPE_REMOVE:
+			break;
+		default:
+			throw new Exception(
+				'sCode 参数 错误 ： `%s`',
+				array(
+					$sCode,
+				)
+			);
+			break;
+		}
+		
+		// data
+		switch($sData){
+		case self::TYPE_KEEP:
+			break;
+		case self::TYPE_REMOVE:
+			break;
+		default:
+			throw new Exception(
+				'sData 参数 错误 ： `%s`',
+				array(
+					$sData,
+				)
+			);
+			break;
+		}
+		
+		// 设置 setting
+		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
+		$arrInstalled = array_diff($arrInstalled,array($aExtMeta->installPath()) ) ;
+		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
+		
+		// 修改 ExtensionManager
+		$aExtensionManager->removeInstallExtension($aExtMeta);
 	}
 	
 	public function disable($sExtName)
@@ -126,7 +174,7 @@ class ExtensionSetup extends Object
 		
 		if( !$aExtMeta = $aExtensionManager->extensionMetainfo($sExtName) )
 		{
-			throw new Exception("启用扩展失败，指定的扩展尚未安装：%s",$sExtName) ;
+			throw new Exception("禁用扩展失败，指定的扩展尚未安装：%s",$sExtName) ;
 		}
 		
 		// check dependence

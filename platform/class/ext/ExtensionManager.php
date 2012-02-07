@@ -203,6 +203,20 @@ class ExtensionManager extends Object
 		unset($this->arrExtensionInstances[$aExtensionMetainfo->name()]);
 	}
 	
+	/**
+	 * @brief 移除installed扩展
+	 * 
+	 * 在卸载扩展时，installed扩展列表会发生变化。
+	 * 需要同时更新这个类的内容，
+	 * 否则会发生数据不同步的问题。
+	 * @seealso ExtensionSetup::uninstall()
+	 */
+	public function removeInstallExtension(ExtensionMetainfo $aExtensionMetainfo){
+		// arrInstalledExtensions
+		$sName = $aExtensionMetainfo->name() ;
+		unset($this->arrInstalledExtensions[$sName]);
+	}
+	
 	private $arrEnableExtensiongNames = array() ;
 	
 	private $arrInstalledExtensions = array() ;
