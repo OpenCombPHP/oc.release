@@ -163,6 +163,46 @@ class ExtensionManager extends Object
 		}
 	}
 	
+	/**
+	 * @brief 加入enable扩展
+	 * 
+	 * 在激活扩展时，enable扩展列表会发生变化。
+	 * 需要同时更新这个类的内容，
+	 * 否则会发生数据不同步的问题。
+	 * @seealso ExtensionSetup::enable()
+	 */
+	public function addEnableExtension(ExtensionMetainfo $aExtensionMetainfo){
+		// arrEnableExtensiongNames
+		$nPriority = $aExtensionMetainfo->priority() ;
+		$sName = $aExtensionMetainfo->name() ;
+		if(!isset($this->arrEnableExtensionNames[$nPriority])){
+			$this->arrEnableExtensionNames[$nPriority] = array();
+		}
+		$this->arrEnableExtensionNames[$nPriority] [] = $sName ;
+		
+		// arrExtensionInstances
+		$aExtension = new Extension($aExtensionMetainfo);
+		$this->arrExtensionInstances[$sName] = $aExtension ;
+	}
+	
+	/**
+	 * @brief 移除enable扩展
+	 * 
+	 * 在禁用扩展时，enable扩展列表会发生变化。
+	 * 需要同时更新这个类的内容，
+	 * 否则会发生数据不同步的问题。
+	 * @seealso ExtensionSetup::disable()
+	 */
+	public function removeEnableExtension(ExtensionMetainfo $aExtensionMetainfo){
+		// arrEnableExtensiongNames
+		foreach($this->arrEnableExtensiongNames as &$arrExtensionNameList){
+			$arrExtensionNameList = array( $arrExtensionNameList , array( $aExtensionMetainfo->name() ) );
+		}
+		
+		// arrExtensionInstances
+		unset($this->arrExtensionInstances[$aExtensionMetainfo->name()]);
+	}
+	
 	private $arrEnableExtensiongNames = array() ;
 	
 	private $arrInstalledExtensions = array() ;

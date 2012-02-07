@@ -12,6 +12,7 @@ use org\jecat\framework\message\MessageQueue;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\lang\oop\ClassLoader ;
 use org\jecat\framework\fs\FileSystem;
+use org\opencomb\platform\ext\dependence\RequireItem ;
 
 class ExtensionSetup extends Object
 {
@@ -87,11 +88,90 @@ class ExtensionSetup extends Object
 		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
 		$arrEnable[$aExtMeta->priority()][] = $sExtName ;
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
+		
+		// 修改 ExtensionManager
+		$aExtMgr->addEnableExtension($aExtMeta);
+	}
+	
+	public function uninstall($sExtName)
+	{
+		$aExtensionManager = ExtensionManager::singleton();
+		// check dependence
+		$arrDependence = array();
+		foreach($aExtensionManager->iterator() as $aExtension){
+			foreach($aExtension->metainfo()->dependence()->iterator() as $aRequireItem){
+				if($aRequireItem->type() === RequireItem::TYPE_EXTENSION){
+					if($aRequireItem->itemName() === $sExtName){
+						$arrDependence[$aExtension->metainfo()->name()] = $aExtension ;
+					}
+				}
+			}
+		}
+		
+		if(!empty($arrDependence)){
+			throw new Exception(
+				'无法卸载扩展 `%s` ，它被 %s 依赖',
+				array(
+					$sExtName,
+					implode( ' , ' , array_keys($arrDependence) ),
+				)
+			);
+			return FALSE;
+		}
 	}
 	
 	public function disable($sExtName)
 	{
+		$aExtensionManager = ExtensionManager::singleton();
 		
+		if( !$aExtMeta = $aExtensionManager->extensionMetainfo($sExtName) )
+		{
+			throw new Exception("启用扩展失败，指定的扩展尚未安装：%s",$sExtName) ;
+		}
+		
+		// check dependence
+		$arrDependence = array();
+		foreach($aExtensionManager->iterator() as $aExtension){
+			foreach($aExtension->metainfo()->dependence()->iterator() as $aRequireItem){
+				if($aRequireItem->type() === RequireItem::TYPE_EXTENSION){
+					if($aRequireItem->itemName() === $sExtName){
+						$arrDependence[$aExtension->metainfo()->name()] = $aExtension ;
+					}
+				}
+			}
+		}
+		
+		// dependence exception
+		if(!empty($arrDependence)){
+			throw new Exception(
+				'无法禁用扩展 `%s` ，它被 %s 依赖',
+				array(
+					$sExtName,
+					implode( ' , ' , array_keys($arrDependence) ),
+				)
+			);
+			return FALSE;
+		}
+		
+		// 设置 setting
+		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
+		$arrEnable2 = array();
+		foreach($arrEnable as $nPriority=>$arrExtNameList){
+			$arrEnable2[$nPriority] = array();
+			foreach($arrExtNameList as $sEnableExtName){
+				if($sEnableExtName !== $sExtName){
+					$arrEnable2[$nPriority][] = $sEnableExtName;
+				}
+			}
+		}
+		Setting::singleton()->setItem('/extensions','enable',$arrEnable2) ;
+		
+		// 修改 ExtensionManager
+		$aExtensionManager->removeEnableExtension($aExtMeta);
+	}
+	
+	public function changePriority($sExtName,$nNewPriority){
+		throw new Exception('unfinished function :%s',__METHOD__);
 	}
 	
 	/**
