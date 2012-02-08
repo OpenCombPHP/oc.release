@@ -268,7 +268,59 @@ class ExtensionSetup extends Object
 	}
 	
 	public function changePriority($sExtName,$nNewPriority){
-		throw new Exception('unfinished function :%s',__METHOD__);
+		$aExtMgr = ExtensionManager::singleton() ;
+		
+		if( !$aExtMeta = $aExtMgr->extensionMetainfo($sExtName) )
+		{
+			throw new Exception("修改扩展优先级失败，指定的扩展尚未安装：%s",$sExtName) ;
+		}
+		
+		// int param priority
+		$nNewPriority = (int)$nNewPriority;
+		
+		// check dependence
+		$arrDependence = array();
+		
+		foreach($aExtMeta->dependence()->iterator() as $aRequireItem){
+			if($aRequireItem->type() === RequireItem::TYPE_EXTENSION){
+				$sDepExtName = $aRequireItem->itemName() ;
+				
+				if(!$aDepExtMeta = $aExtMgr->extensionMetainfo($sDepExtName)){
+					throw new Exception("依赖的扩展尚未安装：%s",$sDepExtName) ;
+				}
+				
+				// 优先级不能小于它依赖的扩展
+				if( $nNewPriority < $aDepExtMeta->priority() ){
+					throw new Exception('优先级不能小于依赖的扩展: %s ( %d )',array($sDepExtName,$aDepExtMeta->priority() ) );
+				}
+			}
+		}
+		
+		// 设置 setting
+		$aSetting = Setting::singleton() ;
+		$arrEnable = $aSetting->item('/extensions','enable') ;
+		$arrEnableNew = array();
+		foreach($arrEnable as $nPriority=>$arrExtNameList){
+			
+			$arrEnableNew[$nPriority] = array();
+			
+			// 从它原来的优先级删除
+			foreach($arrExtNameList as $sEnableExtName){
+				if($sEnableExtName !== $sExtName){
+					$arrEnableNew[$nPriority][] = $sEnableExtName;
+				}
+			}
+			
+			// 添加到新的优先级
+			if( $nPriority == $nNewPriority ){
+				$arrEnableNew[$nPriority][] = $sExtName;
+			}
+		}
+		// 如果新的优先级不存在，需要额外添加
+		if( !isset($arrEnableNew[$nNewPriority]) ){
+			$arrEnableNew[$nNewPriority] = array($sExtName);
+		}
+		$aSetting->setItem('/extensions','enable',$arrEnableNew) ;
 	}
 	
 	/**
