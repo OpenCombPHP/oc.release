@@ -196,7 +196,8 @@ class ExtensionManager extends Object
 	public function removeEnableExtension(ExtensionMetainfo $aExtensionMetainfo){
 		// arrEnableExtensiongNames
 		foreach($this->arrEnableExtensiongNames as &$arrExtensionNameList){
-			$arrExtensionNameList = array( $arrExtensionNameList , array( $aExtensionMetainfo->name() ) );
+			$sExtName = $aExtensionMetainfo->name() ;
+			$arrExtensionNameList = array_diff( $arrExtensionNameList , array( $sExtName ) );
 		}
 		
 		// arrExtensionInstances
