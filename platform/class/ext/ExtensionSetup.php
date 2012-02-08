@@ -323,6 +323,109 @@ class ExtensionSetup extends Object
 		$aSetting->setItem('/extensions','enable',$arrEnableNew) ;
 	}
 	
+	const TYPE_DIRE_UP = 'up' ;
+	const TYPE_DIRE_DOWN = 'down' ;
+	public function changeOrder($sExtName,$sDire){
+		$aSetting = Setting::singleton() ;
+		
+		// 读取并整理顺序
+		$arrEnable = $aSetting->item('/extensions','enable');
+		
+		$nExtPriority = -1 ; // $sExtName 的优先级
+		$nExtPosition = -1 ; // $sExtName 目前的位置
+		
+		// 查找并确定位置
+		foreach($arrEnable as $nPriority => $arrExtList){
+			foreach($arrExtList as $nPos => $sEnableExtName){
+				if($sExtName === $sEnableExtName){
+					$nExtPriority = (int) $nPriority ;
+					$nExtPosition = (int) $nPos ;
+					break;
+				}
+			}
+			
+			// 已经找到，可以直接退出了
+			if( -1 !== $nExtPriority or -1 !== $nExtPosition ){
+				break;
+			}
+		}
+		
+		// 没找到
+		if( -1 === $nExtPriority or -1 === $nExtPosition ){
+			throw new Exception('未找到扩展 `%s`，可能是尚未安装或尚未激活',$sExtName);
+			return false;
+		}
+		
+		// 检查依赖关系
+		function isDependence($sExtFrom , $sExtTo){
+			$aExtMgr = ExtensionManager::singleton() ;
+		
+			if( !$aExtMeta = $aExtMgr->extensionMetainfo($sExtFrom) )
+			{
+				throw new Exception("指定的扩展尚未安装：%s",$sExtFrom) ;
+			}
+			
+			foreach($aExtMeta->dependence()->iterator() as $aRequireItem){
+				if($aRequireItem->type() === RequireItem::TYPE_EXTENSION){
+					$sDepExtName = $aRequireItem->itemName() ;
+				
+					if($sDepExtName === $sExtTo){
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		// 分析参数并做相应处理
+		switch($sDire){
+		case self::TYPE_DIRE_UP:
+			if( 0 === $nExtPosition ){
+				throw new Exception('已经是最前面，不能再往前了');
+				return false;
+			}
+			
+			// 它将交换的目标
+			$sMoveExtName = $arrEnable[$nExtPriority][$nExtPosition-1] ;
+			
+			// 检查依赖关系
+			if(isDependence($sExtName , $sMoveExtName)){
+				throw new Exception('不能移动到它依赖的扩展之前');
+				return false;
+			}
+			
+			// 修改
+			$arrEnable[$nExtPriority][$nExtPosition] = $sMoveExtName ;
+			$arrEnable[$nExtPriority][$nExtPosition-1] = $sExtName ;
+			break;
+		case self::TYPE_DIRE_DOWN:
+			if( $nExtPosition >= count($arrEnable[$nExtPriority]) -1 ){
+				throw new Exception('已经是最后面，不能再往后了');
+				return false;
+			}
+			
+			// 它将交换的目标
+			$sMoveExtName = $arrEnable[$nExtPriority][$nExtPosition+1] ;
+			
+			// 检查依赖关系
+			if(isDependence($sMoveExtName , $sExtName)){
+				throw new Exception('不能移动到依赖它的扩展之后');
+				return false;
+			}
+			
+			// 修改
+			$arrEnable[$nExtPriority][$nExtPosition] = $sMoveExtName ;
+			$arrEnable[$nExtPriority][$nExtPosition+1] = $sExtName ;
+			break;
+		default:
+			throw new Exception('未知参数dire : `%s`',$sDire );
+			return false;
+			break;
+		}
+		
+		// 保存setting
+		$aSetting->setItem('/extensions','enable',$arrEnable) ;
+	}
+	
 	/**
 	 *  @param $bEnable bool 安装时为false,激活时为true
 	 */
