@@ -156,8 +156,15 @@ class ExtensionSetup extends Object
 				$aDB->execute('DROP TABLE '.$sTableName);
 			}
 			
-			// 数据库的结构已经改变，需要清理缓存
-			Platform::singleton()->cache()->delete('/db');
+			
+			/**
+			 * @example /platform/cache/db
+			 * 清理平台的缓存
+			 */
+			{
+				// 数据库的结构已经改变，需要清理缓存
+				Platform::singleton()->cache()->delete('/db');
+			}
 			
 			// settings
 			$aExtension = $aExtensionManager->extension($sExtName);
