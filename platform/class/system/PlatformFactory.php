@@ -116,9 +116,11 @@ class PlatformFactory extends HttpAppFactory
 			}
 		} 
 		
-		// 配置 
+		// 启用class路径缓存
 		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/platform/class','enableClassPathCache',true) ) ;
 		
+		// 启用class编译
+		ClassLoader::singleton()->enableClassCompile(true) ;
 		
 		if($aOriApp)
 		{
@@ -179,7 +181,7 @@ class PlatformFactory extends HttpAppFactory
 		
 		// class
 		$aClassLoader->addPackage( 'org\\opencomb\\platform', '/platform/class' ) ;
-		$aClassLoader->enableClassCompile(true) ;
+		$aClassLoader->enableClassCompile(false) ;
 		
 		return $aClassLoader ;
 	}
