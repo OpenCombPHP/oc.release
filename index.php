@@ -1,6 +1,13 @@
 <?php
 namespace org\opencomb\platform ;
 
+// 检查系统关闭锁
+if( is_file(__DIR__.'/lock.html') )
+{
+	include __DIR__.'/lock.html' ;
+	exit() ;
+}
+
 // 初始化 jcat 框架
 use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\system\AccessRouter;
@@ -10,6 +17,7 @@ use org\jecat\framework\fs\File;
 use org\jecat\framework\mvc\model\db\orm\PrototypeAssociationMap;
 use org\opencomb\platform\mvc\model\db\orm\PAMap;
 use org\opencomb\platform\ext\ExtensionMetainfo;
+
 
 $t = microtime(1) ;
 
