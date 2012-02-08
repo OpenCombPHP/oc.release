@@ -13,6 +13,8 @@ use org\jecat\framework\message\Message;
 use org\jecat\framework\lang\oop\ClassLoader ;
 use org\jecat\framework\fs\FileSystem;
 use org\opencomb\platform\ext\dependence\RequireItem ;
+use org\jecat\framework\db\DB ;
+use org\opencomb\platform\mvc\model\db\orm\Prototype ;
 
 class ExtensionSetup extends Object
 {
@@ -127,27 +129,42 @@ class ExtensionSetup extends Object
 			return FALSE;
 		}
 		
-		// code
-		switch($sCode){
-		case self::TYPE_KEEP:
-			break;
-		case self::TYPE_REMOVE:
-			break;
-		default:
-			throw new Exception(
-				'sCode 参数 错误 ： `%s`',
-				array(
-					$sCode,
-				)
-			);
-			break;
-		}
-		
 		// data
 		switch($sData){
 		case self::TYPE_KEEP:
 			break;
 		case self::TYPE_REMOVE:
+			// 数据库
+			
+			// 防止在平台管理之外，数据库的结构发生改变
+			Platform::singleton()->cache()->delete('/db');
+			
+			$arrTableList = array();
+			$aDB = DB::singleton() ;
+			$aReflecterFactory = $aDB->reflecterFactory() ;
+			$strDBName = $aDB->driver(true)->currentDBName();
+			$aDbReflecter = $aReflecterFactory->dbReflecter($strDBName);
+			$sKey = 'Tables_in_'.$strDBName ;
+			foreach( $aDbReflecter->tableNameIterator() as $value ){
+				$tableName = $value[$sKey] ;
+				if(Prototype::isExtensionTable($tableName,$sExtName)){
+					$arrTableList [] = $tableName;
+				}
+			}
+			
+			foreach($arrTableList as $sTableName){
+				$aDB->execute('DROP TABLE '.$sTableName);
+			}
+			
+			// 数据库的结构已经改变，需要清理缓存
+			Platform::singleton()->cache()->delete('/db');
+			
+			// settings
+			$aExtension = $aExtensionManager->extension($sExtName);
+			$aExtension->setting()->deleteKey('');
+			
+			// data
+			$aExtension->publicFolder()->delete(true);
 			break;
 		default:
 			throw new Exception(
@@ -159,7 +176,39 @@ class ExtensionSetup extends Object
 			break;
 		}
 		
+		// code
+		switch($sCode){
+		case self::TYPE_KEEP:
+			break;
+		case self::TYPE_REMOVE:
+			$aFolder = FileSystem::singleton()->findFolder($aExtMeta->installPath());
+			if($aFolder){
+				$aFolder->delete(true);
+			}
+			break;
+		default:
+			throw new Exception(
+				'sCode 参数 错误 ： `%s`',
+				array(
+					$sCode,
+				)
+			);
+			break;
+		}
+		
 		// 设置 setting
+		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
+		$arrEnable2 = array();
+		foreach($arrEnable as $nPriority=>$arrExtNameList){
+			$arrEnable2[$nPriority] = array();
+			foreach($arrExtNameList as $sEnableExtName){
+				if($sEnableExtName !== $sExtName){
+					$arrEnable2[$nPriority][] = $sEnableExtName;
+				}
+			}
+		}
+		Setting::singleton()->setItem('/extensions','enable',$arrEnable2) ;
+		
 		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
 		$arrInstalled = array_diff($arrInstalled,array($aExtMeta->installPath()) ) ;
 		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
