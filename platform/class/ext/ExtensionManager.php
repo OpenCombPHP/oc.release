@@ -163,6 +163,61 @@ class ExtensionManager extends Object
 		}
 	}
 	
+	/**
+	 * @brief 加入enable扩展
+	 * 
+	 * 在激活扩展时，enable扩展列表会发生变化。
+	 * 需要同时更新这个类的内容，
+	 * 否则会发生数据不同步的问题。
+	 * @seealso ExtensionSetup::enable()
+	 */
+	public function addEnableExtension(ExtensionMetainfo $aExtensionMetainfo){
+		// arrEnableExtensiongNames
+		$nPriority = $aExtensionMetainfo->priority() ;
+		$sName = $aExtensionMetainfo->name() ;
+		if(!isset($this->arrEnableExtensionNames[$nPriority])){
+			$this->arrEnableExtensionNames[$nPriority] = array();
+		}
+		$this->arrEnableExtensionNames[$nPriority] [] = $sName ;
+		
+		// arrExtensionInstances
+		$aExtension = new Extension($aExtensionMetainfo);
+		$this->arrExtensionInstances[$sName] = $aExtension ;
+	}
+	
+	/**
+	 * @brief 移除enable扩展
+	 * 
+	 * 在禁用扩展时，enable扩展列表会发生变化。
+	 * 需要同时更新这个类的内容，
+	 * 否则会发生数据不同步的问题。
+	 * @seealso ExtensionSetup::disable()
+	 */
+	public function removeEnableExtension(ExtensionMetainfo $aExtensionMetainfo){
+		// arrEnableExtensiongNames
+		foreach($this->arrEnableExtensiongNames as &$arrExtensionNameList){
+			$sExtName = $aExtensionMetainfo->name() ;
+			$arrExtensionNameList = array_diff( $arrExtensionNameList , array( $sExtName ) );
+		}
+		
+		// arrExtensionInstances
+		unset($this->arrExtensionInstances[$aExtensionMetainfo->name()]);
+	}
+	
+	/**
+	 * @brief 移除installed扩展
+	 * 
+	 * 在卸载扩展时，installed扩展列表会发生变化。
+	 * 需要同时更新这个类的内容，
+	 * 否则会发生数据不同步的问题。
+	 * @seealso ExtensionSetup::uninstall()
+	 */
+	public function removeInstallExtension(ExtensionMetainfo $aExtensionMetainfo){
+		// arrInstalledExtensions
+		$sName = $aExtensionMetainfo->name() ;
+		unset($this->arrInstalledExtensions[$sName]);
+	}
+	
 	private $arrEnableExtensiongNames = array() ;
 	
 	private $arrInstalledExtensions = array() ;

@@ -43,7 +43,10 @@ class RequireItem
 	{
 		$this->aRequireVersionScope = $aVersionScope ;
 	}
-
+	
+	/**
+	 *  @param $bEnable bool 安装时为false,激活时为true
+	 */
 	public function check(Platform $aPlatform,$bExtensionEnabled)
 	{
 		switch ($this->sType)
@@ -61,13 +64,26 @@ class RequireItem
 				return $this->checkVersion($aPlatform->version()) ;
 				break;
 			case self::TYPE_EXTENSION :
-				$aExtMeta = $aPlatform->extensions()->extensionMetainfo($this->itemName()) ;
-				if(!$aExtMeta)
-				{
-					throw new Exception('request extension `'.$this->itemName().'` failed : not exist.');
-					return false ;
+				// 激活时为 true
+				if($bExtensionEnabled){
+					foreach($aPlatform->extensions()->iterator() as $aExtension){
+						if($aExtension->metainfo()->name() === $this->itemName()){
+							return $this->checkVersion( $aExtension->metainfo()->versionCompat() );
+						}
+					}
+					throw new Exception('依赖扩展 `%s` 未安装或未激活',$this->itemName() );
+					return false;
 				}
-				return $this->checkVersion( $aExtMeta->versionCompat() ) ;
+				// 安装时为 false
+				else{
+					$aExtMeta = $aPlatform->extensions()->extensionMetainfo($this->itemName()) ;
+					if(!$aExtMeta)
+					{
+						throw new Exception('依赖扩展 `%s` 未安装',$this->itemName() );
+						return false ;
+					}
+					return $this->checkVersion( $aExtMeta->versionCompat() ) ;
+				}
 		}
 	}
 	

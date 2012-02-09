@@ -30,6 +30,9 @@ class Dependence
 		$this->arrRequires[] = $aRequire ;
 	}
 	
+	/**
+	 *  @param $bEnable bool 安装时为false,激活时为true
+	 */
 	public function check(Platform $aPlatform,$bExtensionEnabled)
 	{
 		foreach($this->arrRequires as $aRequeir)
