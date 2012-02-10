@@ -29,10 +29,17 @@ class PlatformDataUpgrader extends Object{
 			// upgrade
 			$aDataVersion = $this->dataVersion () ;
 			$aCurrentVersion = $this->currentVersion() ;
-			$this->upgrade() ;
 			
-			// restore system
-			$aPlatformShutdowner->restore() ;
+			try{
+				$this->upgrade() ;
+			
+				// restore system
+				$aPlatformShutdowner->restore() ;
+			}catch(Exception $e){
+				$aPlatformShutdowner->restore() ;
+				
+				throw new Exception('升级过程发生异常',array(),$e);
+			}
 		}
 		
 		fclose($aLockRes);
@@ -87,16 +94,15 @@ class PlatformDataUpgrader extends Object{
 		$arrPath = $aCalc->calc($arrMap,$aFromVersion->toString(),$aToVersion->toString() );
 		
 		if( false === $arrPath ){
-			throw new Exception('no upgrade path');
-		}
-		
-		foreach($arrPath as $sPath){
-			$aUpdater = new $sPath ;
-			$aUpdater->process();
+			throw new Exception('未找到合适的升级路径');
 		}
 		
 		$aSetting = Setting::singleton() ;
-		$aSetting->setItem('/platform','data_version',$aToVersion->toString());
+		foreach($arrPath as $sPath){
+			$aUpdater = new $sPath ;
+			$aUpdater->process();
+			$aSetting->setItem('/platform','data_version',$arrMap[$sPath]['to']);
+		}
 	}
 	
 	private function currentVersion(){
