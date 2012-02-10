@@ -9,6 +9,7 @@ use org\opencomb\platform\Platform ;
 use org\opencomb\platform\system\PlatformShutdowner ;
 use org\jecat\framework\lang\oop\ClassLoader ;
 use org\jecat\framework\lang\Exception;
+use org\jecat\framework\message\MessageQueue ;
 
 /*
 	org\opencomb\platform\system\upgrader ;
@@ -35,8 +36,14 @@ class PlatformDataUpgrader extends Object{
 			
 				// restore system
 				$aPlatformShutdowner->restore() ;
+				$this->relocation() ;
+				fclose($aLockRes);
+				exit();
 			}catch(Exception $e){
 				$aPlatformShutdowner->restore() ;
+				$this->relocation() ;
+				fclose($aLockRes);
+				exit();
 				
 				throw new Exception('升级过程发生异常',array(),$e);
 			}
@@ -98,9 +105,13 @@ class PlatformDataUpgrader extends Object{
 		}
 		
 		$aSetting = Setting::singleton() ;
+		$aMessageQueue = $this->messageQueue();
 		foreach($arrPath as $sPath){
-			$aUpdater = new $sPath ;
-			$aUpdater->process();
+			$aUpgrader = new $sPath ;
+			if( ! $aUpgrader instanceof IUpgrader){
+				throw new Exception('Upgrader `%s` 未实现指定接口 ： IUpgrader',$sPath);
+			}
+			$aUpgrader->process($aMessageQueue);
 			$aSetting->setItem('/platform','data_version',$arrMap[$sPath]['to']);
 		}
 	}
@@ -114,4 +125,42 @@ class PlatformDataUpgrader extends Object{
 		$sVersion = $aSetting->item('/platform','data_version','0.0') ;
 		return Version::fromString($sVersion);
 	}
+	
+	private function relocation(){
+		echo <<<CODE
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<title>平台升级程序 - </title>
+
+		<link rel="stylesheet" type="text/css" href="/framework/public/style/style.css" />
+		<link rel="stylesheet" type="text/css" href="/framework/public/style/widget/menu.css" />
+		<link rel="stylesheet" type="text/css" href="/extensions/coresystem/0.1/public/css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="/extensions/coresystem/0.1/public/css/ControlPanelFrame.css" />
+	</head>
+	<body>
+CODE;
+		$aMessageQueue = $this->messageQueue () ;
+		$aMessageQueue->display();
+		
+		echo <<<CODE
+		<div>升级完毕</div>
+		<a href="">刷新网页返回</a>
+	</body>
+</html>
+CODE;
+	}
+	
+	private function messageQueue(){
+		if( null === $this->aMessageQueue ){
+			$this->aMessageQueue = new MessageQueue;
+		}
+		return $this->aMessageQueue ;
+	}
+	
+	private $aMessageQueue = null;
 }
