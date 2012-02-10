@@ -5,7 +5,7 @@ use org\jecat\framework\setting\Setting;
 use org\jecat\framework\fs\imp\LocalFileSystem;
 use org\opencomb\platform\Platform;
 use org\opencomb\platform\system\PlatformFactory;
-
+use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
 
 ini_set('display_errors',1) ;
 error_reporting(E_ALL^E_STRICT) ;
@@ -25,10 +25,14 @@ require_once __DIR__."/framework/class/setting/imp/FsKey.php" ;
 require_once __DIR__."/platform/class/Platform.php" ;
 require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
 require_once __DIR__."/platform/class/system/PlatformSerializer.php" ;
+require_once __DIR__."/platform/class/system/upgrader/PlatformDataUpgrader.php" ;
 
 
 $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;
 $aSetting = Setting::singleton() ;
+
+
+$aDataUpgrader = PlatformDataUpgrader::singleton()->process();
 
 
 return $aPlatform ;
