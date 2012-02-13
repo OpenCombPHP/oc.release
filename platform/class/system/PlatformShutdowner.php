@@ -12,7 +12,7 @@ use org\jecat\framework\lang\Object;
  * org\opencomb\platform\system\PlatformShutdowner::shutdown() 方法关闭系统，并返回后门密钥。
  * org\opencomb\platform\system\PlatformShutdowner::restore() 方法恢复系统访问。
  * 
- * = “后门”密钥 =
+ * =“后门”密钥=
  * 系统在关闭状态时，可以通过 Get/Post/Cookie 等方式，提供”后门“密钥来访问系统。
  */
 class PlatformShutdowner extends Object
