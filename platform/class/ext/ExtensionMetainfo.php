@@ -289,7 +289,7 @@ class ExtensionMetainfo extends Object
 	/**
 	 * @return \Iterator
 	 */
-	public function pakcageIterator()
+	public function packageIterator()
 	{
 		return new \ArrayIterator($this->arrPackages) ;
 	}

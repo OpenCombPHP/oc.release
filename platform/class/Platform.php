@@ -46,6 +46,7 @@ use org\opencomb\platform\system\PlatformFactory ;
 class Platform extends Application
 {
 	const version = '0.2.0.0' ;
+	const data_version = '0.2.3' ;
 	const version_compat = "" ;
 	
 	/**
@@ -78,6 +79,26 @@ class Platform extends Application
 			return $this->aVersion ;
 		}
 	}
+	
+	/**
+	 * @return org\jecat\framework\util\Version
+	 */
+	public function dataVersion($bString=false)
+	{
+		if($bString)
+		{
+			return self::data_version ;
+		}
+		else
+		{
+			if( !$this->aDataVersion )
+			{
+				$this->aDataVersion = Version::FromString(self::data_version) ;
+			}
+			return $this->aDataVersion ;
+		}
+	}
+	
 	/**
 	 * @return org\jecat\framework\util\VersionCompat
 	 */
@@ -143,6 +164,7 @@ class Platform extends Application
 	private $aExtensionManager ;
 	private $aStaticPageManager ;
 	private $aVersion ;
+	private $aDataVersion ;
 	private $aVersionCompat ;
 	private $aCache ;
 }

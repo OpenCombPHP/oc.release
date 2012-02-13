@@ -32,7 +32,7 @@ class ExtensionLoader extends Object
 		$aPlatformFs = FileSystem::singleton() ;
 
 		// 加载类包
-		foreach($aExtMeta->pakcageIterator() as $arrPackage)
+		foreach($aExtMeta->packageIterator() as $arrPackage)
 		{
 			list($sNamespace,$sPackagePath) = $arrPackage ;
 			

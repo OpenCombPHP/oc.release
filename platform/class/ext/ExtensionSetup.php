@@ -456,7 +456,7 @@ class ExtensionSetup extends Object
 		}
 		// 加载class
 		$aExtFolder = FileSystem::singleton()->findFolder($aExtMeta->installPath());
-		foreach( $aExtMeta->pakcageIterator() as $package){
+		foreach( $aExtMeta->packageIterator() as $package){
 			// $package[0] 是 namespace
 			// $package[1] 是 文件夹，从$aExtMeta->installPath()算起
 			$sSourceFolder = $aExtFolder->path().$package[1];
