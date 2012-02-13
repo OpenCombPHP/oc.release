@@ -41,11 +41,10 @@ class PlatformDataUpgrader extends Object{
 				exit();
 			}catch(Exception $e){
 				$aPlatformShutdowner->restore() ;
-				$this->relocation() ;
 				fclose($aLockRes);
-				exit();
 				
 				throw new Exception('升级过程发生异常',array(),$e);
+				exit();
 			}
 		}
 		
@@ -59,7 +58,9 @@ class PlatformDataUpgrader extends Object{
 		$aFromVersion = $this->dataVersion() ;
 		$aToVersion = $this->currentVersion() ;
 		
-		if($aFromVersion < $aToVersion){
+		$nCompare = $aFromVersion->compare($aToVersion) ;
+		
+		if( 0 !== $nCompare ){
 			return self::CheckResult_NeedUpgrade ;
 		}else{
 			return self::CheckResult_Nothing ;
@@ -73,7 +74,7 @@ class PlatformDataUpgrader extends Object{
 		$aClassLoader = ClassLoader::singleton() ;
 		$arrUpdateClass = array();
 		foreach($aClassLoader->classIterator(__NAMESPACE__) as $sClass){
-			if(preg_match('`^'.preg_quote(__NAMESPACE__).'\\\\upgrader_(\d+((_\d+){1,3}))To(\d+((_\d+){1,3}))$`' , $sClass , $arrMatch)){
+			if(preg_match('`^'.preg_quote(__NAMESPACE__).'\\\\upgrader_(\d+((_\d+){0,3}))To(\d+((_\d+){0,3}))$`' , $sClass , $arrMatch)){
 				$sClassFromVersion = str_replace('_','.',$arrMatch[1]) ;
 				$sClassToVersion = str_replace('_','.',$arrMatch[4]) ;
 				
@@ -136,11 +137,8 @@ class PlatformDataUpgrader extends Object{
 		<meta name="keywords" content="" />
 		<meta name="description" content="" />
 		<title>平台升级程序 - </title>
-
-		<link rel="stylesheet" type="text/css" href="/framework/public/style/style.css" />
-		<link rel="stylesheet" type="text/css" href="/framework/public/style/widget/menu.css" />
-		<link rel="stylesheet" type="text/css" href="/extensions/coresystem/0.1/public/css/reset.css" />
-		<link rel="stylesheet" type="text/css" href="/extensions/coresystem/0.1/public/css/ControlPanelFrame.css" />
+		
+		<link rel="stylesheet" type="text/css" href="/public/platform/css/platformdataupgrader.css" />
 	</head>
 	<body>
 CODE;
