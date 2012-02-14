@@ -37,6 +37,7 @@ $aPlatform = require 'jc.init.php' ;
 
 $aDataUpgrader = PlatformDataUpgrader::singleton() ; 
 if(TRUE === $aDataUpgrader->process()){
+	$aDataUpgrader->relocation();
 	exit();
 }
 
