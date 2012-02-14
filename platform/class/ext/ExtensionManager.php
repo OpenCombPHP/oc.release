@@ -72,9 +72,11 @@ class ExtensionManager extends Object
 	{
 		if($nPriority<0)
 		{
-			return new \ArrayIterator(
-					call_user_func_array('array_merge',$this->arrEnableExtensiongNames)
-			) ;
+			return empty($this->arrEnableExtensiongNames)?
+					new \EmptyIterator():
+					new \ArrayIterator(
+						call_user_func_array('array_merge',$this->arrEnableExtensiongNames)
+					) ;
 		}
 		else 
 		{

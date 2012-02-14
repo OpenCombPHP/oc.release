@@ -38,13 +38,12 @@ class PlatformDataUpgrader extends Object{
 				$aPlatformShutdowner->restore() ;
 				$this->relocation() ;
 				fclose($aLockRes);
-				exit();
+				return TRUE;
 			}catch(Exception $e){
 				$aPlatformShutdowner->restore() ;
 				fclose($aLockRes);
 				
 				throw new Exception('升级过程发生异常',array(),$e);
-				exit();
 			}
 		}
 		
