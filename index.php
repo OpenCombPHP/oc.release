@@ -2,8 +2,6 @@
 namespace org\opencomb\platform ;
 
 // 检查系统关闭锁
-use org\jecat\framework\mvc\controller\ExecuteState;
-
 if( is_file(__DIR__.'/lock.shutdown.html') )
 {
 	// 检查”后门“密钥，方便管理员进入
@@ -26,6 +24,7 @@ use org\jecat\framework\fs\File;
 use org\jecat\framework\mvc\model\db\orm\PrototypeAssociationMap;
 use org\opencomb\platform\mvc\model\db\orm\PAMap;
 use org\opencomb\platform\ext\ExtensionMetainfo;
+use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
 
 
 $t = microtime(1) ;
@@ -34,7 +33,11 @@ $t = microtime(1) ;
 // 简单配置启动 OC platform,以及扩展, 以后完善
 $aPlatform = require 'jc.init.php' ;
 
-
+$aDataUpgrader = PlatformDataUpgrader::singleton() ; 
+if(TRUE === $aDataUpgrader->process()){
+	$aDataUpgrader->relocation();
+	exit();
+}
 
 // 根据路由设置创建控制器 并 执行
 $aController = AccessRouter::singleton()->createRequestController(Request::singleton()) ;

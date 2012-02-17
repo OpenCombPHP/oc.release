@@ -42,6 +42,14 @@ use org\jecat\framework\fs\FileSystem ;
  */
 class Extension extends Object 
 {
+	/**
+	 * @return Extension
+	 */
+	static public function flyweight($sExtensionName,$bAutoCreate=false,$sClassName=null)
+	{
+		return parent::flyweight($sExtensionName,$bAutoCreate,$sClassName) ;
+	}
+	
 	public function __construct(ExtensionMetainfo $aMeta)
 	{
 		$this->aMetainfo = $aMeta ;
