@@ -40,7 +40,7 @@ $aPlatform = require 'jc.init.php' ;
 $aController = AccessRouter::singleton()->createRequestController(Request::singleton()) ;
 if($aController)
 {
-	$aController->mainRun(ExecuteState::flyweight(false,true)) ;
+	$aController->mainRun() ;
 }
 else 
 {
