@@ -5,7 +5,6 @@ use org\jecat\framework\lang\aop\AOP;
 use org\jecat\framework\lang\compile\CompilerFactory;
 use org\opencomb\platform\ext\ExtensionLoader;
 use org\opencomb\platform\ext\Extension;
-use org\jecat\framework\session\OriginalSession;
 use org\jecat\framework\session\Session;
 use org\jecat\framework\db\DB;
 use org\jecat\framework\db\driver\PDODriver;
@@ -151,7 +150,7 @@ class PlatformFactory extends HttpAppFactory
 		DB::singleton()->setDriver($aDBDriver) ;
 
 		// 会话
-		Session::setSingleton( new OriginalSession() ) ;
+		Session::setSingleton( new OcSession() ) ;
 
 		// 模板引擎宏
 		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(

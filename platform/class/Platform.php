@@ -1,8 +1,6 @@
 <?php
 namespace org\opencomb\platform ;
 
-use org\jecat\framework\util\VersionCompat;
-
 use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\Setting;
@@ -130,6 +128,9 @@ class Platform extends Application
 		return ExtensionManager::singleton() ;
 	}
 	
+	/**
+	 * 平台签名
+	 */
 	public function signature()
 	{
 		$aSetting = Setting::singleton() ;
@@ -141,6 +142,22 @@ class Platform extends Application
 		}
 		
 		return $sSignature ;
+	}
+	
+	/**
+	 * 平台的系统签名，受平台、框架、扩展及其版本的影响
+	 */
+	public function systemSignature()
+	{
+		$sSrc = 'framework:' . \org\jecat\framework\VERSION . '/'
+			. 'platform:' . self::version . '/' ;
+		
+		foreach($this->extensions()->enableExtensionMetainfoIterator() as $aExtMeta)
+		{
+			$sSrc.= 'extension:'.$aExtMeta->name().':'.$aExtMeta->version()->__toString().'/' ;
+		}
+		
+		return md5($sSrc) ;
 	}
 	
 	/**
