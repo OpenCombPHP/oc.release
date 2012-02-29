@@ -11,37 +11,45 @@ use org\jecat\framework\fs\FileSystem ;
 /**
  * @wiki /蜂巢/扩展
  * 
- * === 扩展的元信息(metainfo) ===
+ * ===扩展的元信息(metainfo)===
  * org\opencomb\platform\ext\ExtensionMetainfo 类负责维护和提供扩展固有的信息，\
  * 包括扩展的名称、说明，提供的类包、文件、模板目录等资源，以及扩展所有的能够向蜂巢平台提供的功能和数据。
  * 如果你需要了解一个扩展项蜂巢提供了哪些功能和数据，你可以访问 ExtensionMetainfo 类的相关方法。
  * 
- * === 扩展实例 ===
+ * ===扩展实例===
  * org\opencomb\platform\ext\Extension 类负责维护和提供一个扩展，在系统运行时的状态和信息。\
  * 包括扩展的缓存目录、临时目录、数据名录、配置信息对象，等等。\
  * 也包括扩展在载入和唤醒时所需要执行的函数。
  * 
- * == 扩展实例的享元对象 ==
+ * ==扩展实例的享元对象==
  * 系统在初始化时，会为每个被激活的扩展创建一个 org\opencomb\platform\ext\Extension类(或子类)的享元实例。\
  * 当你需要访问一个扩展的相关信息和状态时，可以通过Extension::flyweight('extension name') 静态方法取得这个扩展的享元实例。[see /模式/单例和享元]
  * 
- * === (^)比较：扩展的元信息（ExtensionMetainfo类）和 扩展实例（Extension类） ===
+ * ===(^)比较：扩展的元信息（ExtensionMetainfo类）和 扩展实例（Extension类） ===
  * 扩展实例（Extension类对象）维护扩展在平台系统运行时的状态和信息，在扩展尚未安装之前无法获得有效的 Extension 对象。
  * 扩展的元信息（ExtensionMetainfo类）维护扩展固有的信息，ExtensionMetainfo对象中的内容不会随着系统运行发生变化；\
  * 并且，即使没有安装该扩展，也可以根据扩展提供的metainfo.xml文件，创建一个 ExtensionMetainfo 对象。
  * 
- * === 扩展的载入（load） ===
+ * ===扩展的载入（load）===
  * [todo]
  * 
- * === 扩展的唤醒（weekup） ===
+ * ===扩展的唤醒（weekup）===
  * [todo]
  * 
- * === (^)比较：扩展的载入（load）和 扩展的唤醒（weekup） ===
+ * ===(^)比较：扩展的载入（load）和 扩展的唤醒（weekup）===
  * [todo]
  * 
  */
 class Extension extends Object 
 {
+	/**
+	 * @return Extension
+	 */
+	static public function flyweight($sExtensionName,$bAutoCreate=false,$sClassName=null)
+	{
+		return parent::flyweight($sExtensionName,$bAutoCreate,$sClassName) ;
+	}
+	
 	public function __construct(ExtensionMetainfo $aMeta)
 	{
 		$this->aMetainfo = $aMeta ;

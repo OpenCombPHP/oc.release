@@ -7,7 +7,7 @@ class Prototype extends JcPrototype
 {
 	static public function createBean(array & $arrConfig,$sNamespace='*',$bBuildAtOnce,\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
 	{
-		if( !empty($arrConfig['table']) )
+		if( !empty($arrConfig['table']) and empty($arrConfig['tableTransed']) and empty($arrConfig['disableTableTrans']) )
 		{
 			$arrConfig['table'] = self::transTableName($arrConfig['table'],$sNamespace) ;
 			$arrConfig['tableTransed'] = true ;

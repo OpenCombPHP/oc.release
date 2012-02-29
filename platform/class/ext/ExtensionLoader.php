@@ -81,9 +81,6 @@ class ExtensionLoader extends Object
 		// 注册 Extension::flyweight()
 		Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
 		
-		// 执行扩展的加载函数
-		$aExtension->load($aPlatform) ;
-		
 		// 设置 priority
 		if( $nPriority<0 )
 		{
@@ -91,6 +88,8 @@ class ExtensionLoader extends Object
 		}
 		$aExtension->setRuntimePriority($nPriority) ;
 		
+		// 执行扩展的加载函数
+		$aExtension->load($aPlatform) ;
 		
 		return $aExtension ;
 	}

@@ -4,7 +4,7 @@ namespace org\opencomb\platform\system ;
 use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\lang\Object;
-
+use org\jecat\framework\setting\Setting;
 
 /**
  * @wiki /蜂巢/关闭系统
@@ -12,19 +12,15 @@ use org\jecat\framework\lang\Object;
  * org\opencomb\platform\system\PlatformShutdowner::shutdown() 方法关闭系统，并返回后门密钥。
  * org\opencomb\platform\system\PlatformShutdowner::restore() 方法恢复系统访问。
  * 
- * = “后门”密钥 =
+ * =“后门”密钥=
  * 系统在关闭状态时，可以通过 Get/Post/Cookie 等方式，提供”后门“密钥来访问系统。
  */
 class PlatformShutdowner extends Object
 {
 	public function shutdown($sMessage="系统正在离线升级中……")
-	{		
-		// TODO : 用到了扩展 coresystem 的 setting 内容 ！
-		
+	{
 		$sContents = self::$sTemplate ;
-		$sContents = str_replace('%title%', sprintf(Extension::flyweight("coresystem")->setting()->item('/webpage','title-template'),"系统关闭"), $sContents) ;
-		$sContents = str_replace('%keywords%', Extension::flyweight("coresystem")->setting()->item('/webpage','description-template'), $sContents) ;
-		$sContents = str_replace('%description%', Extension::flyweight("coresystem")->setting()->item('/webpage','keywords-template'), $sContents) ;
+		$sContents = str_replace('%title%', sprintf(Setting::singleton()->item('/platform','systemname'),"系统关闭"), $sContents) ;
 		$sContents = str_replace('%contents%', $sMessage, $sContents) ;
 		
 		FileSystem::singleton()->findFile('/lock.shutdown.html',FileSystem::FIND_AUTO_CREATE)->openWriter()->write($sContents) ;

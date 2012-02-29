@@ -56,6 +56,26 @@ class ExtensionManager extends Object
 	{
 		return new \ArrayIterator($this->arrInstalledExtensions) ;
 	}
+
+	/**
+	 * \Iterator
+	 */
+	public function enableExtensionMetainfoIterator()
+	{
+		$arrExtMetas = array() ;
+		foreach($this->extensionPriorities() as $nPriority)
+		{
+			foreach($this->enableExtensionNameIterator($nPriority) as $sExtName)
+			{
+				if( !$aMetainfo = $this->extensionMetainfo($sExtName) )
+				{
+					throw new Exception("遇到未知的扩展: %s",$sExtName) ;
+				}
+				$arrExtMetas[] = $aMetainfo ;
+			}
+		}
+		return new \ArrayIterator($arrExtMetas) ;
+	}
 	
 	/**
 	 * \Iterator
@@ -72,9 +92,11 @@ class ExtensionManager extends Object
 	{
 		if($nPriority<0)
 		{
-			return new \ArrayIterator(
-					call_user_func_array('array_merge',$this->arrEnableExtensiongNames)
-			) ;
+			return empty($this->arrEnableExtensiongNames)?
+					new \EmptyIterator():
+					new \ArrayIterator(
+						call_user_func_array('array_merge',$this->arrEnableExtensiongNames)
+					) ;
 		}
 		else 
 		{
