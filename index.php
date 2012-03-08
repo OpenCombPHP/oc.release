@@ -33,10 +33,10 @@ use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
 
 
-$t = microtime(1) ;
 
 
 // 简单配置启动 OC platform,以及扩展, 以后完善
+$t = microtime(1) ;
 $aPlatform = require 'jc.init.php' ;
 $fPlatformInitTime = microtime(1) - $t ;
 
@@ -83,6 +83,7 @@ exit() ;
 */
 
 // 根据路由设置创建控制器 并 执行
+$t = microtime(1) ;
 $aController = AccessRouter::singleton()->createRequestController(Request::singleton()) ;
 if($aController)
 {
@@ -93,10 +94,12 @@ else
 	header("HTTP/1.0 404 Not Found");
 	echo "<h1>Page Not Found</h1>" ;
 }
+$fExecuteTime = microtime(1) - $t ;
 
 if(empty($_REQUEST['rspn'])){
 	//echo $aPlatform->signature() ;
 	echo 'total: ', $aPlatform->uptime(true),'<br />' ;
 	echo 'platform init: ', $fPlatformInitTime,'<br />' ;
+	echo 'controller execute: ', $fExecuteTime,'<br />' ;
 	echo 'class load: ', ClassLoader::singleton()->totalLoadTime() ;
 }
