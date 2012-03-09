@@ -3,7 +3,7 @@ namespace org\opencomb\platform\ext ;
 
 use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\mvc\view\UIFactory;
@@ -29,7 +29,7 @@ class ExtensionLoader extends Object
 		}
 		$sVersion = $aExtMeta->version()->toString(false) ;
 		$aPlatform = $aExtensionManager->application() ;
-		$aPlatformFs = FileSystem::singleton() ;
+		$aPlatformFs = Folder::singleton() ;
 
 		// 加载类包
 		foreach($aExtMeta->packageIterator() as $arrPackage)
@@ -37,7 +37,7 @@ class ExtensionLoader extends Object
 			list($sNamespace,$sPackagePath) = $arrPackage ;
 			
 			$sPackagePath = $aExtMeta->installPath().$sPackagePath ;
-			ClassLoader::singleton()->addPackage( $sNamespace, $sPackagePath ) ;
+			ClassLoader::singleton()->addPackage( $sNamespace, $aPlatformFs->findFolder($sPackagePath) ) ;
 			
 			$aExtensionManager->registerPackageNamespace($sNamespace,$sName) ;
 		}
@@ -61,6 +61,7 @@ class ExtensionLoader extends Object
 			{
 				throw new ExtensionException("扩展 %s 的公共文件目录 %s 不存在",array($sName,$sFolder)) ;
 			}
+			$aFolder->setHttpUrl($aExtMeta->installPath().$sFolder) ;
 			$aPlatform->publicFolders()->addFolder($aFolder,$sNamespace) ;
 		}
 		

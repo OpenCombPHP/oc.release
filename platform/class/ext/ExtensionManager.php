@@ -37,8 +37,6 @@ class ExtensionManager extends Object
 		
 		// 取得Settnig中的另一项item数据：激活使用的扩展名称数组
 		$this->arrEnableExtensiongNames = $aSetting->item("/extensions",'enable') ?: array() ;
-		
-		$this->aSetting = $aSetting ;
 	}
 	
 	/**
@@ -247,8 +245,6 @@ class ExtensionManager extends Object
 	private $arrExtensionInstances = array() ;
 	
 	private $arrExtensionPackages = array() ;
-	
-	private $aSetting ;
 }
 
-?>
+

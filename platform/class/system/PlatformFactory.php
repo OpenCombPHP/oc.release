@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\jecat\framework\fs\Folder;
+
 use org\jecat\framework\lang\aop\AOP;
 use org\jecat\framework\lang\compile\CompilerFactory;
 use org\opencomb\platform\ext\ExtensionLoader;
@@ -13,7 +15,6 @@ use org\jecat\framework\mvc\controller\Response;
 use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\locale\LocaleManager;
-use org\jecat\framework\fs\FileSystem;
 use org\jecat\framework\bean\BeanFactory;
 use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
@@ -43,8 +44,8 @@ class PlatformFactory extends HttpAppFactory
 		$aOriApp = Application::switchSingleton($aPlatform) ;
 
 		// filesystem (cache 依赖 filesystem，所以需要首先初始化 fs)
-		$aFileSystem = $this->createFileSystem($aPlatform,$sApplicationRootPath) ;
-		FileSystem::setSingleton($aFileSystem) ;
+		$aFolder = $this->createFileSystem($aPlatform,$sApplicationRootPath) ;
+		Folder::setSingleton($aFolder) ;
 		
 		// setting
 		$aSetting = $this->createSetting($aPlatform) ;
@@ -71,10 +72,10 @@ class PlatformFactory extends HttpAppFactory
 			LocaleManager::setSingleton($this->createLocaleManager($aPlatform)) ;
 				
 			// 模板文件
-			JcSourceFileManager::setSingleton($this->createUISourceFileManager($aFileSystem)) ;
+			JcSourceFileManager::setSingleton($this->createUISourceFileManager($aFolder)) ;
 			
 			// 初始化系统无须store/restore的部分
-			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem,$aSetting) ;
+			$this->initPlatformUnrestorableSystem($aPlatform,$aFolder,$aSetting) ;
 			
 			// BeanFactory 类别名
 			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Prototype','prototype') ;
@@ -100,7 +101,7 @@ class PlatformFactory extends HttpAppFactory
 		else 
 		{
 			// 初始化系统无须store/restore的部分
-			$this->initPlatformUnrestorableSystem($aPlatform,$aFileSystem,$aSetting) ;
+			$this->initPlatformUnrestorableSystem($aPlatform,$aFolder,$aSetting) ;
 			
 			// (request/respone 需要在ClassLoader之后)
 			$this->initPlatformRequestResponse($aPlatform) ;
@@ -119,7 +120,7 @@ class PlatformFactory extends HttpAppFactory
 		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/platform/class','enableClassPathCache',true) ) ;
 		
 		// 启用class编译
-		ClassLoader::singleton()->enableClassCompile(true) ;
+		ClassLoader::singleton()->enableClassCompile(false) ;
 		
 		if($aOriApp)
 		{
@@ -137,7 +138,7 @@ class PlatformFactory extends HttpAppFactory
 		// Response
 		Response::setSingleton( $this->createResponse($aPlatform) ) ;
 	}
-	private function initPlatformUnrestorableSystem(Platform $aPlatform,FileSystem $aFileSystem,Setting $aSetting)
+	private function initPlatformUnrestorableSystem(Platform $aPlatform,Folder $aFolder,Setting $aSetting)
 	{
 		// 数据库
 		$sDBConfig = $aSetting->item('/platform/db','config','alpha') ;
@@ -162,7 +163,7 @@ class PlatformFactory extends HttpAppFactory
 		
 		// public folder
 		$aPublicFolders = $aPlatform->publicFolders() ;
-		$aPublicFolders->addFolder($aFileSystem->findFolder('/public/platform'),'org.opencomb') ;
+		$aPublicFolders->addFolder($aFolder->findFolder('/public/platform'),'org.opencomb') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 	}
 	
@@ -179,7 +180,7 @@ class PlatformFactory extends HttpAppFactory
 		$aClassLoader = parent::createClassLoader($aApp) ;
 		
 		// class
-		$aClassLoader->addPackage( 'org\\opencomb\\platform', '/platform/class' ) ;
+		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('platform/class') ) ;
 		$aClassLoader->enableClassCompile(false) ;
 		
 		return $aClassLoader ;
@@ -192,14 +193,14 @@ class PlatformFactory extends HttpAppFactory
 		return $aAccessRouter ;
 	}
 	
-	public function createUISourceFileManager(FileSystem $aFileSystem)
+	public function createUISourceFileManager(Folder $aFolder)
 	{
 		$aSrcFileMgr = new SourceFileManager() ;
 		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
-		$aSrcFileMgr->addFolder( $aFileSystem->findFolder('/framework/template'), 'org.jecat.framework' ) ;
-		$aSrcFileMgr->addFolder( $aFileSystem->findFolder('/platform/template') , 'org.opencomb' ) ;
+		$aSrcFileMgr->addFolder( $aFolder->findFolder('/framework/template'), 'org.jecat.framework' ) ;
+		$aSrcFileMgr->addFolder( $aFolder->findFolder('/platform/template') , 'org.opencomb' ) ;
 		
 		return $aSrcFileMgr ;
 	}

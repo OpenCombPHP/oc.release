@@ -5,8 +5,7 @@ use org\opencomb\platform\ext\dependence\Dependence;
 use org\jecat\framework\util\VersionCompat;
 use org\jecat\framework\util\VersionScope;
 use org\jecat\framework\lang\Type;
-use org\jecat\framework\fs\IFolder;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\util\VersionExcetion;
 use org\jecat\framework\util\String;
 use org\jecat\framework\util\Version;
@@ -22,7 +21,7 @@ use org\jecat\framework\lang\Object;
 class ExtensionMetainfo extends Object
 {
 	/**
-	 * @param $extensionFoler	string,IFolder
+	 * @param $extensionFoler	string,Folder
 	 * @return ExtensionMetainfo
 	 */
 	static public function load($extensionFoler)
@@ -30,19 +29,19 @@ class ExtensionMetainfo extends Object
 		if( is_string($extensionFoler) )
 		{
 			$sExtPath = $extensionFoler ;
-			if( !$aExtFolder = FileSystem::singleton()->findFolder($sExtPath) )
+			if( !$aExtFolder = Folder::singleton()->findFolder($sExtPath) )
 			{
 				throw new ExtensionException("无法读取扩展信息，扩展路径无效：%s",$sExtPath) ;
 			}
 		}
-		else if( $extensionFoler instanceof IFolder )
+		else if( $extensionFoler instanceof Folder )
 		{
 			$sExtPath = $extensionFoler->path() ;
 			$aExtFolder = $extensionFoler ;
 		}
 		else
 		{
-			throw new Exception("参数 \$extensionFoler 类型无效，必须是 string, IFolder 类型，传入类型为 %s",Type::reflectType($extensionFoler)) ;
+			throw new Exception("参数 \$extensionFoler 类型无效，必须是 string, Folder 类型，传入类型为 %s",Type::reflectType($extensionFoler)) ;
 		}
 		
 		if( !$aMetainfoFile = $aExtFolder->findFile('metainfo.xml') )
@@ -55,7 +54,7 @@ class ExtensionMetainfo extends Object
 		
 		if( !$aDomMetainfo = simplexml_load_string($aMetainfoContents) )
 		{
-			throw new ExtensionException("扩展 metainfo 文件内容无效：%s",$aMetainfoFile->url()) ;
+			throw new ExtensionException("扩展 metainfo 文件内容无效：%s",$aMetainfoFile->path()) ;
 		}
 		
 		return self::loadFromXML($aDomMetainfo , $sExtPath);
@@ -69,7 +68,7 @@ class ExtensionMetainfo extends Object
 			{
 				throw new ExtensionException(
 						"扩展 metainfo 文件内容无效，缺少必须的 %s 元素：%s"
-						, array($sNodeName,$aMetainfoFile->url())
+						, array($sNodeName,$aMetainfoFile->path())
 				) ;
 			}
 		}
@@ -177,8 +176,9 @@ class ExtensionMetainfo extends Object
 			$sNamespace = str_replace('.','\\',$sNamespace) ;
 			$sNamespace = str_replace('/','\\',$sNamespace) ;
 			
-			
-			$aExtMetainfo->arrPackages[] = array($sNamespace,self::formatPath($aPackage['folder'])) ;
+			$sFolder = (string)$aPackage['folder'] ;
+			Folder::formatPath($sFolder) ;
+			$aExtMetainfo->arrPackages[] = array($sNamespace,$sFolder) ;
 		}
 	
 		// template
@@ -329,8 +329,8 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		$sPath = '/data/compiled/class/extensions/'.$this->sName.'/'.$this->version() ;
-		if( !$aFolder=FileSystem::singleton()->find($sPath) and !$aFolder=FileSystem::singleton()->createFolder($sPath) )
+		$sPath = 'data/compiled/class/extensions/'.$this->sName.'/'.$this->version() ;
+		if( !$aFolder=Folder::singleton()->find($sPath) and !$aFolder=Folder::singleton()->createChildFolder($sPath) )
 		{
 			throw new Exception(
 				"无法为扩展(%s)创建class编译目录：%s，请检查文件系统上的权限。"
@@ -347,7 +347,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		$aClassFolder = FileSystem::singleton()->find('/extensions/'.$this->sName.'/class') ;
+		$aClassFolder = Folder::singleton()->find('extensions/'.$this->sName.'/class') ;
 		
 		if(!$aClassFolder)
 		{
@@ -364,7 +364,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return FileSystem::singleton()->find('/extensions/'.$this->sName.'/ui/template') ;
+		return Folder::singleton()->find('extensions/'.$this->sName.'/ui/template') ;
 	}
 	
 	public function resourceUiJsFolder(Platform $aPlatform=null)
@@ -374,7 +374,7 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return FileSystem::singleton()->find('/extensions/'.$this->sName.'/ui/js') ;
+		return Folder::singleton()->find('extensions/'.$this->sName.'/ui/js') ;
 	}
 	
 	public function resourceUiCssFolder(Platform $aPlatform=null)
@@ -384,20 +384,20 @@ class ExtensionMetainfo extends Object
 			$aPlatform = Application::singleton() ;
 		}
 		
-		return FileSystem::singleton()->find('/extensions/'.$this->sName.'/ui/css') ;
+		return Folder::singleton()->find('extensions/'.$this->sName.'/ui/css') ;
 	}
 	
 	/**
 	 * 
-	 * @return org\jecat\framework\fs\IFolder 
+	 * @return org\jecat\framework\fs\Folder 
 	 */
 	public function publicDataFolder()
 	{
-		$aFilesystem = FileSystem::singleton() ;
+		$aFilesystem = Folder::singleton() ;
 		
-		if( !$aFolder=$aFilesystem->find('/data/public/'.$this->sName) )
+		if( !$aFolder=$aFilesystem->find('data/public/'.$this->sName) )
 		{
-			$aFolder = $aFilesystem->createFolder('/data/public/'.$this->sName) ;
+			$aFolder = $aFilesystem->createChildFolder('data/public/'.$this->sName) ;
 		}
 		
 		return $aFolder ;
@@ -438,11 +438,9 @@ class ExtensionMetainfo extends Object
 	
 	static public function formatPath($sPath)
 	{
-		$sPath = FileSystem::formatPath(strval($sPath)) ;
-		if( substr($sPath,0,1)!=='/' )
-		{
-			$sPath = '/' . $sPath ;
-		}
+		$sPath = strval($sPath) ;
+		
+		 ;
 		
 		return $sPath ;
 	}

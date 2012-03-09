@@ -1,13 +1,13 @@
 <?php
 namespace org\opencomb\platform\resrc ;
 
-use org\jecat\framework\fs\IFolder;
+use org\jecat\framework\fs\Folder;
 use org\opencomb\platform\ext\Extension ;
 use org\jecat\framework\resrc\ResourceManager as JsResourceManager ;
 
 class ResourceManager extends JsResourceManager
 {
-	public function addFolder(IFolder $aFolder,$sExtensionName=null)
+	public function addFolder(Folder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
@@ -17,7 +17,7 @@ class ResourceManager extends JsResourceManager
 		parent::addFolder($aFolder,$sExtensionName) ;
 	}
 	
-	public function removeFolder(IFolder $aFolder,$sExtensionName=null)
+	public function removeFolder(Folder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
@@ -38,7 +38,7 @@ class ResourceManager extends JsResourceManager
 	}
 	
 	/**
-	 * @return org\jecat\framework\fs\IFile
+	 * @return org\jecat\framework\fs\File
 	 */
 	public function find($sFilename,$sNamespace='*')
 	{

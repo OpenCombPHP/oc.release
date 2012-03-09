@@ -2,7 +2,7 @@
 namespace org\opencomb\platform\system\upgrader ;
 
 use org\jecat\framework\lang\Object;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\util\Version ;
 use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\Platform ;
@@ -22,9 +22,9 @@ class PlatformDataUpgrader extends Object{
 			$this->aMessageQueue = $aMessageQueue ;
 		}
 		$sLockFileName = '/'.basename(__FILE__,".php").'Lock.html' ;
-		$aLockFile = FileSystem::singleton()->findFile( $sLockFileName ,FileSystem::FIND_AUTO_CREATE) ;
+		$aLockFile = Folder::singleton()->findFile( $sLockFileName ,Folder::FIND_AUTO_CREATE) ;
 		
-		$aLockRes = fopen($aLockFile->url(false),'w');
+		$aLockRes = fopen($aLockFile->path(),'w');
 		flock($aLockRes,LOCK_EX);
 		
 		if( self::CheckResult_NeedUpgrade === $this->check() ){

@@ -140,7 +140,7 @@ class PlatformSerializer extends Object
 	
 		// 还原 platform 
 		Platform::switchSingleton($aOriPlatform) ;
-			
+		
 		return true ;
 	}
 	

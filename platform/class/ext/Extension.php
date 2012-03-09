@@ -6,7 +6,7 @@ use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
 use org\opencomb\platform\Platform;
 use org\jecat\framework\lang\Object;
-use org\jecat\framework\fs\FileSystem ;
+use org\jecat\framework\fs\Folder ;
 
 /**
  * @wiki /蜂巢/扩展
@@ -78,21 +78,21 @@ class Extension extends Object
 	public function cache()
 	{}
 	/**
-	 * @return org\jecat\framework\fs\IFolder
+	 * @return org\jecat\framework\fs\Folder
 	 */
 	public function publicFolder()
 	{
-		//IFolder
+		//Folder
 		$strPath = '/data/public/'.$this->metainfo()->name();
-		return FileSystem::singleton()->findFolder($strPath,FileSystem::FIND_AUTO_CREATE);
+		return Folder::singleton()->findFolder($strPath,Folder::FIND_AUTO_CREATE);
 	}
 	/**
-	 * @return org\jecat\framework\fs\IFolder
+	 * @return org\jecat\framework\fs\Folder
 	 */
 	public function dataFolder()
 	{}
 	/**
-	 * @return org\jecat\framework\fs\IFolder
+	 * @return org\jecat\framework\fs\Folder
 	 */
 	public function temporaryFolder()
 	{}

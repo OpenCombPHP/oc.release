@@ -2,7 +2,7 @@
 namespace org\opencomb\platform\system ;
 
 use org\opencomb\platform\ext\Extension;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\setting\Setting;
 
@@ -23,14 +23,14 @@ class PlatformShutdowner extends Object
 		$sContents = str_replace('%title%', sprintf(Setting::singleton()->item('/platform','systemname'),"系统关闭"), $sContents) ;
 		$sContents = str_replace('%contents%', $sMessage, $sContents) ;
 		
-		FileSystem::singleton()->findFile('/lock.shutdown.html',FileSystem::FIND_AUTO_CREATE)->openWriter()->write($sContents) ;
+		Folder::singleton()->findFile('/lock.shutdown.html',Folder::FIND_AUTO_CREATE)->openWriter()->write($sContents) ;
 		
 		return $this->backdoorSecretKey(true) ;
 	}
 	
 	public function backdoorSecretKey($bAutoCreate=false)
 	{
-		if( $aSkFile=FileSystem::singleton()->findFile('/lock.shutdown.backdoor.php') )
+		if( $aSkFile=Folder::singleton()->findFile('/lock.shutdown.backdoor.php') )
 		{
 			return $aSkFile->includeFile(false,false) ;
 		}
@@ -39,7 +39,7 @@ class PlatformShutdowner extends Object
 		{
 			$sBackDoorSecretKey = md5(microtime()) ;
 			
-			FileSystem::singleton()->findFile('/lock.shutdown.backdoor.php',FileSystem::FIND_AUTO_CREATE)->openWriter()->write("<?php
+			Folder::singleton()->findFile('/lock.shutdown.backdoor.php',Folder::FIND_AUTO_CREATE)->openWriter()->write("<?php
 // 系统关闭的后门密钥，用于管理员进入系统
 return \$sBackDoorSecretKey = '{$sBackDoorSecretKey}' ;") ;
 			
@@ -52,8 +52,8 @@ return \$sBackDoorSecretKey = '{$sBackDoorSecretKey}' ;") ;
 	
 	public function restore()
 	{
-		FileSystem::singleton()->delete('/lock.shutdown.html') ;		
-		FileSystem::singleton()->delete('/lock.shutdown.backdoor.php') ;		
+		Folder::singleton()->delete('/lock.shutdown.html') ;		
+		Folder::singleton()->delete('/lock.shutdown.backdoor.php') ;		
 	}
 	
 	static private $sTemplate = <<<TEMPLATE

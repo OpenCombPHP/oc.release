@@ -1,7 +1,7 @@
 <?php
 namespace org\opencomb\platform ;
 
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\lang\oop\ClassLoader;
@@ -167,7 +167,7 @@ class Platform extends Application
 	{
 		if(!$this->aCache)
 		{
-			$this->aCache = new FSCache( FileSystem::singleton()->findFolder('/data/cache/platform',FileSystem::FIND_AUTO_CREATE) ) ;
+			$this->aCache = new FSCache(Folder::singleton()->findFolder('data/cache/platform',Folder::FIND_AUTO_CREATE)) ;
 		}
 		return $this->aCache ;
 	}
