@@ -92,11 +92,7 @@ class PlatformFactory extends HttpAppFactory
 			
 			// 激活所有扩展
 			ExtensionLoader::singleton()->enableExtensions($aPlatform,$aPlatform->extensions()) ;
-			
-			// 计算class签名
-			$sSignture = ClassLoader::singleton()->compiler()->strategySignature(true) ;
-			$aSetting->setItem('/platform/class','signture',$sSignture) ;
-		}			
+		}
 
 		else 
 		{
@@ -108,20 +104,11 @@ class PlatformFactory extends HttpAppFactory
 			
 			// 激活所有扩展
 			ExtensionLoader::singleton()->enableExtensions($aPlatform,$aPlatform->extensions()) ;
-			
-			// 设置 class signture
-			if( $sSignture = Setting::singleton()->item('/platform/class','signture',null) )
-			{
-				ClassLoader::singleton()->compiler()->setStrategySignature($sSignture) ;
-			}
 		} 
 		
 		// 启用class路径缓存
 		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/platform/class','enableClassPathCache',true) ) ;
-		
-		// 启用class编译
-		ClassLoader::singleton()->enableClassCompile(false) ;
-		
+				
 		if($aOriApp)
 		{
 			Application::switchSingleton($aOriApp) ;
@@ -171,17 +158,21 @@ class PlatformFactory extends HttpAppFactory
 	{
 		$aCache = $aApp->cache() ;
 		
+		// 从缓存中恢复
 		if( $aClassLoader=$aCache->item('/system/objects/classLoader') )
 		{
 			return $aClassLoader ;
 		}
 		
-		// 重建缓存
+		// 重建对像
 		$aClassLoader = parent::createClassLoader($aApp) ;
 		
-		// class
+		// platform class
 		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('platform/class') ) ;
-		$aClassLoader->enableClassCompile(false) ;
+		
+		// 类编译包
+		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('data/compiled/class',Folder::FIND_AUTO_CREATE), ClassLoader::compiled ) ;
+		
 		
 		return $aClassLoader ;
 	}
