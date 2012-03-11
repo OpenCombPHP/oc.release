@@ -34,6 +34,8 @@ use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
 class PlatformFactory extends HttpAppFactory
 {
+	const CLASS_COMPILED_FOLDER = 'data/compiled/class' ;
+	
 	static public function singleton($bCreateNew=true,$createArgvs=null,$sClass=null)
 	{
 		return Object::singleton($bCreateNew,null,__CLASS__) ;
@@ -173,8 +175,7 @@ class PlatformFactory extends HttpAppFactory
 		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('platform/class') ) ;
 		
 		// 类编译包
-		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('data/compiled/class',Folder::FIND_AUTO_CREATE), Package::compiled ) ;
-		
+		$aClassLoader->addPackage( '', Folder::singleton()->findFolder(self::CLASS_COMPILED_FOLDER,Folder::FIND_AUTO_CREATE), Package::compiled ) ;
 		
 		return $aClassLoader ;
 	}
