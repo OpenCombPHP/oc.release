@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\jecat\framework\lang\oop\Package;
+
 use org\jecat\framework\fs\Folder;
 
 use org\jecat\framework\lang\aop\AOP;
@@ -171,7 +173,7 @@ class PlatformFactory extends HttpAppFactory
 		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('platform/class') ) ;
 		
 		// 类编译包
-		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('data/compiled/class',Folder::FIND_AUTO_CREATE), ClassLoader::compiled ) ;
+		$aClassLoader->addPackage( 'org\\opencomb\\platform', Folder::singleton()->findFolder('data/compiled/class',Folder::FIND_AUTO_CREATE), Package::compiled ) ;
 		
 		
 		return $aClassLoader ;
