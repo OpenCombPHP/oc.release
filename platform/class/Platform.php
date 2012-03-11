@@ -43,7 +43,7 @@ use org\opencomb\platform\system\PlatformFactory ;
  */
 class Platform extends Application
 {
-	const version = '0.2.0.0' ;
+	const version = '0.2.1.0' ;
 	const data_version = '0.2' ;
 	const version_compat = "" ;
 	
