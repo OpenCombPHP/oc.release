@@ -73,6 +73,7 @@ class OcCompiler extends Compiler
 			if( $aClassInfoLibrary->isA( $sClassName , $sWeaveClass ) ){
 				if( null === $aTokenPool ){
 					$aTokenPool = $this->scan($sSourceFile);
+					$this->interpret($aTokenPool);
 				}
 				foreach($aTokenPool->iterator() as $aToken){
 					if($aJointPoint->matchExecutionPoint($aToken) ){
