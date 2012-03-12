@@ -77,7 +77,7 @@ class CompiledValidableCheck extends Object implements IGenerator
 		$nCompileTime = time() ;
 		foreach ($arrReferFiles as $sFilePath)
 		{
-			$sCode.= "if( filemtime(\'{$sFilePath}\')>{$nCompileTime} ){\r\n" ;
+			$sCode.= "if( filemtime('{$sFilePath}')>{$nCompileTime} ){\r\n" ;
 			$sCode.= $sCodeRecompileClass ;
 			$sCode.= "}\r\n" ;
 		}
