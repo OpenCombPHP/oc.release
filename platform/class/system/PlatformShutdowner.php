@@ -52,8 +52,8 @@ return \$sBackDoorSecretKey = '{$sBackDoorSecretKey}' ;") ;
 	
 	public function restore()
 	{
-		Folder::singleton()->delete('/lock.shutdown.html') ;		
-		Folder::singleton()->delete('/lock.shutdown.backdoor.php') ;		
+		Folder::singleton()->deleteChild('/lock.shutdown.html') ;
+		Folder::singleton()->deleteChild('/lock.shutdown.backdoor.php') ;
 	}
 	
 	static private $sTemplate = <<<TEMPLATE
