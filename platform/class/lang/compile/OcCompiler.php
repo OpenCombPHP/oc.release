@@ -70,14 +70,12 @@ class OcCompiler extends Compiler
 		$aTokenPool = null ;
 		foreach($aAOP->jointPointIterator() as $aJointPoint){
 			$sWeaveClass = $aJointPoint->weaveClass() ;
-			echo $sWeaveClass ,' ',$sClassName,'<br />';
 			if( $aClassInfoLibrary->isA( $sClassName , $sWeaveClass ) ){
 				if( null === $aTokenPool ){
 					$aTokenPool = $this->scan($sSourceFile);
 				}
 				foreach($aTokenPool->iterator() as $aToken){
 					if($aJointPoint->matchExecutionPoint($aToken) ){
-						echo __METHOD__,__LINE__;
 						return true;
 					}
 				}
