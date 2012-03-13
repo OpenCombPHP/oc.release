@@ -51,6 +51,10 @@ class OcCompiler extends Compiler
 			// 系统 release 状态
 			else
 			{
+				$sDirName = dirname($sCompiledFile) ;
+				if( ! file_exists($sDirName) ){
+					mkdir($sDirName,0755,true);
+				}
 				copy($sSourceFile,$sCompiledFile) ;
 			}
 		}
