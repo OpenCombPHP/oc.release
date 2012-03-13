@@ -90,7 +90,11 @@ class Extension extends Object
 	 * @return org\jecat\framework\fs\Folder
 	 */
 	public function dataFolder()
-	{}
+	{
+		//Folder
+		$strPath = '/data/extensions/'.$this->metainfo()->name();
+		return Folder::singleton()->findFolder($strPath,Folder::FIND_AUTO_CREATE);
+	}
 	/**
 	 * @return org\jecat\framework\fs\Folder
 	 */
