@@ -52,6 +52,7 @@ class PlatformDataUpgrader extends Object{
 		}
 		
 		fclose($aLockRes);
+		$aLockFile->delete() ;
 	}
 	
 	const CheckResult_Error = 'error' ;
@@ -105,7 +106,13 @@ class PlatformDataUpgrader extends Object{
 		$arrPath = $aCalc->calc($arrMap,$aFromVersion->toString(),$aToVersion->toString() );
 		
 		if( false === $arrPath ){
-			throw new Exception('未找到合适的升级路径');
+			throw new Exception(
+				'未找到合适的升级路径 : from %s to %s',
+				array(
+					$aFromVersion,
+					$aToVersion,
+				)
+			);
 		}
 		
 		$aSetting = Setting::singleton() ;

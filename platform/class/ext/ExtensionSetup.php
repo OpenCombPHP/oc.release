@@ -11,7 +11,6 @@ use org\jecat\framework\lang\Object;
 use org\jecat\framework\message\MessageQueue;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\lang\oop\ClassLoader ;
-use org\jecat\framework\fs\Folder;
 use org\opencomb\platform\ext\dependence\RequireItem ;
 use org\jecat\framework\db\DB ;
 use org\opencomb\platform\mvc\model\db\orm\Prototype ;
@@ -463,7 +462,7 @@ class ExtensionSetup extends Object
 			if(in_array($sSourceFolder,$arrClassLoaderPackagePath)){
 				continue;
 			}
-			$this->arrLoadedClassPackages[] = $aClassLoader->addPackage($package[0],$sSourceFolder);
+			$this->arrLoadedClassPackages[] = $aClassLoader->addPackage($package[0],new Folder($sSourceFolder));
 		}
 	}
 	private function unloadClassPackages(ExtensionMetainfo $aExtMeta)
