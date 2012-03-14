@@ -6,6 +6,8 @@ use org\opencomb\platform\system\PlatformFactory;
 use org\jecat\framework\lang\oop\Package;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\compile\Compiler;
+use org\jecat\framework\lang\aop\AOP ;
+use org\jecat\framework\lang\aop\compiler\ClassInfoLibrary ;
 
 class OcCompiler extends Compiler
 {
@@ -39,12 +41,20 @@ class OcCompiler extends Compiler
 				$sCode.= "require \"".addslashes($sSourceFile)."\" ;\r\n" ;
 				
 				// 写入编译文件
+				$sDirName = dirname($sCompiledFile) ;
+				if( ! file_exists($sDirName) ){
+					mkdir($sDirName,0755,true);
+				}
 				file_put_contents($sCompiledFile,$sCode) ;
 			}
 			
 			// 系统 release 状态
 			else
 			{
+				$sDirName = dirname($sCompiledFile) ;
+				if( ! file_exists($sDirName) ){
+					mkdir($sDirName,0755,true);
+				}
 				copy($sSourceFile,$sCompiledFile) ;
 			}
 		}
@@ -57,5 +67,26 @@ class OcCompiler extends Compiler
 		
 		// for all jointpoints
 		// todo ...
+		
+		$aAOP = AOP::singleton();
+		$aClassInfoLibrary = ClassInfoLibrary::singleton() ;
+		
+		$aTokenPool = null ;
+		foreach($aAOP->jointPointIterator() as $aJointPoint){
+			$sWeaveClass = $aJointPoint->weaveClass() ;
+			if( $aClassInfoLibrary->isA( $sClassName , $sWeaveClass ) ){
+				if( null === $aTokenPool ){
+					$aTokenPool = $this->scan($sSourceFile);
+					$this->interpret($aTokenPool);
+				}
+				foreach($aTokenPool->iterator() as $aToken){
+					if($aJointPoint->matchExecutionPoint($aToken) ){
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 }

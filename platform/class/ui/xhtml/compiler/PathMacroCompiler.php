@@ -51,8 +51,6 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		else
 		{
 			@list($sNamespace,$sPath) = explode(':',$sContents,2) ;
-			echo $sNamespace."<br/>";
-			echo $sPath;
 			if(!$sNamespace)
 			{
 				$sNamespace = $aObject->root()->ns() ;
@@ -64,8 +62,9 @@ class PathMacroCompiler extends JcPathMacroCompiler
 			}
 			else
 			{
-				$aDev->write( "if(\$aFile=\\org\\opencomb\\platform\\Platform::singleton()->publicFolders()->find(\"$sPath\",\"$sNamespace\")){\r\n" ) ;
-				$aDev->write( "	\$aDevice->write(\$aFile->httpUrl()) ;" ) ;
+				$aDev->write( "list(\$aFolder,\$sFileName)=\\org\\opencomb\\platform\\Platform::singleton()->publicFolders()->findEx(\"$sPath\",\"$sNamespace\");\r\n" ) ;
+				$aDev->write( "if(\$aFolder){\r\n");
+				$aDev->write( "	\$aDevice->write(\$aFolder->httpUrl().'/'.\$sFileName) ;" ) ;
 				$aDev->write( "}" ) ;
 			}
 		}

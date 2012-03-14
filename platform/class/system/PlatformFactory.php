@@ -211,7 +211,7 @@ class PlatformFactory extends HttpAppFactory
 		return $aSrcFileMgr ;
 	}
 	
-	private $aClassCompiledPackage ;
+	private $aClassCompiledPackage = null ;
 }
 
 ?>

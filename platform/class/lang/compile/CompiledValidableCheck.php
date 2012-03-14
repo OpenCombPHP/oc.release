@@ -45,8 +45,15 @@ class CompiledValidableCheck extends Object implements IGenerator
 		$arrReferFiles = array_unique($arrReferFiles) ;
 		$aValidCheckToken = new Token(0,$this->generateValidableCheckCode($arrReferFiles)) ;
 		
+		// 寻找 namespace 后的 ;
+		$aIter = $aTokenPool->iterator() ;
+		$aIter->search($aToken->endToken());
+		while($aIter->current()->tokenType() !== Token::T_SEMICOLON ){
+			$aIter->next() ;
+		}
+		
 		// 插入到 TokenPool 中
-		$aTokenPool->insertAfter($aToken,$aValidCheckToken) ;
+		$aTokenPool->insertAfter($aIter->current(),$aValidCheckToken) ;
 	}
 	
 	private function isFirstNamespaceToken(TokenPool $aTokenPool, Token $aToken)
@@ -77,7 +84,7 @@ class CompiledValidableCheck extends Object implements IGenerator
 		$nCompileTime = time() ;
 		foreach ($arrReferFiles as $sFilePath)
 		{
-			$sCode.= "if( filemtime(\'{$sFilePath}\')>{$nCompileTime} ){\r\n" ;
+			$sCode.= "if( filemtime('{$sFilePath}')>{$nCompileTime} ){\r\n" ;
 			$sCode.= $sCodeRecompileClass ;
 			$sCode.= "}\r\n" ;
 		}

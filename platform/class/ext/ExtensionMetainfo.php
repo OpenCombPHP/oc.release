@@ -29,7 +29,8 @@ class ExtensionMetainfo extends Object
 		if( is_string($extensionFoler) )
 		{
 			$sExtPath = $extensionFoler ;
-			if( !$aExtFolder = Folder::singleton()->findFolder($sExtPath) )
+			$aExtFolder = new Folder($sExtPath);
+			if( !$aExtFolder->exists() )
 			{
 				throw new ExtensionException("无法读取扩展信息，扩展路径无效：%s",$sExtPath) ;
 			}
@@ -80,7 +81,7 @@ class ExtensionMetainfo extends Object
 			$aExtMetainfo = new self(
 				$sExtName
 				, Version::FromString($aDomMetainfo->version)
-				, $sExtPath
+				, Folder::relativePath(Folder::singleton()->path(),$sExtPath)
 				, empty($aDomMetainfo->class)? null: str_replace('.','\\',trim($aDomMetainfo->class))
 			) ;
 		}
