@@ -2,6 +2,8 @@
 namespace org\opencomb\platform ;
 
 // 检查系统关闭锁
+use org\jecat\framework\db\DB;
+
 if( is_file(__DIR__.'/lock.shutdown.html') )
 {
 	// 检查”后门“密钥，方便管理员进入

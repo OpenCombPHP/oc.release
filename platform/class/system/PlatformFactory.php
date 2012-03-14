@@ -133,13 +133,13 @@ class PlatformFactory extends HttpAppFactory
 	{
 		// 数据库
 		$sDBConfig = $aSetting->item('/platform/db','config','alpha') ;
-		$aDBDriver = new PDODriver(
+		$aDB = new DB(
 				$aSetting->item('/platform/db/'.$sDBConfig,'dsn')
 				, $aSetting->item('/platform/db/'.$sDBConfig,'username')
 				, $aSetting->item('/platform/db/'.$sDBConfig,'password')
 				, $aSetting->item('/platform/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"))
 		) ;
-		DB::singleton()->setDriver($aDBDriver) ;
+		DB::setSingleton($aDB) ;
 
 		// 会话
 		Session::setSingleton( new OcSession() ) ;
@@ -210,6 +210,8 @@ class PlatformFactory extends HttpAppFactory
 		
 		return $aSrcFileMgr ;
 	}
+	
+	private $aClassCompiledPackage ;
 }
 
 ?>
