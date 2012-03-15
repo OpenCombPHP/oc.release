@@ -35,9 +35,13 @@ class ExtensionLoader extends Object
 		foreach($aExtMeta->packageIterator() as $arrPackage)
 		{
 			list($sNamespace,$sPackagePath) = $arrPackage ;
-			
+						
 			$sPackagePath = $aExtMeta->installPath().$sPackagePath ;
-			ClassLoader::singleton()->addPackage( $sNamespace, $aPlatformFs->findFolder($sPackagePath) ) ;
+			if(!$aPackage=$aPlatformFs->findFolder($sPackagePath))
+			{
+				throw new ExtensionException("没有找到扩展 %s 的类包:%s",array($sName,$sPackagePath)) ;
+			}
+			ClassLoader::singleton()->addPackage( $sNamespace, $aPackage ) ;
 			
 			$aExtensionManager->registerPackageNamespace($sNamespace,$sName) ;
 		}

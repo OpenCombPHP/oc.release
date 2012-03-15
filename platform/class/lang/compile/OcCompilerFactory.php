@@ -11,15 +11,7 @@ class OcCompilerFactory extends CompilerFactory
 	 */
 	public function create()
 	{
-		$aCompiler = parent::create( new OcCompiler() ) ;
-
-		// 编译文件有效性检查的代码生成器
-		if( Platform::singleton()->isDebugging() )
-		{
-			$aCompiler->registerGenerator("org\\jecat\\framework\\lang\\compile\\object\\NamespaceDeclare","org\\opencomb\\platform\\lang\\compile\\CompiledValidableCheck") ;
-		}
-		
-		return $aCompiler ;
+		return parent::create( new OcCompiler() ) ;
 	}
 }
 

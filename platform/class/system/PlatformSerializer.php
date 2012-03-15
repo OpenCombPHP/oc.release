@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\jecat\framework\lang\aop\AOP;
+
 use org\opencomb\platform\Platform;
 use org\jecat\framework\cache\ICache;
 use org\jecat\framework\lang\Object;
@@ -137,7 +139,13 @@ class PlatformSerializer extends Object
 			
 		// 设置 public folder
 		$this->aPlatform->setPublicFolders($aPublicFolders) ;
-	
+		
+		// 更新 AOP 缓存
+		if( $this->aPlatform->isDebugging() )
+		{
+			AOP::singleton()->refresh() ;
+		}
+			
 		// 还原 platform 
 		Platform::switchSingleton($aOriPlatform) ;
 		
