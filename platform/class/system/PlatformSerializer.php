@@ -143,7 +143,11 @@ class PlatformSerializer extends Object
 		// 更新 AOP 缓存
 		if( $this->aPlatform->isDebugging() )
 		{
-			AOP::singleton()->refresh() ;
+			if( AOP::singleton()->refresh() )
+			{
+				// 重新写入缓存
+				$this->addSystemObject(AOP::singleton()) ;
+			}
 		}
 			
 		// 还原 platform 
