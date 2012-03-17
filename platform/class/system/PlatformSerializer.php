@@ -16,7 +16,7 @@ class PlatformSerializer extends Object
 	
 	public function __destruct()
 	{
-		if($this->bNeedStore)
+		if($this->arrSystemObjects)
 		{
 			$this->store() ;
 		}
@@ -29,11 +29,18 @@ class PlatformSerializer extends Object
 			$sClass = get_class($aObject) ;
 		}
 		
-		$this->arrSystemObjects[] = array(
-				$aObject, $sClass, &$flyweightKey
-		) ;
-
-		$this->bNeedStore = true ;
+		if( !$this->arrSystemObjects or !in_array($aObject,$this->arrSystemObjects,true) or $flyweightKey!=$flyweightKey and $sClass!=$sClass )
+		{
+			$this->arrSystemObjects[] = array(
+					$aObject, $sClass, &$flyweightKey
+			) ;
+		}
+		
+		$arrInfo = array($sClass, $flyweightKey) ;
+		if( !$this->arrInstanceInfos or !in_array($arrInfo,$this->arrInstanceInfos) )
+		{
+			$this->arrInstanceInfos[] = $arrInfo ;
+		}
 	}
 	
 	public function addSystemSingletons()
@@ -62,25 +69,21 @@ class PlatformSerializer extends Object
 		
 		$aCache = $this->aPlatform->cache() ;
 		
-		$arrInstanceInfos = array() ;
-		
 		// 缓存对像
-		foreach($this->arrSystemObjects as $arrObjectInfo)
+		foreach($this->arrSystemObjects as $key=>$arrObjectInfo)
 		{
 			list($aObject, $sClass, $flyweightKey) = $arrObjectInfo ;
 			$aCache->setItem($this->cacheStorePath($sClass,$flyweightKey),$aObject) ;
 			
-			$arrInstanceInfos[] = array($sClass, $flyweightKey) ;
+			unset($this->arrSystemObjects[$key]) ;
 		}
 		
 		// 保存对像信息
-		$aCache->setItem($this->cacheStorePath('platform-serialize-info',null),$arrInstanceInfos) ;
+		$aCache->setItem($this->cacheStorePath('platform-serialize-info',null),$this->arrInstanceInfos) ;
 		
 		// 保存 platform 的 publicFolder 对像
 		$aCache->setItem($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder'),$this->aPlatform->publicFolders()) ;
-		
-		$this->bNeedStore = false ;
-		
+				
 		// 还原 platform 
 		Platform::switchSingleton($aOriPlatform) ;
 	}
@@ -92,7 +95,7 @@ class PlatformSerializer extends Object
 		$aCache = $this->aPlatform->cache() ;
 		
 		// 恢复对像信息
-		if( !$arrInstanceInfos=$aCache->item($this->cacheStorePath('platform-serialize-info',null)) )
+		if( !$this->arrInstanceInfos=$aCache->item($this->cacheStorePath('platform-serialize-info',null),array()) )
 		{
 			// 还原 platform 
 			Platform::switchSingleton($aOriPlatform) ;
@@ -102,7 +105,7 @@ class PlatformSerializer extends Object
 		
 		// ------------------------------------
 		// 恢复各个对像
-		foreach($arrInstanceInfos as &$arrInfo)
+		foreach($this->arrInstanceInfos as &$arrInfo)
 		{
 			list($sClass,$flyweightKey) = $arrInfo ;
 			
@@ -172,5 +175,5 @@ class PlatformSerializer extends Object
 	
 	private $arrSystemObjects ;
 	
-	private $bNeedStore = false ;
+	private $arrInstanceInfos = array() ;
 }

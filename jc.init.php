@@ -24,6 +24,7 @@ require_once __DIR__."/platform/class/Platform.php" ;
 require_once __DIR__."/platform/class/system/PlatformFactory.php" ;
 require_once __DIR__."/platform/class/system/PlatformSerializer.php" ;
 require_once __DIR__."/platform/class/system/upgrader/PlatformDataUpgrader.php" ;
+require_once __DIR__."/platform/class/debug/ExecuteTimeWatcher.php" ;
 
 
 $aPlatform = PlatformFactory::singleton()->create(__DIR__) ;

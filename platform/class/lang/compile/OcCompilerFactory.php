@@ -11,7 +11,11 @@ class OcCompilerFactory extends CompilerFactory
 	 */
 	public function create()
 	{
-		return parent::create( new OcCompiler() ) ;
+		$aCompiler = parent::create( new OcCompiler() ) ;
+		
+		$aCompiler->registerGenerator("org\\jecat\\framework\\lang\\compile\\object\\ClassDefine","org\\opencomb\\platform\\lang\\compile\\ClassDefineWrapper") ;
+		
+		return $aCompiler ;
 	}
 }
 

@@ -2,6 +2,8 @@
 namespace org\opencomb\platform ;
 
 // 检查系统关闭锁
+use org\opencomb\platform\debug\ExecuteTimeWatcher;
+
 use org\jecat\framework\db\DB;
 
 if( is_file(__DIR__.'/lock.shutdown.html') )
@@ -26,13 +28,11 @@ use org\opencomb\platform\mvc\model\db\orm\PAMap;
 use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
 
-
-
+$fStartTime = microtime(true) ;
 
 // 简单配置启动 OC platform,以及扩展, 以后完善
-$t = microtime(1) ;
 $aPlatform = require 'jc.init.php' ;
-$fPlatformInitTime = microtime(1) - $t ;
+ExecuteTimeWatcher::singleton()->start('/system',$fStartTime) ;
 
 $aDataUpgrader = PlatformDataUpgrader::singleton() ; 
 if(TRUE === $aDataUpgrader->process()){
@@ -42,23 +42,25 @@ if(TRUE === $aDataUpgrader->process()){
 
 
 // 根据路由设置创建控制器 并 执行
-$t = microtime(1) ;
 $aController = AccessRouter::singleton()->createRequestController(Request::singleton()) ;
 if($aController)
 {
+	$t = microtime(1) ;
 	$aController->mainRun() ;
+	$fControllerExecuteTime = microtime(1) - $t ;
 }
 else 
 {
 	header("HTTP/1.0 404 Not Found");
 	echo "<h1>Page Not Found</h1>" ;
 }
-$fExecuteTime = microtime(1) - $t ;
 
-if(empty($_REQUEST['rspn'])){
-	//echo $aPlatform->signature() ;
-	echo 'total: ', $aPlatform->uptime(true),'<br />' ;
-	echo 'platform init: ', $fPlatformInitTime,'<br />' ;
-	echo 'controller execute: ', $fExecuteTime,'<br />' ;
-	echo 'class load: ', ClassLoader::singleton()->totalLoadTime() ;
+if( empty($_REQUEST['rspn']) ){
+	echo '<br /><pre>' ;
+	echo 'platform init: 		', $fPlatformInitTime,'<br />' ;
+	echo 'controller create: 	', $fCreateControllerTime,'<br />' ;
+	echo 'controller execute: 	', $fControllerExecuteTime,'<br />' ;
+	echo 'class load: 		', ClassLoader::singleton()->totalLoadTime(),'<br />' ;
+	echo 'total: 			', microtime(1) - $fStartTime,'<br />' ;
+	echo '</pre><br />' ;
 }

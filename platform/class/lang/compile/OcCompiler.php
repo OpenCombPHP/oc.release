@@ -61,7 +61,7 @@ class OcCompiler extends Compiler
 				if( ! file_exists($sDirName) ){
 					mkdir($sDirName,0755,true);
 				}
-				copy($sSourceFile,$sCompiledFile) ;
+				@copy($sSourceFile,$sCompiledFile) ;
 			}
 		}
 	}
