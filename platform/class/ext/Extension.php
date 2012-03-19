@@ -47,7 +47,7 @@ class Extension extends Object
 	 */
 	static public function flyweight($sExtensionName,$bAutoCreate=false,$sClassName=null)
 	{
-		return parent::flyweight($sExtensionName,$bAutoCreate,$sClassName) ;
+		return ExtensionManager::singleton()->extension($sExtensionName) ;
 	}
 	
 	public function __construct(ExtensionMetainfo $aMeta)

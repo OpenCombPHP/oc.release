@@ -83,9 +83,6 @@ class ExtensionLoader extends Object
 		// 建立扩展实例
 		$aExtension = $aExtensionManager->extension($sName) ;
 		
-		// 注册 Extension::flyweight()
-		Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
-		
 		// 设置 priority
 		if( $nPriority<0 )
 		{
@@ -103,14 +100,7 @@ class ExtensionLoader extends Object
 	public function enableExtensions(Platform $aPlatform,ExtensionManager $aExtensionManager)
 	{
 		foreach($aExtensionManager->iterator() as $aExtension)
-		{
-			// 注册 Extension::flyweight()
-			$sExtensionName = $aExtension->metainfo()->name() ;
-			if( !Extension::flyweight($sExtensionName,false) )
-			{
-				Extension::setFlyweight($aExtension,$sExtensionName) ;
-			}
-			
+		{			
 			$aExtension->active($aPlatform) ;
 		}
 	}

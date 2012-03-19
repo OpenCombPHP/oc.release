@@ -1,8 +1,9 @@
 <?php
 namespace org\opencomb\platform\system ;
 
-use org\jecat\framework\lang\aop\AOP;
+use org\opencomb\platform\ext\ExtensionManager;
 
+use org\jecat\framework\lang\aop\AOP;
 use org\opencomb\platform\Platform;
 use org\jecat\framework\cache\ICache;
 use org\jecat\framework\lang\Object;
@@ -92,6 +93,8 @@ class PlatformSerializer extends Object
 	{
 		$aOriPlatform = Platform::switchSingleton($this->aPlatform) ;
 		
+		$arrShareObjectsMemento = Object::shareObjectMemento() ;
+		
 		$aCache = $this->aPlatform->cache() ;
 		
 		// 恢复对像信息
@@ -99,6 +102,7 @@ class PlatformSerializer extends Object
 		{
 			// 还原 platform 
 			Platform::switchSingleton($aOriPlatform) ;
+			Object::setShareObjectMemento($arrShareObjectsMemento) ;
 			
 			return false ;
 		}
@@ -114,6 +118,7 @@ class PlatformSerializer extends Object
 			{
 				// 还原 platform 
 				Platform::switchSingleton($aOriPlatform) ;
+				Object::setShareObjectMemento($arrShareObjectsMemento) ;
 				
 				return false ;
 			}
@@ -136,6 +141,7 @@ class PlatformSerializer extends Object
 		{
 			// 还原 platform 
 			Platform::switchSingleton($aOriPlatform) ;
+			Object::setShareObjectMemento($arrShareObjectsMemento) ;
 			
 			return false ;
 		}
@@ -144,12 +150,16 @@ class PlatformSerializer extends Object
 		$this->aPlatform->setPublicFolders($aPublicFolders) ;
 		
 		// 更新 AOP 缓存
+		$a = AOP::singleton() ;
 		if( $this->aPlatform->isDebugging() )
 		{
-			if( AOP::singleton()->refresh() )
+			if( !AOP::singleton()->isValid() )
 			{
-				// 重新写入缓存
-				$this->addSystemObject(AOP::singleton()) ;
+				// 还原 platform 
+				Platform::switchSingleton($aOriPlatform) ;
+				Object::setShareObjectMemento($arrShareObjectsMemento) ;
+				
+				return false ;
 			}
 		}
 			

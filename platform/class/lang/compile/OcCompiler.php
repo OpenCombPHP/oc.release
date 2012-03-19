@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\lang\compile ;
 
+use org\jecat\framework\lang\Exception;
+
 use org\jecat\framework\lang\compile\object\Token;
 
 use org\jecat\framework\lang\compile\object\NamespaceDeclare;
@@ -20,7 +22,10 @@ class OcCompiler extends Compiler
 		$this->sCompilingClassName = $sClassName ; 
 		
 		// 找到 class source 的路径
-		$sSourceFile = ClassLoader::singleton()->searchClass($sClassName,Package::nocompiled) ;
+		if( !$sSourceFile = ClassLoader::singleton()->searchClass($sClassName,Package::nocompiled) )
+		{
+			throw new Exception("编译类时找不到类：%s",$sClassName) ; 
+		}
 		
 		// 通过 class compiled package 确定 class compiled 的路径
 		$aCompiledPackage = PlatformFactory::singleton()->classCompiledPackage() ;
