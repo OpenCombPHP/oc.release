@@ -23,7 +23,11 @@ if( is_file(__DIR__.'/lock.shutdown.html') )
 
 // 初始化 jcat 框架
 $aPlatform = require 'oc.init.php' ;
-ExecuteTimeWatcher::singleton()->start('/system',$fStartTime) ;
+
+$aExecuteTimeWatcher = ExecuteTimeWatcher::singleton() ;
+$aExecuteTimeWatcher->start('/system/total',$fStartTime) ;
+$aExecuteTimeWatcher->start('/system/init',$fStartTime) ;
+$aExecuteTimeWatcher->finish('/system/init') ;
 
 $aDataUpgrader = PlatformDataUpgrader::singleton() ; 
 if(TRUE === $aDataUpgrader->process()){
@@ -46,12 +50,10 @@ else
 	echo "<h1>Page Not Found</h1>" ;
 }
 
-if( empty($_REQUEST['rspn']) ){
-	echo '<br /><pre>' ;
-	echo 'platform init: 		', $fPlatformInitTime,'<br />' ;
-	echo 'controller create: 	', $fCreateControllerTime,'<br />' ;
-	echo 'controller execute: 	', $fControllerExecuteTime,'<br />' ;
-	echo 'class load: 		', ClassLoader::singleton()->totalLoadTime(),'<br />' ;
-	echo 'total: 			', microtime(1) - $fStartTime,'<br />' ;
-	echo '</pre><br />' ;
+
+$aExecuteTimeWatcher->finish('/system/total') ;
+
+if( empty($_REQUEST['rspn']) )
+{
+	$aExecuteTimeWatcher->printLogs() ;
 }
