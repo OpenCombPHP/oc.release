@@ -9,5 +9,6 @@ data
 framework
 settings
 extensions*
+services
 gitall.sh
 PlatformDataUpgraderLock.html
