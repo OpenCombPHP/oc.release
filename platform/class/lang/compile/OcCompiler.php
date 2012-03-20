@@ -46,8 +46,15 @@ class OcCompiler extends Compiler
 			{
 				$sCode = "<?php \r\n" ;
 				
-				// 生成 compiled 文件的 有效性检查代码
-				$sCode.= $this->generateValidableCheckCode($sClassName,array($sSourceFile)) ;
+				if($this->isInitiativeCompileClass($sClassName))
+				{
+					// 生成 compiled 文件的 有效性检查代码
+					$sCode.= $this->generateValidableCheckCode($sClassName,array($sSourceFile)) ;
+				}
+				else
+				{
+					$sCode.= "// {$sClassName} 被编译器本身依赖，编译文件失效后，无法主动重新编译\r\n\r\n" ;
+				}
 				
 				$sCode.= "require \"".addslashes($sSourceFile)."\" ;\r\n" ;
 				
@@ -107,8 +114,16 @@ class OcCompiler extends Compiler
 		}
 		
 		// 生成代码
-		$arrReferFiles = array_unique($arrReferFiles) ;
-		$aValidCheckToken = new Token(0,$this->generateValidableCheckCode($this->sCompilingClassName,$arrReferFiles)) ;
+		if($this->isInitiativeCompileClass($this->sCompilingClassName))
+		{
+			$arrReferFiles = array_unique($arrReferFiles) ;
+			$aValidCheckToken = new Token(0,$this->generateValidableCheckCode($this->sCompilingClassName,$arrReferFiles)) ;
+		}
+		else
+		{
+			$aValidCheckToken = new Token(0,"// {$this->sCompilingClassName} 被编译器本身依赖，编译文件失效后，无法主动重新编译\r\n\r\n") ;
+		}
+		
 		
 		// 寻找 namespace 后的 ;
 		$aIter = $aTokenPool->iterator() ;
@@ -192,7 +207,29 @@ class OcCompiler extends Compiler
 	
 		return $sCode ;
 	}
+	
+	public function isInitiativeCompileClass($sClass)
+	{
+		foreach(array(
+				'org\\opencomb\\platform\\lang\\compile\\' ,
+				'org\\jecat\\framework\\lang\\' ,
+				//'org\\jecat\\framework\\lang\\compile\\' ,
+				//'org\\jecat\\framework\\lang\\aop\\compiler\\' ,
+				'org\\jecat\\framework\\io\\' ,
+				'org\\jecat\\framework\\util\\' ,
+				'org\\jecat\\framework\\pattern\\iterate\\' ,
+		) as $sPackage)
+		{
+			if( strstr($sClass,$sPackage) !== false )
+			{
+				return false ;
+			}
+		}
+		
+		return true ;
+	}
 
 	
 	private $sCompilingClassName ;
 }
+

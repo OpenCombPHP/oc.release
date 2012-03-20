@@ -50,7 +50,6 @@ else
 	echo "<h1>Page Not Found</h1>" ;
 }
 
-
 $aExecuteTimeWatcher->finish('/system/total') ;
 
 if( empty($_REQUEST['rspn']) )
