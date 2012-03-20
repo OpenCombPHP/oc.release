@@ -154,7 +154,7 @@ class PlatformFactory extends HttpAppFactory
 		
 		// public folder
 		$aPublicFolders = $aPlatform->publicFolders() ;
-		$aPublicFolders->addFolder($aFolder->findFolder('/public/platform'),'org.opencomb') ;
+		$aPublicFolders->addFolder($aFolder->findFolder('/platform/public'),'org.opencomb') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 	}
 	

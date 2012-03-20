@@ -1,11 +1,15 @@
 <?php
 namespace org\opencomb\platform ;
 
-// 检查系统关闭锁
+$fStartTime = microtime(true) ;
+
 use org\opencomb\platform\debug\ExecuteTimeWatcher;
-
 use org\jecat\framework\db\DB;
+use org\jecat\framework\mvc\controller\Request;
+use org\jecat\framework\system\AccessRouter;
+use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
 
+// 检查系统关闭锁
 if( is_file(__DIR__.'/lock.shutdown.html') )
 {
 	// 检查”后门“密钥，方便管理员进入
@@ -18,20 +22,7 @@ if( is_file(__DIR__.'/lock.shutdown.html') )
 }
 
 // 初始化 jcat 框架
-use org\jecat\framework\mvc\controller\Request;
-use org\jecat\framework\system\AccessRouter;
-use org\jecat\framework\lang\oop\ClassLoader;
-use org\jecat\framework\fs\imp\LocalFileSystem;
-use org\jecat\framework\fs\File;
-use org\jecat\framework\mvc\model\db\orm\PrototypeAssociationMap;
-use org\opencomb\platform\mvc\model\db\orm\PAMap;
-use org\opencomb\platform\ext\ExtensionMetainfo;
-use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
-
-$fStartTime = microtime(true) ;
-
-// 简单配置启动 OC platform,以及扩展, 以后完善
-$aPlatform = require 'jc.init.php' ;
+$aPlatform = require 'oc.init.php' ;
 ExecuteTimeWatcher::singleton()->start('/system',$fStartTime) ;
 
 $aDataUpgrader = PlatformDataUpgrader::singleton() ; 

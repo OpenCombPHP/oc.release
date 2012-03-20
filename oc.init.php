@@ -2,8 +2,6 @@
 namespace org\opencomb\platform ;
 
 use org\jecat\framework\setting\Setting;
-use org\jecat\framework\fs\imp\LocalFileSystem;
-use org\opencomb\platform\Platform;
 use org\opencomb\platform\system\PlatformFactory;
 
 ini_set('display_errors',1) ;
@@ -27,11 +25,4 @@ require_once __DIR__."/platform/class/system/upgrader/PlatformDataUpgrader.php" 
 require_once __DIR__."/platform/class/debug/ExecuteTimeWatcher.php" ;
 
 
-$aPlatform = PlatformFactory::singleton()->create(__DIR__) ;
-$aSetting = Setting::singleton() ;
-
-
-
-
-return $aPlatform ;
-
+return PlatformFactory::singleton()->create(__DIR__) ;
