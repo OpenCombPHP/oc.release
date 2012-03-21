@@ -16,7 +16,13 @@ class OcSession extends OriginalSession
 		{
 			return true ;
 		}
-				
+		
+		$this->updateSignature() ;
+		
+		return parent::start() ;
+	}
+	
+	public function updateSignature(){
 		// 检查 cookie 中的 session 签名
 		// 系统已经发生变化，清理 session
 		$sSystemSignature = Platform::singleton()->systemSignature() ; 
@@ -25,10 +31,7 @@ class OcSession extends OriginalSession
 			unset($_COOKIE[session_name()]) ;
 			setcookie('oc_session_signature',$sSystemSignature,time()+315360000) ;
 		}
-		
-		return parent::start() ;
 	}
-	
 }
 
 ?>

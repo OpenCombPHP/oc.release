@@ -36,7 +36,7 @@ class ExtensionManager extends Object
 		}
 		
 		// 取得Settnig中的另一项item数据：激活使用的扩展名称数组
-		$this->arrEnableExtensiongNames = $aSetting->item("/extensions",'enable') ?: array() ;
+		$this->arrEnableExtensionNames = $aSetting->item("/extensions",'enable') ?: array() ;
 	}
 	
 	/**
@@ -80,7 +80,7 @@ class ExtensionManager extends Object
 	 */
 	public function extensionPriorities()
 	{
-		return array_keys($this->arrEnableExtensiongNames) ;
+		return array_keys($this->arrEnableExtensionNames) ;
 	}
 	
 	/**
@@ -90,16 +90,16 @@ class ExtensionManager extends Object
 	{
 		if($nPriority<0)
 		{
-			return empty($this->arrEnableExtensiongNames)?
+			return empty($this->arrEnableExtensionNames)?
 					new \EmptyIterator():
 					new \ArrayIterator(
-						call_user_func_array('array_merge',$this->arrEnableExtensiongNames)
+						call_user_func_array('array_merge',$this->arrEnableExtensionNames)
 					) ;
 		}
 		else 
 		{
-			return isset($this->arrEnableExtensiongNames[$nPriority])?
-						new \ArrayIterator($this->arrEnableExtensiongNames[$nPriority]) :
+			return isset($this->arrEnableExtensionNames[$nPriority])?
+						new \ArrayIterator($this->arrEnableExtensionNames[$nPriority]) :
 						new \EmptyIterator() ;
 		}
 	}
@@ -192,7 +192,7 @@ class ExtensionManager extends Object
 	 * @seealso ExtensionSetup::enable()
 	 */
 	public function addEnableExtension(ExtensionMetainfo $aExtensionMetainfo){
-		// arrEnableExtensiongNames
+		// arrEnableExtensionNames
 		$nPriority = $aExtensionMetainfo->priority() ;
 		$sName = $aExtensionMetainfo->name() ;
 		if(!isset($this->arrEnableExtensionNames[$nPriority])){
@@ -214,8 +214,8 @@ class ExtensionManager extends Object
 	 * @seealso ExtensionSetup::disable()
 	 */
 	public function removeEnableExtension(ExtensionMetainfo $aExtensionMetainfo){
-		// arrEnableExtensiongNames
-		foreach($this->arrEnableExtensiongNames as &$arrExtensionNameList){
+		// arrEnableExtensionNames
+		foreach($this->arrEnableExtensionNames as &$arrExtensionNameList){
 			$sExtName = $aExtensionMetainfo->name() ;
 			$arrExtensionNameList = array_diff( $arrExtensionNameList , array( $sExtName ) );
 		}
@@ -238,7 +238,7 @@ class ExtensionManager extends Object
 		unset($this->arrInstalledExtensions[$sName]);
 	}
 	
-	private $arrEnableExtensiongNames = array() ;
+	private $arrEnableExtensionNames = array() ;
 	
 	private $arrInstalledExtensions = array() ;
 		
