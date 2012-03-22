@@ -53,7 +53,7 @@ class ExtensionSetup extends Object
 		
 		// 设置 setting
 		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
-		$arrInstalled[] = $aExtensionFolder->path() ;
+		$arrInstalled[] = $aExtMeta->installPath() ;
 		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
 		
 		// 添加扩展的安装信息
@@ -216,7 +216,8 @@ class ExtensionSetup extends Object
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable2) ;
 		
 		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
-		$arrInstalled = array_diff($arrInstalled,array($aExtMeta->installPath()) ) ;
+		$sInstallPath = $aExtMeta->installPath();
+		$arrInstalled = array_diff($arrInstalled,array($sInstallPath) ) ;
 		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
 		
 		// 修改 ExtensionManager
