@@ -83,7 +83,7 @@ class Extension extends Object
 	public function publicFolder()
 	{
 		//Folder
-		$strPath = '/data/public/'.$this->metainfo()->name();
+		$strPath = 'data/public/'.$this->metainfo()->name();
 		return Folder::singleton()->findFolder($strPath,Folder::FIND_AUTO_CREATE);
 	}
 	/**
@@ -92,7 +92,7 @@ class Extension extends Object
 	public function dataFolder()
 	{
 		//Folder
-		$strPath = '/data/extensions/'.$this->metainfo()->name();
+		$strPath = 'data/extensions/'.$this->metainfo()->name();
 		return Folder::singleton()->findFolder($strPath,Folder::FIND_AUTO_CREATE);
 	}
 	/**
