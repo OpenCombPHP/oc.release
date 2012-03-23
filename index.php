@@ -1,9 +1,6 @@
 <?php
 namespace org\opencomb\platform ;
 
-$fStartTime = microtime(true) ;
-
-use org\opencomb\platform\debug\ExecuteTimeWatcher;
 use org\jecat\framework\db\DB;
 use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\system\AccessRouter;
@@ -23,11 +20,11 @@ if( is_file(__DIR__.'/lock.shutdown.html') )
 
 // 初始化 jcat 框架
 $aPlatform = require 'oc.init.php' ;
-
+/*
 $aExecuteTimeWatcher = ExecuteTimeWatcher::singleton() ;
 $aExecuteTimeWatcher->start('/system/total',$fStartTime) ;
 $aExecuteTimeWatcher->start('/system/init',$fStartTime) ;
-$aExecuteTimeWatcher->finish('/system/init') ;
+$aExecuteTimeWatcher->finish('/system/init') ;*/
 
 $aDataUpgrader = PlatformDataUpgrader::singleton() ; 
 if(TRUE === $aDataUpgrader->process()){
@@ -49,10 +46,10 @@ else
 	header("HTTP/1.0 404 Not Found");
 	echo "<h1>Page Not Found</h1>" ;
 }
-
+/*
 $aExecuteTimeWatcher->finish('/system/total') ;
 
 if( empty($_REQUEST['rspn']) )
 {
 	$aExecuteTimeWatcher->printLogs() ;
-}
+}*/
