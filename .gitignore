@@ -14,3 +14,4 @@ gitall.sh
 PlatformDataUpgraderLock.html
 lock.shutdown.*
 /nbproject/private/
+.svn
