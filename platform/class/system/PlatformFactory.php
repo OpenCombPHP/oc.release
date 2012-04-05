@@ -1,6 +1,10 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\jecat\framework\cache\Cache;
+
+use org\jecat\framework\lang\Exception;
+
 use org\jecat\framework\lang\oop\Package;
 
 use org\jecat\framework\fs\Folder;
@@ -54,6 +58,10 @@ class PlatformFactory extends HttpAppFactory
 		// setting
 		$aSetting = $this->createSetting($aPlatform) ;
 		Setting::setSingleton($aSetting) ;
+
+		// 初始化 cache
+		$aCache = $this->createCache($aSetting) ;
+		Cache::setSingleton($aCache) ;
 		
 		$aPlatformSerializer = PlatformSerializer::singleton(true,$aPlatform) ;
 		
@@ -130,7 +138,7 @@ class PlatformFactory extends HttpAppFactory
 		Response::setSingleton( $this->createResponse($aPlatform) ) ;
 	}
 	private function initPlatformUnrestorableSystem(Platform $aPlatform,Folder $aFolder,Setting $aSetting)
-	{
+	{			
 		// 数据库
 		$sDBConfig = $aSetting->item('/platform/db','config','alpha') ;
 		$aDB = new DB(
@@ -158,16 +166,40 @@ class PlatformFactory extends HttpAppFactory
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 	}
 	
-	public function createClassLoader(Platform $aApp)
+	public function createCache(Setting $aSetting)
 	{
-		$aCache = $aApp->cache() ;
-		
-		// 从缓存中恢复
-		if( $aClassLoader=$aCache->item('/system/objects/classLoader') )
+		if( !$sCacheDriver = $aSetting->item('/platform/cache','driver') )
 		{
-			return $aClassLoader ;
+			$sCacheDriver = 'FSCache' ;
+			$sCacheParameters = array('data/cache/platform') ;
+		}
+		else
+		{
+			$sCacheParameters = $aSetting->item('/platform/cache','parameters',array()) ;
+		}
+
+		if(!class_exists('org\\jecat\\framework\\cache\\Cache',false))
+		{
+			include_once \org\jecat\framework\CLASSPATH.'/cache/Cache.php' ;
+		}
+		if(!class_exists('org\\jecat\\framework\\cache\\'.$sCacheDriver,false))
+		{
+			include_once \org\jecat\framework\CLASSPATH.'/cache/'.$sCacheDriver.'.php' ;
 		}
 		
+		// 检查 driver 类型
+		$sCacheDriver = 'org\\jecat\\framework\\cache\\' . $sCacheDriver ;
+		if( !is_subclass_of($sCacheDriver,'org\\jecat\\framework\\cache\\Cache') )
+		{
+			$aSetting->deleteKey('/platform/cache') ;
+			throw new Exception('无效的 cache 类型：%s; 必须是 org\\jecat\\framework\\cache\\Cache 的实现类。',$sCacheDriver) ; 
+		}
+
+		return $sCacheDriver::createInstance($sCacheParameters) ;
+	}
+	
+	public function createClassLoader(Platform $aApp)
+	{		
 		// 重建对像
 		$aClassLoader = parent::createClassLoader($aApp) ;
 		

@@ -19,7 +19,11 @@ if( is_file(__DIR__.'/lock.shutdown.html') )
 }
 
 // 初始化 jcat 框架
+$fTime = microtime(true) ;
 $aPlatform = require 'oc.init.php' ;
+$fTime2 = microtime(true) ;
+
+
 /*
 $aExecuteTimeWatcher = ExecuteTimeWatcher::singleton() ;
 $aExecuteTimeWatcher->start('/system/total',$fStartTime) ;
@@ -45,6 +49,11 @@ else
 {
 	header("HTTP/1.0 404 Not Found");
 	echo "<h1>Page Not Found</h1>" ;
+}
+
+if( empty($_REQUEST['rspn']) )
+{
+	echo $fTime2 - $fTime ;
 }
 /*
 $aExecuteTimeWatcher->finish('/system/total') ;

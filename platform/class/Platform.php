@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform ;
 
+use org\jecat\framework\cache\Cache;
+
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\Setting;
@@ -165,11 +167,7 @@ class Platform extends Application
 	 */
 	public function cache()
 	{
-		if(!$this->aCache)
-		{
-			$this->aCache = new FSCache(Folder::singleton()->findFolder('data/cache/platform',Folder::FIND_AUTO_CREATE)) ;
-		}
-		return $this->aCache ;
+		return Cache::singleton() ;
 	}
 	
 	public function isDebugging()
