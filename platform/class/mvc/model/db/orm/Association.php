@@ -7,12 +7,9 @@ class Association extends JcAssociation
 {
 	public function buildBean(array & $arrConfig,$sNamespace='*',\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
 	{
-		if(empty($arrConfig['disableBridgeTableTrans']))
+		if( !empty($arrConfig['bridge']) and empty($arrConfig['disableBridgeTableTrans']) and strpos($arrConfig['bridge'],':')===false )
 		{
-			if( !empty($arrConfig['bridge']) )
-			{
-				$arrConfig['bridge'] = Prototype::transTableName($arrConfig['bridge'],$sNamespace) ;
-			}
+			$arrConfig['bridge'] = $sNamespace.':'.$arrConfig['bridge'] ;
 		}
 		
 		parent::buildBean($arrConfig,$sNamespace) ;

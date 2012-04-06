@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system ;
 
+use org\jecat\framework\db\sql\compiler\SqlNameCompiler;
+
 use org\jecat\framework\cache\Cache;
 
 use org\jecat\framework\lang\Exception;
@@ -147,6 +149,11 @@ class PlatformFactory extends HttpAppFactory
 				, $aSetting->item('/platform/db/'.$sDBConfig,'password')
 				, $aSetting->item('/platform/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"))
 		) ;
+		// 表名称前缀
+		if( $sTablePrefix=$aSetting->item('/platform/db/'.$sDBConfig,'table_prefix',null) )
+		{
+			$aDB->setTableNamePrefix($sTablePrefix) ;
+		}
 		DB::setSingleton($aDB) ;
 
 		// 会话
