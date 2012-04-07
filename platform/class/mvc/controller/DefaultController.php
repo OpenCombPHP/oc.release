@@ -9,7 +9,7 @@ class DefaultController extends Controller
 	{
 		return array(
 			'view:welcome' => array(
-				'template' => "org.opencomb:Welcome.template.html" ,
+				'template' => "org.opencomb.platform:Welcome.template.html" ,
 			) ,
 		) ;
 	}

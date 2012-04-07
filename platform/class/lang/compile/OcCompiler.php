@@ -28,7 +28,7 @@ class OcCompiler extends Compiler
 		}
 		
 		// 通过 class compiled package 确定 class compiled 的路径
-		$aCompiledPackage = PlatformFactory::singleton()->classCompiledPackage() ;
+		$aCompiledPackage = Package::flyweight(Package::compiled) ;
 		list($sSubFolder,$sShortClassName) = $aCompiledPackage->parsePath($sClassName) ;
 		$sCompiledFile = $aCompiledPackage->folder()->path() . '/' . $sSubFolder . '/' . $sShortClassName . '.php' ;
 		

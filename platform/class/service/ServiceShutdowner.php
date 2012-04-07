@@ -1,5 +1,5 @@
 <?php
-namespace org\opencomb\platform\system ;
+namespace org\opencomb\platform\service ;
 
 use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\fs\Folder;
@@ -15,7 +15,7 @@ use org\jecat\framework\setting\Setting;
  * =“后门”密钥=
  * 系统在关闭状态时，可以通过 Get/Post/Cookie 等方式，提供”后门“密钥来访问系统。
  */
-class PlatformShutdowner extends Object
+class ServiceShutdowner extends Object
 {
 	public function shutdown($sMessage="系统正在离线升级中……")
 	{

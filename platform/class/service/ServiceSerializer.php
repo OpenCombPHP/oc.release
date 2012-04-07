@@ -1,18 +1,17 @@
 <?php
-namespace org\opencomb\platform\system ;
+namespace org\opencomb\platform\service ;
 
+use org\jecat\framework\cache\Cache;
 use org\opencomb\platform\ext\ExtensionManager;
-
 use org\jecat\framework\lang\aop\AOP;
-use org\opencomb\platform\Platform;
 use org\jecat\framework\cache\ICache;
 use org\jecat\framework\lang\Object;
 
-class PlatformSerializer extends Object
+class ServiceSerializer extends Object
 {
-	public function __construct(Platform $aPlatform)
+	public function __construct(Service $aService)
 	{
-		$this->aPlatform = $aPlatform ;
+		$this->aService = $aService ;
 	}
 	
 	public function __destruct()
@@ -66,9 +65,9 @@ class PlatformSerializer extends Object
 	
 	public function store()
 	{
-		$aOriPlatform = Platform::switchSingleton($this->aPlatform) ;
+		$aOriService = Service::switchSingleton($this->aService) ;
 		
-		$aCache = $this->aPlatform->cache() ;
+		$aCache = Cache::singleton() ;
 		
 		// 缓存对像
 		foreach($this->arrSystemObjects as $key=>$arrObjectInfo)
@@ -80,28 +79,28 @@ class PlatformSerializer extends Object
 		}
 		
 		// 保存对像信息
-		$aCache->setItem($this->cacheStorePath('platform-serialize-info',null),$this->arrInstanceInfos) ;
+		$aCache->setItem($this->cacheStorePath('Service-serialize-info',null),$this->arrInstanceInfos) ;
 		
-		// 保存 platform 的 publicFolder 对像
-		$aCache->setItem($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder'),$this->aPlatform->publicFolders()) ;
+		// 保存 Service 的 publicFolder 对像
+		$aCache->setItem($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder'),$this->aService->publicFolders()) ;
 				
-		// 还原 platform 
-		Platform::switchSingleton($aOriPlatform) ;
+		// 还原 Service 
+		Service::switchSingleton($aOriService) ;
 	}
 	
 	public function restore()
 	{
-		$aOriPlatform = Platform::switchSingleton($this->aPlatform) ;
+		$aOriService = Service::switchSingleton($this->aService) ;
 		
 		$arrShareObjectsMemento = Object::shareObjectMemento() ;
 		
-		$aCache = $this->aPlatform->cache() ;
+		$aCache = Cache::singleton() ;
 		
 		// 恢复对像信息
-		if( !$this->arrInstanceInfos=$aCache->item($this->cacheStorePath('platform-serialize-info',null),array()) )
+		if( !$this->arrInstanceInfos=$aCache->item($this->cacheStorePath('service-serialize-info',null),array()) )
 		{
-			// 还原 platform 
-			Platform::switchSingleton($aOriPlatform) ;
+			// 还原 Service 
+			Service::switchSingleton($aOriService) ;
 			Object::setShareObjectMemento($arrShareObjectsMemento) ;
 			
 			return false ;
@@ -116,8 +115,8 @@ class PlatformSerializer extends Object
 			$aInstance = $aCache->item( $this->cacheStorePath($sClass) ) ;
 			if( !$aInstance or !($aInstance instanceof Object) )
 			{
-				// 还原 platform 
-				Platform::switchSingleton($aOriPlatform) ;
+				// 还原 Service 
+				Service::switchSingleton($aOriService) ;
 				Object::setShareObjectMemento($arrShareObjectsMemento) ;
 				
 				return false ;
@@ -139,39 +138,39 @@ class PlatformSerializer extends Object
 		$aPublicFolders = $aCache->item($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder')) ;
 		if( !$aPublicFolders or !($aPublicFolders instanceof Object) )
 		{
-			// 还原 platform 
-			Platform::switchSingleton($aOriPlatform) ;
+			// 还原 Service 
+			Service::switchSingleton($aOriService) ;
 			Object::setShareObjectMemento($arrShareObjectsMemento) ;
 			
 			return false ;
 		}
 			
 		// 设置 public folder
-		$this->aPlatform->setPublicFolders($aPublicFolders) ;
+		$this->aService->setPublicFolders($aPublicFolders) ;
 		
 		// 更新 AOP 缓存
 		$a = AOP::singleton() ;
-		if( $this->aPlatform->isDebugging() )
+		if( $this->aService->isDebugging() )
 		{
 			if( !AOP::singleton()->isValid() )
 			{
-				// 还原 platform 
-				Platform::switchSingleton($aOriPlatform) ;
+				// 还原 Service 
+				Service::switchSingleton($aOriService) ;
 				Object::setShareObjectMemento($arrShareObjectsMemento) ;
 				
 				return false ;
 			}
 		}
 			
-		// 还原 platform 
-		Platform::switchSingleton($aOriPlatform) ;
+		// 还原 Service 
+		Service::switchSingleton($aOriService) ;
 		
 		return true ;
 	}
 	
 	public function clearRestoreCache()
 	{
-		$this->aPlatform->cache()->delete('/system/objects') ;
+		$this->aService->cache()->delete('/system/objects') ;
 	}
 	
 	public function cacheStorePath($sClass,$flyweightKey=null)
