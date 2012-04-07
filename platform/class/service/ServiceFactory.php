@@ -207,11 +207,6 @@ class ServiceFactory extends HttpAppFactory
 		$aPublicFolders = $aService->publicFolders() ;
 		$aPublicFolders->addFolder($aPublicFolder,'org.opencomb.platform') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
-		
-		// 类编译包
-		$aCompiledPackage = new Package('',Folder::createFolder($arrServiceSetting['folder_compiled_class'])) ;
-		Package::setFlyweight($aCompiledPackage,Package::compiled) ;
-		ClassLoader::singleton()->addPackage( $aCompiledPackage, null, Package::compiled ) ;
 	}
 		
 	public function createClassLoader(array & $arrServiceSetting)
@@ -221,7 +216,11 @@ class ServiceFactory extends HttpAppFactory
 		
 		// Service class
 		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\CLASSPATH) ) ;
-				
+
+		// 类编译包
+		$aCompiledPackage = new Package('',Folder::createFolder($arrServiceSetting['folder_compiled_class'])) ;
+		$aClassLoader->addPackage( $aCompiledPackage, null, Package::compiled ) ;
+		
 		return $aClassLoader ;
 	}
 	

@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\lang\compile ;
 
+use org\jecat\framework\lang\Assert;
+
 use org\opencomb\platform\service\Service;
 
 use org\jecat\framework\lang\Exception;
@@ -30,9 +32,7 @@ class OcCompiler extends Compiler
 		}
 		
 		// 通过 class compiled package 确定 class compiled 的路径
-		$aCompiledPackage = Package::flyweight(Package::compiled) ;
-		list($sSubFolder,$sShortClassName) = $aCompiledPackage->parsePath($sClassName) ;
-		$sCompiledFile = $aCompiledPackage->folder()->path() . '/' . $sSubFolder . '/' . $sShortClassName . '.php' ;
+		$sCompiledFile = $this->compiledPath($sClassName) ;
 		
 		// AOP 目标
 		if( $this->isAopTarget($sSourceFile,$sClassName) )
@@ -229,6 +229,15 @@ class OcCompiler extends Compiler
 		}
 		
 		return true ;
+	}
+	
+	public function compiledPath($sClassName)
+	{
+		foreach(ClassLoader::singleton()->packageIterator(Package::compiled) as $aPackage)
+		{
+			list($sSubFolder,$sShortClassName) = $aPackage->parsePath($sClassName) ;
+			return $aPackage->folder()->path() . '/' . $sSubFolder . '/' . $sShortClassName . '.php' ;
+		}
 	}
 
 	

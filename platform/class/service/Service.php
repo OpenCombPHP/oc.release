@@ -29,9 +29,6 @@ class Service extends Application
 		parent::singleton($aInstance) ;
 	}
 	
-	public function load()
-	{}
-	
 	/**
 	 * @return org\opencomb\platform\ext\ExtensionManager 
 	 */
@@ -76,4 +73,4 @@ class Service extends Application
 	private $bDebugging = null ;
 }
 
-?>
+
