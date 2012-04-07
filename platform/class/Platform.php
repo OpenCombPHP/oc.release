@@ -132,9 +132,9 @@ class Platform
 	/**
 	 * @return org\jecat\framework\fs\Folder
 	 */
-	public function installFolder($bReturnPath)
+	public function installFolder($bReturnPath=false)
 	{
-		return $bReturnPath? PATH: $this->aInstallFolder ;
+		return $bReturnPath? ROOT: $this->aInstallFolder ;
 	}
 	
 	// --------
