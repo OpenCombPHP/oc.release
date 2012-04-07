@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\cache\Cache;
+
 use org\opencomb\platform\Platform;
 
 use org\jecat\framework\setting\Setting;
@@ -136,7 +138,7 @@ class ExtensionSetup extends Object
 			// 数据库
 			
 			// 防止在平台管理之外，数据库的结构发生改变
-			Platform::singleton()->cache()->delete('/db');
+			Cache::singleton()->delete('/db');
 			
 			$arrTableList = array();
 			$aDB = DB::singleton() ;
@@ -162,7 +164,7 @@ class ExtensionSetup extends Object
 			 */
 			{
 				// 数据库的结构已经改变，需要清理缓存
-				Platform::singleton()->cache()->delete('/db');
+				Cache::singleton()->delete('/db');
 			}
 			
 			// settings

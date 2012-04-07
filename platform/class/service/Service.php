@@ -56,30 +56,6 @@ class Service extends Application
 		return $sSignature ;
 	}
 	
-	/**
-	 * 平台的系统签名，受平台、框架、扩展及其版本的影响
-	 */
-	/*public function systemSignature()
-	{
-		$sSrc = 'framework:' . \org\jecat\framework\VERSION . '/'
-			. 'platform:' . self::version . '/' ;
-		
-		foreach($this->extensions()->enableExtensionMetainfoIterator() as $aExtMeta)
-		{
-			$sSrc.= 'extension:'.$aExtMeta->name().':'.$aExtMeta->version()->__toString().'/' ;
-		}
-		
-		return md5($sSrc) ;
-	}*/
-	
-	/**
-	 * @return org\jecat\cache\ICache 
-	 */
-	/*public function cache()
-	{
-		return Cache::singleton() ;
-	}*/
-	
 	public function isDebugging()
 	{
 		if($this->bDebugging===null)

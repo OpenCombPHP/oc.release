@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\opencomb\platform as oc;
 use org\opencomb\platform\ext\dependence\Dependence;
 use org\jecat\framework\util\VersionCompat;
 use org\jecat\framework\util\VersionScope;
@@ -28,7 +29,15 @@ class ExtensionMetainfo extends Object
 	{
 		if( is_string($extensionFoler) )
 		{
-			$sExtPath = $extensionFoler ;
+			if( substr($extensionFoler,0,1)!=='/' )
+			{
+				$sExtPath = oc\ROOT . '/' . $extensionFoler ;
+			}
+			else
+			{
+				$sExtPath = $extensionFoler ;
+			}
+			
 			$aExtFolder = new Folder($sExtPath);
 			if( !$aExtFolder->exists() )
 			{
@@ -81,7 +90,7 @@ class ExtensionMetainfo extends Object
 			$aExtMetainfo = new self(
 				$sExtName
 				, Version::FromString($aDomMetainfo->version)
-				, Folder::relativePath(Folder::singleton()->path(),$sExtPath)
+				, $sExtPath
 				, empty($aDomMetainfo->class)? null: str_replace('.','\\',trim($aDomMetainfo->class))
 			) ;
 		}
@@ -318,76 +327,7 @@ class ExtensionMetainfo extends Object
 	{
 		return new \ArrayIterator($this->arrBeanFolders) ;
 	}
-	
-	
-	
-	
-	
-	public function classCompiledPackageFolder(Platform $aPlatform=null)
-	{
-		if(!$aPlatform)
-		{
-			$aPlatform = Application::singleton() ;
-		}
-		
-		$sPath = 'data/compiled/class/extensions/'.$this->sName.'/'.$this->version() ;
-		if( !$aFolder=Folder::singleton()->find($sPath) and !$aFolder=Folder::singleton()->createChildFolder($sPath) )
-		{
-			throw new Exception(
-				"无法为扩展(%s)创建class编译目录：%s，请检查文件系统上的权限。"
-				, array($this->name(),$sPath)
-			) ;
-		}
-		
-		return $aFolder ;
-	}
-	public function classPackageFolder(Platform $aPlatform=null)
-	{
-		if(!$aPlatform)
-		{
-			$aPlatform = Application::singleton() ;
-		}
-		
-		$aClassFolder = Folder::singleton()->find('extensions/'.$this->sName.'/class') ;
-		
-		if(!$aClassFolder)
-		{
-			throw new Exception("找不到扩展（%s）的源文件目录",$this->sName) ;
-		}
-		
-		return $aClassFolder ;
-	}
-	
-	public function resourceUiTemplateFolder(Platform $aPlatform=null)
-	{
-		if(!$aPlatform)
-		{
-			$aPlatform = Application::singleton() ;
-		}
-		
-		return Folder::singleton()->find('extensions/'.$this->sName.'/ui/template') ;
-	}
-	
-	public function resourceUiJsFolder(Platform $aPlatform=null)
-	{
-		if(!$aPlatform)
-		{
-			$aPlatform = Application::singleton() ;
-		}
-		
-		return Folder::singleton()->find('extensions/'.$this->sName.'/ui/js') ;
-	}
-	
-	public function resourceUiCssFolder(Platform $aPlatform=null)
-	{
-		if(!$aPlatform)
-		{
-			$aPlatform = Application::singleton() ;
-		}
-		
-		return Folder::singleton()->find('extensions/'.$this->sName.'/ui/css') ;
-	}
-	
+			
 	/**
 	 * 
 	 * @return org\jecat\framework\fs\Folder 

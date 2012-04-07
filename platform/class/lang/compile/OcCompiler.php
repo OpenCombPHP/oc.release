@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\lang\compile ;
 
+use org\opencomb\platform\service\Service;
+
 use org\jecat\framework\lang\Exception;
 
 use org\jecat\framework\lang\compile\object\Token;
@@ -42,7 +44,7 @@ class OcCompiler extends Compiler
 		else
 		{
 			// 系统 debug 状态
-			if( Platform::singleton()->isDebugging() )
+			if( Service::singleton()->isDebugging() )
 			{
 				$sCode = "<?php \r\n" ;
 				
@@ -84,7 +86,7 @@ class OcCompiler extends Compiler
 		parent::generate($aTokenPool) ;
 		
 		// 仅在debug状态下
-		if( !Platform::singleton()->isDebugging() )
+		if( !Service::singleton()->isDebugging() )
 		{
 			return ;
 		}

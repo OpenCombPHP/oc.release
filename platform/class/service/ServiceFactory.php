@@ -71,7 +71,7 @@ class ServiceFactory extends HttpAppFactory
 		$aServiceSerializer = ServiceSerializer::singleton(true,$aService) ;
 		
 		// 从缓存中恢复 Service ---------------
-		if( !$aSetting->item('/service','serialize',true) or !$aServiceSerializer->restore() )
+		if( !$aServiceSerializer->restore() )
 		{			
 			// 重建 Service
 			// --------------------------
@@ -89,10 +89,10 @@ class ServiceFactory extends HttpAppFactory
 			LocaleManager::setSingleton($this->createLocaleManager($aService)) ;
 				
 			// 模板文件
-			JcSourceFileManager::setSingleton($this->createUISourceFileManager()) ;
+			JcSourceFileManager::setSingleton($this->createUISourceFileManager($arrServiceSetting)) ;
 			
 			// 初始化系统无须store/restore的部分
-			$this->initServiceUnrestorableSystem($aService,$aFolder,$aSetting) ;
+			$this->initServiceUnrestorableSystem($aService,$aFolder,$aSetting,$arrServiceSetting) ;
 			
 			// BeanFactory 类别名
 			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Prototype','prototype') ;
@@ -114,7 +114,7 @@ class ServiceFactory extends HttpAppFactory
 		else 
 		{
 			// 初始化系统无须store/restore的部分
-			$this->initServiceUnrestorableSystem($aService,$aFolder,$aSetting) ;
+			$this->initServiceUnrestorableSystem($aService,$aFolder,$aSetting,$arrServiceSetting) ;
 			
 			// (request/respone 需要在ClassLoader之后)
 			$this->initServiceRequestResponse($aService) ;
@@ -148,6 +148,10 @@ class ServiceFactory extends HttpAppFactory
 		{
 			$arrServiceSetting['folder_compiled_class'] = $arrServiceSetting['folder'] . '/data/compiled/class' ;
 		}
+		if(empty($arrServiceSetting['folder_compiled_template']))
+		{
+			$arrServiceSetting['folder_compiled_template'] = $arrServiceSetting['folder'] . '/data/compiled/template' ;
+		}
 	
 		if(empty($arrServiceSetting['folder_setting']))
 		{
@@ -168,7 +172,7 @@ class ServiceFactory extends HttpAppFactory
 		// Response
 		Response::setSingleton( $this->createResponse($aService) ) ;
 	}
-	private function initServiceUnrestorableSystem(Service $aService,Folder $aFolder,Setting $aSetting)
+	private function initServiceUnrestorableSystem(Service $aService,Folder $aFolder,Setting $aSetting,array & $arrServiceSetting)
 	{			
 		// 数据库
 		$sDBConfig = $aSetting->item('/service/db','config','alpha') ;
@@ -197,9 +201,17 @@ class ServiceFactory extends HttpAppFactory
 		) ;
 		
 		// public folder
+		$aPublicFolder = new Folder(oc\PATH.'/public') ;
+		$aPublicFolder->setHttpUrl('/platform/public') ;
+		
 		$aPublicFolders = $aService->publicFolders() ;
-		$aPublicFolders->addFolder(new Folder(oc\PATH.'/public'),'org.opencomb.platform') ;
+		$aPublicFolders->addFolder($aPublicFolder,'org.opencomb.platform') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
+		
+		// 类编译包
+		$aCompiledPackage = new Package('',Folder::createFolder($arrServiceSetting['folder_compiled_class'])) ;
+		Package::setFlyweight($aCompiledPackage,Package::compiled) ;
+		ClassLoader::singleton()->addPackage( $aCompiledPackage, null, Package::compiled ) ;
 	}
 		
 	public function createClassLoader(array & $arrServiceSetting)
@@ -209,12 +221,7 @@ class ServiceFactory extends HttpAppFactory
 		
 		// Service class
 		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\CLASSPATH) ) ;
-		
-		// 类编译包
-		$aCompiledPackage = new Package('',Folder::singleton()->findFolder($arrServiceSetting['folder_compiled_class'],Folder::FIND_AUTO_CREATE)) ;
-		Package::setFlyweight($aCompiledPackage,Package::compiled) ;
-		$aClassLoader->addPackage( $aCompiledPackage, null, Package::compiled ) ;
-		
+				
 		return $aClassLoader ;
 	}
 	
@@ -225,9 +232,11 @@ class ServiceFactory extends HttpAppFactory
 		return $aAccessRouter ;
 	}
 	
-	public function createUISourceFileManager()
+	public function createUISourceFileManager(array & $arrServiceSetting)
 	{
 		$aSrcFileMgr = new SourceFileManager() ;
+		$aSrcFileMgr->setCompiledFolderPath($arrServiceSetting['folder_compiled_template']) ;
+		
 		UIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		

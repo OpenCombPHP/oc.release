@@ -162,7 +162,6 @@ class Platform
 				{
 					$this->arrServiceSettings[$sFilename] = array(
 							'domains' => array( $sFilename==='default'? '*': $sFilename ) ,
-							'folder' => $sFilename ,
 					) ;
 				}
 			}
@@ -187,11 +186,11 @@ class Platform
 		{
 			foreach($this->arrServiceSettings as $sServiceFolder=>&$arrServiceInfo)
 			{
-				foreach($arrServiceInfo['domains'] as $sFolder=>&$sDomain)
+				foreach($arrServiceInfo['domains'] as &$sDomain)
 				{
 					if(fnmatch($sDomain,$sHost))
 					{
-						$arrServiceInfo['folder'] = SERVICE_ROOT . '/' . $sFolder ; ;
+						$arrServiceInfo['folder'] = SERVICE_ROOT . '/' . $sServiceFolder ; ;
 						return $arrServiceInfo ;
 					}
 				}

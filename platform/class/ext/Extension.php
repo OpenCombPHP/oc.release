@@ -4,7 +4,7 @@ namespace org\opencomb\platform\ext ;
 use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\Folder ;
 
@@ -112,7 +112,7 @@ class Extension extends Object
 	public function load()
 	{}
 	
-	public function active(Platform $aPlatform)
+	public function active(Service $aService)
 	{}
 	
 	public function setRuntimePriority($nPriority)

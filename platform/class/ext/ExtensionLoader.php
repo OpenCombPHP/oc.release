@@ -1,12 +1,16 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\mvc\controller\Request;
+use org\opencomb\platform\Platform;
+use org\jecat\framework\fs\FSO;
 use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\mvc\view\UIFactory;
+use org\opencomb\platform as oc ;
 
 class ExtensionLoader extends Object
 {
@@ -29,19 +33,18 @@ class ExtensionLoader extends Object
 		}
 		$sVersion = $aExtMeta->version()->toString(false) ;
 		$aService = $aExtensionManager->application() ;
-		$aServiceFs = Folder::singleton() ;
 
 		// 加载类包
 		foreach($aExtMeta->packageIterator() as $arrPackage)
 		{
 			list($sNamespace,$sPackagePath) = $arrPackage ;
-						
-			$sPackagePath = $aExtMeta->installPath().$sPackagePath ;
-			if(!$aPackage=$aServiceFs->findFolder($sPackagePath))
+			
+			$aPackageFolder = new Folder($aExtMeta->installPath().$sPackagePath) ;
+			if(!$aPackageFolder->exists())
 			{
 				throw new ExtensionException("没有找到扩展 %s 的类包:%s",array($sName,$sPackagePath)) ;
 			}
-			ClassLoader::singleton()->addPackage( $sNamespace, $aPackage ) ;
+			ClassLoader::singleton()->addPackage( $sNamespace, $aPackageFolder ) ;
 			
 			$aExtensionManager->registerPackageNamespace($sNamespace,$sName) ;
 		}
@@ -50,7 +53,8 @@ class ExtensionLoader extends Object
 		foreach($aExtMeta->templateFolderIterator() as $arrTemplateFolder)
 		{
 			list($sFolder,$sNamespace) = $arrTemplateFolder ;
-			if( !$aFolder=$aServiceFs->findFolder( $aExtMeta->installPath().$sFolder ) )
+			$aFolder = new Folder($aExtMeta->installPath().$sFolder) ;
+			if( !$aFolder->exists() )
 			{
 				throw new ExtensionException("扩展 %s 的模板目录 %s 不存在",array($sName,$sFolder)) ;
 			}
@@ -58,14 +62,16 @@ class ExtensionLoader extends Object
 		}
 		
 		// 注册 public 目录
+		$sExtUrl = Request::singleton()->urlBase() . FSO::relativePath(oc\ROOT,$aExtMeta->installPath()) ;
 		foreach($aExtMeta->publicFolderIterator() as $arrPublicFolder)
 		{
 			list($sFolder,$sNamespace) = $arrPublicFolder ;
-			if( !$aFolder=$aServiceFs->findFolder( $aExtMeta->installPath().$sFolder ) )
+			$aFolder = new Folder($aExtMeta->installPath().$sFolder) ;
+			if( !$aFolder->exists() )
 			{
 				throw new ExtensionException("扩展 %s 的公共文件目录 %s 不存在",array($sName,$sFolder)) ;
 			}
-			$aFolder->setHttpUrl($aExtMeta->installPath().$sFolder) ;
+			$aFolder->setHttpUrl($sExtUrl.$sFolder) ;
 			$aService->publicFolders()->addFolder($aFolder,$sNamespace) ;
 		}
 		
@@ -73,7 +79,8 @@ class ExtensionLoader extends Object
 		foreach($aExtMeta->beanFolderIterator() as $arrFolder)
 		{
 			list($sFolder,$sNamespace) = $arrFolder ;
-			if( !$aFolder=$aServiceFs->findFolder( $aExtMeta->installPath().$sFolder ) )
+			$aFolder = new Folder($aExtMeta->installPath().$sFolder) ;
+			if( !$aFolder->exists() )
 			{
 				throw new ExtensionException("扩展 %s 的bean目录 %s 不存在",array($sName,$sFolder)) ;
 			}

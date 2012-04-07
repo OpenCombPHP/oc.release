@@ -79,7 +79,7 @@ class ServiceSerializer extends Object
 		}
 		
 		// 保存对像信息
-		$aCache->setItem($this->cacheStorePath('Service-serialize-info',null),$this->arrInstanceInfos) ;
+		$aCache->setItem($this->cacheStorePath('service-serialize-info',null),$this->arrInstanceInfos) ;
 		
 		// 保存 Service 的 publicFolder 对像
 		$aCache->setItem($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder'),$this->aService->publicFolders()) ;
@@ -170,7 +170,7 @@ class ServiceSerializer extends Object
 	
 	public function clearRestoreCache()
 	{
-		$this->aService->cache()->delete('/system/objects') ;
+		Cache::singleton()->delete('/system/objects') ;
 	}
 	
 	public function cacheStorePath($sClass,$flyweightKey=null)
