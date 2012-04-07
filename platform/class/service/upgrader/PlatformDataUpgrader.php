@@ -3,13 +3,13 @@ namespace org\opencomb\platform\system\upgrader ;
 
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\Folder;
-use org\jecat\framework\util\Version ;
+use org\jecat\framework\util\Version;
 use org\jecat\framework\setting\Setting;
-use org\opencomb\platform\Platform ;
-use org\opencomb\platform\system\PlatformShutdowner ;
-use org\jecat\framework\lang\oop\ClassLoader ;
+use org\opencomb\platform\Platform;
+use org\opencomb\platform\system\PlatformShutdowner;
+use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Exception;
-use org\jecat\framework\message\MessageQueue ;
+use org\jecat\framework\message\MessageQueue;
 
 /*
 	org\opencomb\platform\system\upgrader ;
@@ -169,3 +169,4 @@ CODE;
 	
 	private $aMessageQueue = null;
 }
+

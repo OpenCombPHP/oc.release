@@ -7,5 +7,3 @@ class ExtensionException extends Exception
 {
 	
 }
-
-?>

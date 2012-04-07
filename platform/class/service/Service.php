@@ -1,19 +1,9 @@
 <?php
 namespace org\opencomb\platform\service ;
 
-use org\jecat\framework\cache\Cache;
-use org\jecat\framework\fs\Folder;
-use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\Setting;
-use org\jecat\framework\lang\oop\ClassLoader;
-use org\jecat\framework\resrc\HtmlResourcePool;
-use org\jecat\framework\ui\xhtml\UIFactory ;
 use org\jecat\framework\system\Application;
 use org\opencomb\platform\ext\ExtensionManager;
-use org\opencomb\platform\ext\ExtensionMetainfo;
-use org\opencomb\platform\resrc\ResourceManager;
-use org\opencomb\platform\system\PlatformFactory ;
-
 
 class Service extends Application
 {
@@ -72,5 +62,6 @@ class Service extends Application
 	
 	private $bDebugging = null ;
 }
+
 
 

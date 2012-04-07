@@ -6,7 +6,6 @@ use org\jecat\framework\util\VersionScope;
 use org\jecat\framework\util\Version;
 use org\jecat\framework\util\VersionCompat;
 use org\opencomb\platform\Platform;
-use org\opencomb\platform\ext\ExtensionMetainfo;
 
 class RequireItem
 {
@@ -157,5 +156,3 @@ class RequireItem
 	
 	private $aRequireVersionScope ;
 }
-
-?>

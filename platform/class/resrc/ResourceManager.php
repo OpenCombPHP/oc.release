@@ -2,8 +2,8 @@
 namespace org\opencomb\platform\resrc ;
 
 use org\jecat\framework\fs\Folder;
-use org\opencomb\platform\ext\Extension ;
-use org\jecat\framework\resrc\ResourceManager as JsResourceManager ;
+use org\opencomb\platform\ext\Extension;
+use org\jecat\framework\resrc\ResourceManager as JsResourceManager;
 
 class ResourceManager extends JsResourceManager
 {
@@ -50,5 +50,3 @@ class ResourceManager extends JsResourceManager
 		return parent::find($sFilename,$sNamespace) ;
 	}
 }
-
-?>

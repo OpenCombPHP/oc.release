@@ -16,3 +16,4 @@ class upgrader_${sFrom}To$sTo extends AbstractTestUpgrader{
 
 CODE
 );
+

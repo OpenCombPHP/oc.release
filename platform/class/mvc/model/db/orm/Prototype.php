@@ -1,7 +1,7 @@
 <?php
 namespace org\opencomb\platform\mvc\model\db\orm ;
 
-use org\jecat\framework\mvc\model\db\orm\Prototype as JcPrototype ;
+use org\jecat\framework\mvc\model\db\orm\Prototype as JcPrototype;
 
 class Prototype extends JcPrototype
 {
@@ -41,5 +41,3 @@ class Prototype extends JcPrototype
 		return false ;
 	}
 }
-
-?>

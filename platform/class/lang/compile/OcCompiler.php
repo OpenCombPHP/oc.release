@@ -1,23 +1,16 @@
 <?php
 namespace org\opencomb\platform\lang\compile ;
 
-use org\jecat\framework\lang\Assert;
-
 use org\opencomb\platform\service\Service;
-
 use org\jecat\framework\lang\Exception;
-
 use org\jecat\framework\lang\compile\object\Token;
-
 use org\jecat\framework\lang\compile\object\NamespaceDeclare;
 use org\jecat\framework\lang\compile\object\TokenPool;
-use org\opencomb\platform\Platform;
-use org\opencomb\platform\system\PlatformFactory;
 use org\jecat\framework\lang\oop\Package;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\compile\Compiler;
-use org\jecat\framework\lang\aop\AOP ;
-use org\jecat\framework\lang\aop\compiler\ClassInfoLibrary ;
+use org\jecat\framework\lang\aop\AOP;
+use org\jecat\framework\lang\aop\compiler\ClassInfoLibrary;
 
 class OcCompiler extends Compiler
 {
@@ -243,4 +236,5 @@ class OcCompiler extends Compiler
 	
 	private $sCompilingClassName ;
 }
+
 

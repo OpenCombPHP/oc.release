@@ -2,9 +2,7 @@
 namespace org\opencomb\platform\service ;
 
 use org\jecat\framework\cache\Cache;
-use org\opencomb\platform\ext\ExtensionManager;
 use org\jecat\framework\lang\aop\AOP;
-use org\jecat\framework\cache\ICache;
 use org\jecat\framework\lang\Object;
 
 class ServiceSerializer extends Object
@@ -186,3 +184,4 @@ class ServiceSerializer extends Object
 	
 	private $arrInstanceInfos = array() ;
 }
+

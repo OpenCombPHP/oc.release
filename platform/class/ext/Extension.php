@@ -6,7 +6,7 @@ use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
 use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\Object;
-use org\jecat\framework\fs\Folder ;
+use org\jecat\framework\fs\Folder;
 
 /**
  * @wiki /蜂巢/扩展
@@ -171,4 +171,5 @@ class Extension extends Object
 	
 	private $nRuntimePriority = -1 ;
 }
+
 

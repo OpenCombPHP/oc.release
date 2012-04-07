@@ -1,9 +1,9 @@
 <?php
 namespace org\opencomb\platform\system\upgrader ;
 
-use org\jecat\framework\message\MessageQueue ;
-use org\jecat\framework\message\Message ;
-use org\jecat\framework\util\Version ;
+use org\jecat\framework\message\MessageQueue;
+use org\jecat\framework\message\Message;
+use org\jecat\framework\util\Version;
 
 /**
  * 为了方便测试的一个抽象基类
@@ -40,3 +40,4 @@ class AbstractTestUpgrader implements IUpgrader{
 		}
 	}
 }
+

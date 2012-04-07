@@ -1,7 +1,6 @@
 <?php
 namespace org\opencomb\platform\service ;
 
-use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\setting\Setting;
@@ -75,5 +74,3 @@ return \$sBackDoorSecretKey = '{$sBackDoorSecretKey}' ;") ;
 TEMPLATE
 	;
 }
-
-?>

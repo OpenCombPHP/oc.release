@@ -208,3 +208,5 @@ class Platform
 	private $aInstallFolder ;
 	
 }
+
+

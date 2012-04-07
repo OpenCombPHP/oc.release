@@ -1,7 +1,6 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\opencomb\platform as oc;
 use org\opencomb\platform\ext\dependence\Dependence;
 use org\jecat\framework\util\VersionCompat;
 use org\jecat\framework\util\VersionScope;
@@ -10,14 +9,9 @@ use org\jecat\framework\fs\Folder;
 use org\jecat\framework\util\VersionExcetion;
 use org\jecat\framework\util\String;
 use org\jecat\framework\util\Version;
-use org\opencomb\platform\ext\coreuser\subscribe\Create;
 use org\jecat\framework\lang\Exception;
-use org\jecat\framework\system\Application;
-use org\jecat\framework\resrc\HtmlResourcePool;
-use org\opencomb\platform\Platform;
-use org\jecat\framework\ui\xhtml\UIFactory ;
-use org\jecat\framework\resrc\htmlresrc\HtmlResourcePoolFactory;
 use org\jecat\framework\lang\Object;
+use org\opencomb\platform as oc;
 
 class ExtensionMetainfo extends Object
 {
@@ -406,5 +400,3 @@ class ExtensionMetainfo extends Object
 	private $aDependence ;
 	
 }
-
-?>

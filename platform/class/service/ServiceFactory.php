@@ -2,25 +2,14 @@
 namespace org\opencomb\platform\service ;
 
 use org\opencomb\platform\system\OcSession;
-
-use org\jecat\framework as jc ;
-use org\opencomb\platform as oc ;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\imp\FsSetting;
-use org\opencomb\platform\Platform;
-use org\jecat\framework\db\sql\compiler\SqlNameCompiler;
 use org\jecat\framework\cache\Cache;
-use org\jecat\framework\lang\Exception;
 use org\jecat\framework\lang\oop\Package;
 use org\jecat\framework\fs\Folder;
-use org\jecat\framework\lang\aop\AOP;
-use org\jecat\framework\lang\compile\CompilerFactory;
 use org\opencomb\platform\ext\ExtensionLoader;
-use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\session\Session;
 use org\jecat\framework\db\DB;
-use org\jecat\framework\db\driver\PDODriver;
-use org\jecat\framework\cache\ICache;
 use org\jecat\framework\mvc\controller\Response;
 use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\setting\Setting;
@@ -28,15 +17,15 @@ use org\jecat\framework\locale\LocaleManager;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\system\Application;
-use org\opencomb\platform\resrc\ResourceManager;
 use org\jecat\framework\resrc\HtmlResourcePool;
-use org\jecat\framework\ui\xhtml\UIFactory ;
-use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory ;
-use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager ;
+use org\jecat\framework\ui\xhtml\UIFactory;
 use org\opencomb\platform\ui\SourceFileManager;
 use org\jecat\framework\system\HttpAppFactory;
-use org\jecat\framework\system\CoreApplication;
 use org\jecat\framework\lang\oop\ClassLoader;
+use org\jecat\framework as jc;
+use org\opencomb\platform as oc;
+use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory;
+use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager;
 use org\jecat\framework\system\AccessRouter as JcAccessRouter;
 
 class ServiceFactory extends HttpAppFactory
@@ -246,4 +235,3 @@ class ServiceFactory extends HttpAppFactory
 	}
 }
 
-?>

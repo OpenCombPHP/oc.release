@@ -2,9 +2,7 @@
 namespace org\opencomb\platform\system ;
 
 use org\opencomb\platform\service\Service;
-
 use org\opencomb\platform\Platform;
-
 use org\jecat\framework\session\OriginalSession;
 
 class OcSession extends OriginalSession
@@ -47,5 +45,3 @@ class OcSession extends OriginalSession
 		return md5($sSrc) ;
 	}
 }
-
-?>

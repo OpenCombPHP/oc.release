@@ -2,7 +2,6 @@
 namespace org\opencomb\platform\ui\xhtml\compiler ;
 
 use org\opencomb\platform\service\Service;
-
 use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\ui\TargetCodeOutputStream;
 use org\jecat\framework\ui\IObject;
@@ -71,5 +70,3 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		}
 	}
 }
-
-?>
