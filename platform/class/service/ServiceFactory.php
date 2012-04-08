@@ -196,6 +196,16 @@ class ServiceFactory extends HttpAppFactory
 		$aPublicFolders = $aService->publicFolders() ;
 		$aPublicFolders->addFolder($aPublicFolder,'org.opencomb.platform') ;
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
+		
+		// 高速缓存
+		if( $arrHsCacheSetting=$aSetting->item('/service/cache','high-speed',null) )
+		{
+			//try{
+				$aHighSpeedCache = call_user_func( array($arrHsCacheSetting['driver'],'createInstance'),$arrHsCacheSetting['parameters'] ) ;
+				Cache::setHighSpeed($aHighSpeedCache) ;
+			//} catch (\Exception $e)
+			{}
+		}
 	}
 		
 	public function createClassLoader(array & $arrServiceSetting)

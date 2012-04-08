@@ -6,9 +6,12 @@ use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\system\AccessRouter;
 use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
 
+$fTimeStart = microtime(true) ;
 
 // 初始化 jcat 框架
 $aPlatform = require 'oc.init.php' ;
+$fInitFinish = microtime(true) ;
+
 
 // 根据路由设置创建控制器 并 执行
 $aController = AccessRouter::singleton()->createRequestController(Request::singleton()) ;
@@ -24,7 +27,7 @@ else
 
 if( empty($_REQUEST['rspn']) )
 {
-	// echo $fTime2 - $fTime ;
+	echo $fInitFinish - $fTimeStart, '<br />', microtime(true) - $fTimeStart ;
 }
 /*
 $aExecuteTimeWatcher->finish('/system/total') ;
