@@ -47,7 +47,7 @@ class Service extends Application
 	{
 		if($this->bDebugging===null)
 		{
-			$this->bDebugging = (bool)Setting::singleton()->item('/platform/debug','stat') ;
+			$this->bDebugging = (bool)Setting::singleton()->item('/service/debug','stat') ;
 		}
 		return $this->bDebugging ;
 	}

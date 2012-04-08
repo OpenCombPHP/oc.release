@@ -51,7 +51,14 @@ class OcCompiler extends Compiler
 					$sCode.= "// {$sClassName} 被编译器本身依赖，编译文件失效后，无法主动重新编译\r\n\r\n" ;
 				}
 				
-				$sCode.= "require \"".addslashes($sSourceFile)."\" ;\r\n" ;
+				$sSourceFileEsc = addslashes($sSourceFile) ;
+				$sCode.= "if(!is_file(\"{$sSourceFileEsc}\")){\r\n" ;
+				$sCode.= "	// 源文件已经丢失，删除编译文件\r\n" ;
+				$sCode.= "	unlink(__FILE__) ;\r\n" ;
+				$sCode.= "}\r\n" ;
+				$sCode.= "\r\n" ;
+				$sCode.= "// 加载源文件\r\n" ;
+				$sCode.= "require \"{$sSourceFileEsc}\" ;\r\n" ;
 				
 				// 写入编译文件
 				$sDirName = dirname($sCompiledFile) ;
