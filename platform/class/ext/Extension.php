@@ -85,7 +85,7 @@ class Extension extends Object
 	 */
 	public function filesFolder()
 	{
-		return self::extensionFlyweightFolder('files','files/') ;
+		return self::extensionFlyweightFolder('files','files/',$this->metainfo()->name()) ;
 	}
 	
 	/**
@@ -93,7 +93,7 @@ class Extension extends Object
 	 */
 	public function dataFolder()
 	{
-		return self::extensionFlyweightFolder('data','data/extensions/') ;
+		return self::extensionFlyweightFolder('data','data/extensions/',$this->metainfo()->name()) ;
 	}
 	
 	/**
@@ -101,16 +101,16 @@ class Extension extends Object
 	 */
 	public function tmpFolder()
 	{
-		return self::extensionFlyweightFolder('tmp','data/tmp/') ;
+		return self::extensionFlyweightFolder('tmp','data/tmp/',$this->metainfo()->name()) ;
 	}
 	
-	private static function extensionFlyweightFolder($sType,$sSubPath)
+	private static function extensionFlyweightFolder($sType,$sSubPath,$sExtName)
 	{
-		$sFlyweightKey = 'oc-ext-'.$sType.'-'.$this->metainfo()->name() ;
+		$sFlyweightKey = 'oc-ext-'.$sType.'-'. $sExtName ;
 		
 		if( !$aFolder=Folder::flyweight($sFlyweightKey,false) )
 		{
-			$sPath = $sSubPath.$this->metainfo()->name();
+			$sPath = $sSubPath.$sExtName ;
 			
 			if($aFolder = Folder::singleton()->findFolder($sPath,Folder::FIND_AUTO_CREATE))
 			{
