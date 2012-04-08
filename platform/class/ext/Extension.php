@@ -76,30 +76,50 @@ class Extension extends Object
 		return Setting::singleton()->separate('extensions/'.$this->aMetainfo->name()) ;
 	}
 	public function cache()
-	{}
+	{
+		
+	}
+	
 	/**
 	 * @return org\jecat\framework\fs\Folder
 	 */
-	public function filesFolder($bReturnPath=true)
+	public function filesFolder()
 	{
-		//Folder
-		$sPath = 'data/files/'.$this->metainfo()->name();
-		$aFolder = Folder::singleton()->findFolder($sPath,Folder::FIND_AUTO_CREATE) ;
+		return self::extensionFlyweightFolder('files','files/') ;
 	}
+	
 	/**
 	 * @return org\jecat\framework\fs\Folder
 	 */
 	public function dataFolder()
 	{
-		//Folder
-		$strPath = 'data/extensions/'.$this->metainfo()->name();
-		return Folder::singleton()->findFolder($strPath,Folder::FIND_AUTO_CREATE);
+		return self::extensionFlyweightFolder('data','data/extensions/') ;
 	}
+	
 	/**
 	 * @return org\jecat\framework\fs\Folder
 	 */
-	public function temporaryFolder()
-	{}
+	public function tmpFolder()
+	{
+		return self::extensionFlyweightFolder('tmp','data/tmp/') ;
+	}
+	
+	private static function extensionFlyweightFolder($sType,$sSubPath)
+	{
+		$sFlyweightKey = 'oc-ext-'.$sType.'-'.$this->metainfo()->name() ;
+		
+		if( !$aFolder=Folder::flyweight($sFlyweightKey,false) )
+		{
+			$sPath = $sSubPath.$this->metainfo()->name();
+			
+			if($aFolder = Folder::singleton()->findFolder($sPath,Folder::FIND_AUTO_CREATE))
+			{
+				Folder::setFlyweight($aFolder,$sFlyweightKey) ;
+			}
+		}
+		
+		return $aFolder ;		
+	}
 
 	/**
 	 * @return ExtensionMetainfo
@@ -170,6 +190,7 @@ class Extension extends Object
 	private $aMetainfo ;
 	
 	private $nRuntimePriority = -1 ;
+	
 }
 
 
