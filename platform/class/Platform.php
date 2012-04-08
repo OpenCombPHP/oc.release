@@ -177,7 +177,7 @@ class Platform
 
 	private function & serviceSetting($sHost)
 	{
-		if(isset($arrDomainSettings[$sHost]))
+		if(isset($this->arrServiceSettings[$sHost]))
 		{
 			$this->arrServiceSettings[$sHost]['folder'] = SERVICE_ROOT . '/' . $sHost ;
 			return $this->arrServiceSettings[$sHost] ;
