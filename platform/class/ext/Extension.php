@@ -80,11 +80,11 @@ class Extension extends Object
 	/**
 	 * @return org\jecat\framework\fs\Folder
 	 */
-	public function publicFolder()
+	public function filesFolder($bReturnPath=true)
 	{
 		//Folder
-		$strPath = 'data/public/'.$this->metainfo()->name();
-		return Folder::singleton()->findFolder($strPath,Folder::FIND_AUTO_CREATE);
+		$sPath = 'data/files/'.$this->metainfo()->name();
+		$aFolder = Folder::singleton()->findFolder($sPath,Folder::FIND_AUTO_CREATE) ;
 	}
 	/**
 	 * @return org\jecat\framework\fs\Folder
