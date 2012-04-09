@@ -53,9 +53,12 @@ class ServiceFactory extends HttpAppFactory
 		$aSetting = FsSetting::createFromPath($arrServiceSetting['folder_setting']) ;
 		Setting::setSingleton($aSetting) ;
 
-		// 初始化 cache
-		$aCache = new FSCache($arrServiceSetting['folder_cache']) ;
-		Cache::setSingleton($aCache) ;
+		// 初始化 cache (debug模式下不使用缓存)
+		if( !$aService->isDebugging() )
+		{
+			$aCache = new FSCache($arrServiceSetting['folder_cache']) ;
+			Cache::setSingleton($aCache) ;
+		}
 
 		$aServiceSerializer = ServiceSerializer::singleton(true,$aService) ;
 		
@@ -200,7 +203,7 @@ class ServiceFactory extends HttpAppFactory
 		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 		
 		// 高速缓存
-		if( $arrHsCacheSetting=$aSetting->item('/service/cache','high-speed',null) )
+		if( !$aService->isDebugging() and $arrHsCacheSetting=$aSetting->item('/service/cache','high-speed',null) )
 		{
 			//try{
 				$aHighSpeedCache = call_user_func( array($arrHsCacheSetting['driver'],'createInstance'),$arrHsCacheSetting['parameters'] ) ;

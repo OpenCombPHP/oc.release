@@ -23,6 +23,7 @@ require_once \org\jecat\framework\CLASSPATH."/setting/imp/FsSetting.php" ;
 require_once \org\jecat\framework\CLASSPATH."/setting/imp/FsKey.php" ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/Cache.php' ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/FSCache.php' ;
+require_once \org\jecat\framework\CLASSPATH.'/cache/EmptyCache.php' ;
 
 // load opencomb core class
 require_once CLASSPATH."/Platform.php" ;
