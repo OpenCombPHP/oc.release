@@ -84,8 +84,10 @@ class ServiceFactory extends HttpAppFactory
 			$this->initServiceUnrestorableSystem($aService,$aFolder,$aSetting,$arrServiceSetting) ;
 			
 			// BeanFactory 类别名
-			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Prototype','prototype') ;
-			BeanFactory::singleton()->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Association','association') ;
+			BeanFactory::singleton()
+				->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Prototype','prototype')
+				->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Association','association')
+				->registerBeanClass("org\\opencomb\\platform\\mvc\\view\\widget\\Menu",'menu') ;
 			
 			// store system objects !
 			$aServiceSerializer->addSystemSingletons() ;
