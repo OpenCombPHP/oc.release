@@ -30,14 +30,14 @@ class Prototype extends JcPrototype
 	 * 检查规则: 若 $sFullTableName 以 ${sExtName}_开头，则返回true，否则返回false
 	 */
 	static public function isExtensionTable($sFullTableName,$sExtName){
-		function startsWith($haystack, $needle){
-			$length = strlen($needle);
-			return (substr($haystack, 0, $length) === $needle);
-		}
 		$sPrefix = '';
-		if( startsWith($sFullTableName,$sPrefix.$sExtName.'_')){
+		if( self::startsWith($sFullTableName,$sPrefix.$sExtName.'_')){
 			return true;
 		}
 		return false ;
+	}
+	static private function startsWith($haystack, $needle){
+		$length = strlen($needle);
+		return (substr($haystack, 0, $length) === $needle);
 	}
 }

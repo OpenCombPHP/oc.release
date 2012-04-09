@@ -139,7 +139,7 @@ class ExtensionSetup extends Object
 			$arrTableList = array();
 			$aDB = DB::singleton() ;
 			$aReflecterFactory = $aDB->reflecterFactory() ;
-			$strDBName = $aDB->driver(true)->currentDBName();
+			$strDBName = $aDB->currentDBName();
 			$aDbReflecter = $aReflecterFactory->dbReflecter($strDBName);
 			$sKey = 'Tables_in_'.$strDBName ;
 			foreach( $aDbReflecter->tableNameIterator() as $value ){
@@ -168,7 +168,7 @@ class ExtensionSetup extends Object
 			$aExtension->setting()->deleteKey('');
 			
 			// data
-			$aExtension->publicFolder()->delete(true);
+			$aExtension->filesFolder()->delete(true);
 			break;
 		default:
 			throw new Exception(
@@ -453,7 +453,7 @@ class ExtensionSetup extends Object
 			$arrClassLoaderPackagePath [] = $package->folder()->path() ;
 		}
 		// 加载class
-		$aExtFolder = Folder::singleton()->findFolder($aExtMeta->installPath());
+		$aExtFolder = new Folder($aExtMeta->installPath());
 		foreach( $aExtMeta->packageIterator() as $package){
 			// $package[0] 是 namespace
 			// $package[1] 是 文件夹，从$aExtMeta->installPath()算起
