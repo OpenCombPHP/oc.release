@@ -1,14 +1,13 @@
 <?php
 namespace org\opencomb\platform\ui ;
 
-use org\jecat\framework\fs\IFolder;
-use org\jecat\framework\fs\Dir;
-use org\opencomb\platform\ext\Extension ;
-use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager ;
+use org\jecat\framework\fs\Folder;
+use org\opencomb\platform\ext\Extension;
+use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager;
 
 class SourceFileManager extends JcSourceFileManager
 {
-	public function addFolder(IFolder $aFolder,$sExtensionName=null)
+	public function addFolder(Folder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
@@ -17,7 +16,7 @@ class SourceFileManager extends JcSourceFileManager
 		parent::addFolder($aFolder,$sExtensionName) ;
 	}
 	
-	public function removeFolder(IFolder $aFolder,$sExtensionName=null)
+	public function removeFolder(Folder $aFolder,$sExtensionName=null)
 	{
 		if(!$sExtensionName)
 		{
@@ -49,5 +48,3 @@ class SourceFileManager extends JcSourceFileManager
 		}
 	}
 }
-
-?>

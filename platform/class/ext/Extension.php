@@ -4,9 +4,9 @@ namespace org\opencomb\platform\ext ;
 use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\Object;
-use org\jecat\framework\fs\FileSystem ;
+use org\jecat\framework\fs\Folder;
 
 /**
  * @wiki /蜂巢/扩展
@@ -47,7 +47,7 @@ class Extension extends Object
 	 */
 	static public function flyweight($sExtensionName,$bAutoCreate=false,$sClassName=null)
 	{
-		return parent::flyweight($sExtensionName,$bAutoCreate,$sClassName) ;
+		return ExtensionManager::singleton()->extension($sExtensionName) ;
 	}
 	
 	public function __construct(ExtensionMetainfo $aMeta)
@@ -76,26 +76,50 @@ class Extension extends Object
 		return Setting::singleton()->separate('extensions/'.$this->aMetainfo->name()) ;
 	}
 	public function cache()
-	{}
-	/**
-	 * @return org\jecat\framework\fs\IFolder
-	 */
-	public function publicFolder()
 	{
-		//IFolder
-		$strPath = '/data/public/'.$this->metainfo()->name();
-		return FileSystem::singleton()->findFolder($strPath,FileSystem::FIND_AUTO_CREATE);
+		
 	}
+	
 	/**
-	 * @return org\jecat\framework\fs\IFolder
+	 * @return org\jecat\framework\fs\Folder
+	 */
+	public function filesFolder()
+	{
+		return self::extensionFlyweightFolder('files','files/',$this->metainfo()->name()) ;
+	}
+	
+	/**
+	 * @return org\jecat\framework\fs\Folder
 	 */
 	public function dataFolder()
-	{}
+	{
+		return self::extensionFlyweightFolder('data','data/extensions/',$this->metainfo()->name()) ;
+	}
+	
 	/**
-	 * @return org\jecat\framework\fs\IFolder
+	 * @return org\jecat\framework\fs\Folder
 	 */
-	public function temporaryFolder()
-	{}
+	public function tmpFolder()
+	{
+		return self::extensionFlyweightFolder('tmp','data/tmp/',$this->metainfo()->name()) ;
+	}
+	
+	private static function extensionFlyweightFolder($sType,$sSubPath,$sExtName)
+	{
+		$sFlyweightKey = 'oc-ext-'.$sType.'-'. $sExtName ;
+		
+		if( !$aFolder=Folder::flyweight($sFlyweightKey,false) )
+		{
+			$sPath = $sSubPath.$sExtName ;
+			
+			if($aFolder = Folder::singleton()->findFolder($sPath,Folder::FIND_AUTO_CREATE))
+			{
+				Folder::setFlyweight($aFolder,$sFlyweightKey) ;
+			}
+		}
+		
+		return $aFolder ;		
+	}
 
 	/**
 	 * @return ExtensionMetainfo
@@ -108,7 +132,7 @@ class Extension extends Object
 	public function load()
 	{}
 	
-	public function active(Platform $aPlatform)
+	public function active(Service $aService)
 	{}
 	
 	public function setRuntimePriority($nPriority)
@@ -166,5 +190,7 @@ class Extension extends Object
 	private $aMetainfo ;
 	
 	private $nRuntimePriority = -1 ;
+	
 }
+
 

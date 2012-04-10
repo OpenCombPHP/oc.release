@@ -1,8 +1,7 @@
 <?php
-namespace org\opencomb\platform\system ;
+namespace org\opencomb\platform\service ;
 
-use org\opencomb\platform\ext\Extension;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\setting\Setting;
 
@@ -15,7 +14,7 @@ use org\jecat\framework\setting\Setting;
  * =“后门”密钥=
  * 系统在关闭状态时，可以通过 Get/Post/Cookie 等方式，提供”后门“密钥来访问系统。
  */
-class PlatformShutdowner extends Object
+class ServiceShutdowner extends Object
 {
 	public function shutdown($sMessage="系统正在离线升级中……")
 	{
@@ -23,14 +22,14 @@ class PlatformShutdowner extends Object
 		$sContents = str_replace('%title%', sprintf(Setting::singleton()->item('/platform','systemname'),"系统关闭"), $sContents) ;
 		$sContents = str_replace('%contents%', $sMessage, $sContents) ;
 		
-		FileSystem::singleton()->findFile('/lock.shutdown.html',FileSystem::FIND_AUTO_CREATE)->openWriter()->write($sContents) ;
+		Folder::singleton()->findFile('/lock.shutdown.html',Folder::FIND_AUTO_CREATE)->openWriter()->write($sContents) ;
 		
 		return $this->backdoorSecretKey(true) ;
 	}
 	
 	public function backdoorSecretKey($bAutoCreate=false)
 	{
-		if( $aSkFile=FileSystem::singleton()->findFile('/lock.shutdown.backdoor.php') )
+		if( $aSkFile=Folder::singleton()->findFile('/lock.shutdown.backdoor.php') )
 		{
 			return $aSkFile->includeFile(false,false) ;
 		}
@@ -39,7 +38,7 @@ class PlatformShutdowner extends Object
 		{
 			$sBackDoorSecretKey = md5(microtime()) ;
 			
-			FileSystem::singleton()->findFile('/lock.shutdown.backdoor.php',FileSystem::FIND_AUTO_CREATE)->openWriter()->write("<?php
+			Folder::singleton()->findFile('/lock.shutdown.backdoor.php',Folder::FIND_AUTO_CREATE)->openWriter()->write("<?php
 // 系统关闭的后门密钥，用于管理员进入系统
 return \$sBackDoorSecretKey = '{$sBackDoorSecretKey}' ;") ;
 			
@@ -52,8 +51,8 @@ return \$sBackDoorSecretKey = '{$sBackDoorSecretKey}' ;") ;
 	
 	public function restore()
 	{
-		FileSystem::singleton()->delete('/lock.shutdown.html') ;		
-		FileSystem::singleton()->delete('/lock.shutdown.backdoor.php') ;		
+		Folder::singleton()->deleteChild('/lock.shutdown.html') ;
+		Folder::singleton()->deleteChild('/lock.shutdown.backdoor.php') ;
 	}
 	
 	static private $sTemplate = <<<TEMPLATE
@@ -75,5 +74,3 @@ return \$sBackDoorSecretKey = '{$sBackDoorSecretKey}' ;") ;
 TEMPLATE
 	;
 }
-
-?>

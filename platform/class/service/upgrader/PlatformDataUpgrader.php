@@ -2,14 +2,14 @@
 namespace org\opencomb\platform\system\upgrader ;
 
 use org\jecat\framework\lang\Object;
-use org\jecat\framework\fs\FileSystem;
-use org\jecat\framework\util\Version ;
+use org\jecat\framework\fs\Folder;
+use org\jecat\framework\util\Version;
 use org\jecat\framework\setting\Setting;
-use org\opencomb\platform\Platform ;
-use org\opencomb\platform\system\PlatformShutdowner ;
-use org\jecat\framework\lang\oop\ClassLoader ;
+use org\opencomb\platform\Platform;
+use org\opencomb\platform\system\PlatformShutdowner;
+use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Exception;
-use org\jecat\framework\message\MessageQueue ;
+use org\jecat\framework\message\MessageQueue;
 
 /*
 	org\opencomb\platform\system\upgrader ;
@@ -22,9 +22,9 @@ class PlatformDataUpgrader extends Object{
 			$this->aMessageQueue = $aMessageQueue ;
 		}
 		$sLockFileName = '/'.basename(__FILE__,".php").'Lock.html' ;
-		$aLockFile = FileSystem::singleton()->findFile( $sLockFileName ,FileSystem::FIND_AUTO_CREATE) ;
+		$aLockFile = Folder::singleton()->findFile( $sLockFileName ,Folder::FIND_AUTO_CREATE) ;
 		
-		$aLockRes = fopen($aLockFile->url(false),'w');
+		$aLockRes = fopen($aLockFile->path(),'w');
 		flock($aLockRes,LOCK_EX);
 		
 		if( self::CheckResult_NeedUpgrade === $this->check() ){
@@ -52,6 +52,7 @@ class PlatformDataUpgrader extends Object{
 		}
 		
 		fclose($aLockRes);
+		$aLockFile->delete() ;
 	}
 	
 	const CheckResult_Error = 'error' ;
@@ -105,7 +106,13 @@ class PlatformDataUpgrader extends Object{
 		$arrPath = $aCalc->calc($arrMap,$aFromVersion->toString(),$aToVersion->toString() );
 		
 		if( false === $arrPath ){
-			throw new Exception('未找到合适的升级路径');
+			throw new Exception(
+				'未找到合适的升级路径 : from %s to %s',
+				array(
+					$aFromVersion,
+					$aToVersion,
+				)
+			);
 		}
 		
 		$aSetting = Setting::singleton() ;
@@ -162,3 +169,4 @@ CODE;
 	
 	private $aMessageQueue = null;
 }
+

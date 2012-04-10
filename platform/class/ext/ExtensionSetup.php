@@ -1,24 +1,21 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\cache\Cache;
 use org\opencomb\platform\Platform;
-
 use org\jecat\framework\setting\Setting;
-
-use org\jecat\framework\fs\IFolder;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\message\MessageQueue;
-use org\jecat\framework\message\Message;
-use org\jecat\framework\lang\oop\ClassLoader ;
-use org\jecat\framework\fs\FileSystem;
-use org\opencomb\platform\ext\dependence\RequireItem ;
-use org\jecat\framework\db\DB ;
-use org\opencomb\platform\mvc\model\db\orm\Prototype ;
+use org\jecat\framework\lang\oop\ClassLoader;
+use org\opencomb\platform\ext\dependence\RequireItem;
+use org\jecat\framework\db\DB;
+use org\opencomb\platform\mvc\model\db\orm\Prototype;
 
 class ExtensionSetup extends Object
 {
-	public function install(IFolder $aExtensionFolder , MessageQueue $aMessageQueue)
+	public function install(Folder $aExtensionFolder , MessageQueue $aMessageQueue)
 	{
 		$aExtMgr = ExtensionManager::singleton() ;
 		
@@ -54,7 +51,7 @@ class ExtensionSetup extends Object
 		
 		// 设置 setting
 		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
-		$arrInstalled[] = $aExtensionFolder->path() ;
+		$arrInstalled[] = $aExtMeta->installPath() ;
 		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
 		
 		// 添加扩展的安装信息
@@ -137,12 +134,12 @@ class ExtensionSetup extends Object
 			// 数据库
 			
 			// 防止在平台管理之外，数据库的结构发生改变
-			Platform::singleton()->cache()->delete('/db');
+			Cache::singleton()->delete('/db');
 			
 			$arrTableList = array();
 			$aDB = DB::singleton() ;
 			$aReflecterFactory = $aDB->reflecterFactory() ;
-			$strDBName = $aDB->driver(true)->currentDBName();
+			$strDBName = $aDB->currentDBName();
 			$aDbReflecter = $aReflecterFactory->dbReflecter($strDBName);
 			$sKey = 'Tables_in_'.$strDBName ;
 			foreach( $aDbReflecter->tableNameIterator() as $value ){
@@ -163,7 +160,7 @@ class ExtensionSetup extends Object
 			 */
 			{
 				// 数据库的结构已经改变，需要清理缓存
-				Platform::singleton()->cache()->delete('/db');
+				Cache::singleton()->delete('/db');
 			}
 			
 			// settings
@@ -171,7 +168,7 @@ class ExtensionSetup extends Object
 			$aExtension->setting()->deleteKey('');
 			
 			// data
-			$aExtension->publicFolder()->delete(true);
+			$aExtension->filesFolder()->delete(true);
 			break;
 		default:
 			throw new Exception(
@@ -188,7 +185,7 @@ class ExtensionSetup extends Object
 		case self::TYPE_KEEP:
 			break;
 		case self::TYPE_REMOVE:
-			$aFolder = FileSystem::singleton()->findFolder($aExtMeta->installPath());
+			$aFolder = Folder::singleton()->findFolder($aExtMeta->installPath());
 			if($aFolder){
 				$aFolder->delete(true);
 			}
@@ -217,7 +214,8 @@ class ExtensionSetup extends Object
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable2) ;
 		
 		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
-		$arrInstalled = array_diff($arrInstalled,array($aExtMeta->installPath()) ) ;
+		$sInstallPath = $aExtMeta->installPath();
+		$arrInstalled = array_diff($arrInstalled,array($sInstallPath) ) ;
 		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
 		
 		// 修改 ExtensionManager
@@ -455,7 +453,7 @@ class ExtensionSetup extends Object
 			$arrClassLoaderPackagePath [] = $package->folder()->path() ;
 		}
 		// 加载class
-		$aExtFolder = FileSystem::singleton()->findFolder($aExtMeta->installPath());
+		$aExtFolder = new Folder($aExtMeta->installPath());
 		foreach( $aExtMeta->packageIterator() as $package){
 			// $package[0] 是 namespace
 			// $package[1] 是 文件夹，从$aExtMeta->installPath()算起
@@ -463,7 +461,7 @@ class ExtensionSetup extends Object
 			if(in_array($sSourceFolder,$arrClassLoaderPackagePath)){
 				continue;
 			}
-			$this->arrLoadedClassPackages[] = $aClassLoader->addPackage($package[0],$sSourceFolder);
+			$this->arrLoadedClassPackages[] = $aClassLoader->addPackage($package[0],new Folder($sSourceFolder));
 		}
 	}
 	private function unloadClassPackages(ExtensionMetainfo $aExtMeta)
@@ -506,5 +504,3 @@ class ExtensionSetup extends Object
 	}
 	
 }
-
-?>

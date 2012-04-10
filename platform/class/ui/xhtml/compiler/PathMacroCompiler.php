@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\platform\ui\xhtml\compiler ;
 
+use org\opencomb\platform\service\Service;
 use org\jecat\framework\ui\ObjectContainer;
 use org\jecat\framework\ui\TargetCodeOutputStream;
 use org\jecat\framework\ui\IObject;
@@ -56,12 +57,10 @@ class PathMacroCompiler extends JcPathMacroCompiler
 			}
 			else
 			{
-				$aDev->write( "if(\$aFile=\\org\\opencomb\\platform\\Platform::singleton()->publicFolders()->find(\"$sPath\",\"$sNamespace\")){\r\n" ) ;
-				$aDev->write( "	\$aDevice->write(\$aFile->httpUrl()) ;" ) ;
-				$aDev->write( "}" ) ;
+				list($aFolder,$sFileName) = Service::singleton()->publicFolders()->findEx($sPath,$sNamespace) ;
+				$sUrl = $aFolder? addslashes($aFolder->httpUrl().'/'.$sFileName): '' ;
+				$aDev->write( "\$aDevice->write(\"{$sUrl}\") ;" ) ;
 			}
 		}
 	}
 }
-
-?>

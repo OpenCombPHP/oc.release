@@ -1,43 +1,49 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\opencomb\platform\Platform;
+use org\jecat\framework\mvc\controller\Request;
+use org\jecat\framework\fs\FSO;
+use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\Object;
-use org\jecat\framework\fs\FileSystem;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\mvc\view\UIFactory;
+use org\opencomb\platform as oc;
 
 class ExtensionLoader extends Object
 {
-	public function loadAllExtensions(Platform $aPlatform,ExtensionManager $aExtensionManager)
+	public function loadAllExtensions(Service $aService,ExtensionManager $aExtensionManager)
 	{
 		foreach($aExtensionManager->extensionPriorities() as $nPriority)
 		{
 			foreach($aExtensionManager->enableExtensionNameIterator($nPriority) as $sExtName)
 			{
-				$this->loadExtension($aPlatform,$aExtensionManager,$sExtName,$nPriority) ;
+				$this->loadExtension($aService,$aExtensionManager,$sExtName,$nPriority) ;
 			}
 		}
 	}
 	
-	public function loadExtension(Platform $aPlatform,ExtensionManager $aExtensionManager,$sName,$nPriority=-1)
+	public function loadExtension(Service $aService,ExtensionManager $aExtensionManager,$sName,$nPriority=-1)
 	{
 		if(!$aExtMeta = $aExtensionManager->extensionMetainfo($sName))
 		{
 			throw new ExtensionException("扩展尚未安装：%s，无法完成加载",$sName) ;
 		}
 		$sVersion = $aExtMeta->version()->toString(false) ;
-		$aPlatform = $aExtensionManager->application() ;
-		$aPlatformFs = FileSystem::singleton() ;
+		$aService = $aExtensionManager->application() ;
 
 		// 加载类包
 		foreach($aExtMeta->packageIterator() as $arrPackage)
 		{
 			list($sNamespace,$sPackagePath) = $arrPackage ;
 			
-			$sPackagePath = $aExtMeta->installPath().$sPackagePath ;
-			ClassLoader::singleton()->addPackage( $sNamespace, $sPackagePath ) ;
+			$aPackageFolder = new Folder($aExtMeta->installPath().$sPackagePath) ;
+			if(!$aPackageFolder->exists())
+			{
+				throw new ExtensionException("没有找到扩展 %s 的类包:%s",array($sName,$sPackagePath)) ;
+			}
+			ClassLoader::singleton()->addPackage( $sNamespace, $aPackageFolder ) ;
 			
 			$aExtensionManager->registerPackageNamespace($sNamespace,$sName) ;
 		}
@@ -46,7 +52,8 @@ class ExtensionLoader extends Object
 		foreach($aExtMeta->templateFolderIterator() as $arrTemplateFolder)
 		{
 			list($sFolder,$sNamespace) = $arrTemplateFolder ;
-			if( !$aFolder=$aPlatformFs->findFolder( $aExtMeta->installPath().$sFolder ) )
+			$aFolder = new Folder($aExtMeta->installPath().$sFolder) ;
+			if( !$aFolder->exists() )
 			{
 				throw new ExtensionException("扩展 %s 的模板目录 %s 不存在",array($sName,$sFolder)) ;
 			}
@@ -54,21 +61,25 @@ class ExtensionLoader extends Object
 		}
 		
 		// 注册 public 目录
+		$sExtUrl = Request::singleton()->urlBase() . FSO::relativePath(oc\ROOT,$aExtMeta->installPath()) ;
 		foreach($aExtMeta->publicFolderIterator() as $arrPublicFolder)
 		{
 			list($sFolder,$sNamespace) = $arrPublicFolder ;
-			if( !$aFolder=$aPlatformFs->findFolder( $aExtMeta->installPath().$sFolder ) )
+			$aFolder = new Folder($aExtMeta->installPath().$sFolder) ;
+			if( !$aFolder->exists() )
 			{
 				throw new ExtensionException("扩展 %s 的公共文件目录 %s 不存在",array($sName,$sFolder)) ;
 			}
-			$aPlatform->publicFolders()->addFolder($aFolder,$sNamespace) ;
+			$aFolder->setHttpUrl($sExtUrl.$sFolder) ;
+			$aService->publicFolders()->addFolder($aFolder,$sNamespace) ;
 		}
 		
 		// 注册 bean 目录
 		foreach($aExtMeta->beanFolderIterator() as $arrFolder)
 		{
 			list($sFolder,$sNamespace) = $arrFolder ;
-			if( !$aFolder=$aPlatformFs->findFolder( $aExtMeta->installPath().$sFolder ) )
+			$aFolder = new Folder($aExtMeta->installPath().$sFolder) ;
+			if( !$aFolder->exists() )
 			{
 				throw new ExtensionException("扩展 %s 的bean目录 %s 不存在",array($sName,$sFolder)) ;
 			}
@@ -78,9 +89,6 @@ class ExtensionLoader extends Object
 		// 建立扩展实例
 		$aExtension = $aExtensionManager->extension($sName) ;
 		
-		// 注册 Extension::flyweight()
-		Extension::setFlyweight($aExtension,$aExtension->metainfo()->name()) ;
-		
 		// 设置 priority
 		if( $nPriority<0 )
 		{
@@ -89,26 +97,20 @@ class ExtensionLoader extends Object
 		$aExtension->setRuntimePriority($nPriority) ;
 		
 		// 执行扩展的加载函数
-		$aExtension->load($aPlatform) ;
+		$aExtension->load($aService) ;
 		
 		return $aExtension ;
 	}
 	
 	
-	public function enableExtensions(Platform $aPlatform,ExtensionManager $aExtensionManager)
+	public function enableExtensions(Service $aService,ExtensionManager $aExtensionManager)
 	{
 		foreach($aExtensionManager->iterator() as $aExtension)
-		{
-			// 注册 Extension::flyweight()
-			$sExtensionName = $aExtension->metainfo()->name() ;
-			if( !Extension::flyweight($sExtensionName,false) )
-			{
-				Extension::setFlyweight($aExtension,$sExtensionName) ;
-			}
-			
-			$aExtension->active($aPlatform) ;
+		{			
+			$aExtension->active($aService) ;
 		}
 	}
 	
 }
+
 

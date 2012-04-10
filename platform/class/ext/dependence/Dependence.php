@@ -3,7 +3,6 @@ namespace org\opencomb\platform\ext\dependence ;
 
 use org\opencomb\platform\Platform;
 use org\jecat\framework\util\VersionScope;
-use org\opencomb\platform\ext\ExtensionMetainfo;
 
 class Dependence
 {
@@ -49,5 +48,3 @@ class Dependence
 	private $arrRequires = array() ;
 	
 }
-
-?>
