@@ -85,7 +85,13 @@ class Extension extends Object
 	 */
 	public function filesFolder()
 	{
-		return self::extensionFlyweightFolder('files','files/',$this->metainfo()->name()) ;
+		if( !$this->aFilesFolder )
+		{
+			$aServiceFilesFolder = Service::singleton()->filesFolder() ;
+			$this->aFilesFolder = $aServiceFilesFolder->findFolder($this->metainfo()->name(),Folder::FIND_AUTO_CREATE) ;
+			$this->aFilesFolder->setHttpUrl( $aServiceFilesFolder->httpUrl() . '/' . $this->metainfo()->name() ) ;
+		}
+		return $this->aFilesFolder ;
 	}
 	
 	/**
@@ -93,7 +99,11 @@ class Extension extends Object
 	 */
 	public function dataFolder()
 	{
-		return self::extensionFlyweightFolder('data','data/extensions/',$this->metainfo()->name()) ;
+		if( !$this->aDataFolder )
+		{
+			$this->aDataFolder = Folder::singleton()->findFolder('data/extensions/'.$this->metainfo()->name(),Folder::FIND_AUTO_CREATE) ;
+		}
+		return $this->aDataFolder ;
 	}
 	
 	/**
@@ -101,7 +111,11 @@ class Extension extends Object
 	 */
 	public function tmpFolder()
 	{
-		return self::extensionFlyweightFolder('tmp','data/tmp/',$this->metainfo()->name()) ;
+		if( !$this->aTmpFolder )
+		{
+			$this->aTmpFolder = Folder::singleton()->findFolder('data/tmp/'.$this->metainfo()->name(),Folder::FIND_AUTO_CREATE) ;
+		}
+		return $this->aTmpFolder ;
 	}
 	
 	private static function extensionFlyweightFolder($sType,$sSubPath,$sExtName)
@@ -188,6 +202,10 @@ class Extension extends Object
 	}
 	
 	private $aMetainfo ;
+	
+	private $aFilesFolder ;
+	private $aDataFolder ;
+	private $aTmpFolder ;
 	
 	private $nRuntimePriority = -1 ;
 	

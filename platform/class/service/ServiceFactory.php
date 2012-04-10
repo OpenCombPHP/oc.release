@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\jecat\framework\mvc\controller\HttpRequest;
+
 use org\opencomb\platform\system\OcSession;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\imp\FsSetting;
@@ -42,11 +44,11 @@ class ServiceFactory extends HttpAppFactory
 		
 		// 创建服务
 		$aService = new Service() ;
+		$aService->setServiceSetting($arrServiceSetting) ;
 		$aOriApp = Application::switchSingleton($aService) ;
 		
-		
 		// filesystem
-		$aFolder = new Folder($arrServiceSetting['folder']) ;
+		$aFolder = new Folder($arrServiceSetting['folder_path']) ;
 		Folder::setSingleton($aFolder) ;
 		
 		// setting
@@ -132,29 +134,38 @@ class ServiceFactory extends HttpAppFactory
 	{
 		if(empty($arrServiceSetting['folder_data']))
 		{
-			$arrServiceSetting['folder_data'] = $arrServiceSetting['folder'] . '/data' ;
+			$arrServiceSetting['folder_data'] = $arrServiceSetting['folder_path'] . '/data' ;
 		}
 		if(empty($arrServiceSetting['folder_cache']))
 		{
-			$arrServiceSetting['folder_cache'] = $arrServiceSetting['folder'] . '/data/cache' ;
+			$arrServiceSetting['folder_cache'] = $arrServiceSetting['folder_path'] . '/data/cache' ;
 		}
 		if(empty($arrServiceSetting['folder_compiled_class']))
 		{
-			$arrServiceSetting['folder_compiled_class'] = $arrServiceSetting['folder'] . '/data/compiled/class' ;
+			$arrServiceSetting['folder_compiled_class'] = $arrServiceSetting['folder_path'] . '/data/compiled/class' ;
 		}
 		if(empty($arrServiceSetting['folder_compiled_template']))
 		{
-			$arrServiceSetting['folder_compiled_template'] = $arrServiceSetting['folder'] . '/data/compiled/template' ;
+			$arrServiceSetting['folder_compiled_template'] = $arrServiceSetting['folder_path'] . '/data/compiled/template' ;
 		}
 	
 		if(empty($arrServiceSetting['folder_setting']))
 		{
-			$arrServiceSetting['folder_setting'] = $arrServiceSetting['folder'] . '/setting' ;
+			$arrServiceSetting['folder_setting'] = $arrServiceSetting['folder_path'] . '/setting' ;
 		}
-	
+
 		if(empty($arrServiceSetting['folder_files']))
 		{
-			$arrServiceSetting['folder_files'] = $arrServiceSetting['folder'] . '/files' ;
+			$arrServiceSetting['folder_files'] = $arrServiceSetting['folder_path'] . '/files' ;
+		}
+		if(empty($arrServiceSetting['folder_files_url']))
+		{
+			$arrServiceSetting['folder_files_url'] = (empty($_SERVER['HTTPS'])?'http://':'https://') . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) ;
+			if( substr($arrServiceSetting['folder_files_url'],-1)!=='/' )
+			{
+				$arrServiceSetting['folder_files_url'].= '/' ;
+			}
+			$arrServiceSetting['folder_files_url'].= 'services/' . $arrServiceSetting['folder_name'] . '/files' ;
 		}
 	}
 	

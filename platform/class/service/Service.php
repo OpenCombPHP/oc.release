@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\jecat\framework\fs\Folder;
+
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\system\Application;
 use org\opencomb\platform\ext\ExtensionManager;
@@ -8,7 +10,7 @@ use org\opencomb\platform\ext\ExtensionManager;
 class Service extends Application
 {
 	/**
-	 * @return Platform
+	 * @return Service
 	 */
 	static public function singleton($bCreateNew=true,$createArgvs=null,$sClass=null)
 	{
@@ -33,34 +35,38 @@ class Service extends Application
 	public function signature()
 	{
 		$aSetting = Setting::singleton() ;
-		if( !$sSignature = $aSetting->item('/platform','signature') )
+		if( !$sSignature = $aSetting->item('/service','signature') )
 		{
 			$sSignature = md5( microtime() . rand(0,100000) ) ;
-			$aSetting->setItem('/platform','signature',$sSignature) ;
-			$aSetting->saveKey('/platform') ;
+			$aSetting->setItem('/service','signature',$sSignature) ;
+			$aSetting->saveKey('/service') ;
 		}
 		
 		return $sSignature ;
 	}
 	
-	public function isDebugging()
+	public function setServiceSetting(array $arrServiceSetting)
 	{
-		if($this->bDebugging===null)
+		$this->arrServiceSetting =& $arrServiceSetting ;
+	}
+
+	/**
+	 * @return org\jecat\framework\fs\Folder
+	 */
+	public function filesFolder()
+	{
+		if(!$this->aFilesFolder)
 		{
-			$this->bDebugging = (bool)Setting::singleton()->item('/service/debug','stat') ;
+			$this->aFilesFolder = new Folder($this->arrServiceSetting['folder_files']) ;
+			$this->aFilesFolder->setHttpUrl($this->arrServiceSetting['folder_files_url']) ;
 		}
-		return $this->bDebugging ;
+		return $this->aFilesFolder ;
 	}
 	
-	private $sExtensionsFolder = 'extensions' ;
 	private $aExtensionManager ;
-	private $aStaticPageManager ;
-	private $aVersion ;
 	private $aDataVersion ;
-	private $aVersionCompat ;
-	private $aCache ;
-	
-	private $bDebugging = null ;
+	private $aFilesFolder ;
+	private $arrServiceSetting ;
 }
 
 
