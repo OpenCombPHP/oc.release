@@ -6,6 +6,10 @@ use org\jecat\framework\fs\imp\LocalFileSystem;
 use org\opencomb\platform\Platform;
 use org\opencomb\platform\system\PlatformFactory;
 
+/**
+ * @wiki /系统/jc.init.php文件
+ */
+
 ini_set('display_errors',1) ;
 error_reporting(E_ALL^E_STRICT) ;
 

@@ -9,12 +9,11 @@ use org\jecat\framework\ui\xhtml\compiler\macro\PathMacroCompiler as JcPathMacro
 
 /**
  * @wiki /模板引擎/宏
+ * @wiki 速查/模板引擎/宏
+ * =={/ }平台path==
  *
+ *  返回扩展文件的完整路径url
  * {|
- *  !{/ }
- *  !
- *  !{/ }返回一个文件的url
- *  |---
  *  !属性
  *  !
  *  !类型
@@ -27,14 +26,9 @@ use org\jecat\framework\ui\xhtml\compiler\macro\PathMacroCompiler as JcPathMacro
  *  |
  *  |
  *  |}
+ *  [example php frameworktest template/test-template/macro/PlatFormPathMacroCase.html 2 6]
  *  
  *  [^]platform的{/}有别与framework的{/}，它处理的是extensions的url[/^]
- */
-/**
- * @author anubis
- * @example /模板引擎/宏/自定义标签:name[1]
- *
- *  通过{/ }标签编译器的代码演示如何编写一个标签编译器
  */
 
 class PathMacroCompiler extends JcPathMacroCompiler
@@ -51,8 +45,6 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		else
 		{
 			@list($sNamespace,$sPath) = explode(':',$sContents,2) ;
-			echo $sNamespace."<br/>";
-			echo $sPath;
 			if(!$sNamespace)
 			{
 				$sNamespace = $aObject->root()->ns() ;
