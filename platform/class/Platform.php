@@ -145,20 +145,20 @@ class Platform
 	
 	private function loadServiceSettings()
 	{
-		$sServiceSettingFile = SERVICE_ROOT.'/settings.inc.php' ;
+		$sServiceSettingFile = SERVICES_ROOT.'/settings.inc.php' ;
 		
 		// load domain settings
 		if( !is_file($sServiceSettingFile) or !is_array($this->arrServiceSettings=include $sServiceSettingFile) )
 		{
 			// domains missing or broken, rebuild it
-			$hServices = opendir(SERVICE_ROOT) ;
+			$hServices = opendir(SERVICES_ROOT) ;
 			while($sFilename=readdir($hServices))
 			{
 				if( $sFilename=='.' or $sFilename=='..')
 				{
 					continue ;
 				}
-				if( is_dir(SERVICE_ROOT.'/'.$sFilename) )
+				if( is_dir(SERVICES_ROOT.'/'.$sFilename) )
 				{
 					$this->arrServiceSettings[$sFilename] = array(
 							'domains' => array( $sFilename==='default'? '*': $sFilename ) ,
@@ -179,7 +179,8 @@ class Platform
 	{
 		if(isset($this->arrServiceSettings[$sHost]))
 		{
-			$this->arrServiceSettings[$sHost]['folder'] = SERVICE_ROOT . '/' . $sHost ;
+			$this->arrServiceSettings[$sHost]['folder_name'] = $sHost ;
+			$this->arrServiceSettings[$sHost]['folder_path'] = SERVICES_ROOT . '/' . $sHost ;
 			return $this->arrServiceSettings[$sHost] ;
 		}
 		else
@@ -190,7 +191,8 @@ class Platform
 				{
 					if(fnmatch($sDomain,$sHost))
 					{
-						$arrServiceInfo['folder'] = SERVICE_ROOT . '/' . $sServiceFolder ; ;
+						$arrServiceInfo['folder_name'] = $sServiceFolder ;
+						$arrServiceInfo['folder_path'] = SERVICES_ROOT . '/' . $sServiceFolder ;
 						return $arrServiceInfo ;
 					}
 				}

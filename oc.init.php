@@ -8,7 +8,7 @@ error_reporting(E_ALL^E_STRICT) ;
 define('org\\opencomb\\platform\\ROOT',__DIR__) ;
 define('org\\opencomb\\platform\\PATH',__DIR__.'/platform') ;
 define('org\\opencomb\\platform\\CLASSPATH',__DIR__.'/platform/class') ;
-define('org\\opencomb\\platform\\SERVICE_ROOT',__DIR__.'/services') ;
+define('org\\opencomb\\platform\\SERVICES_ROOT',__DIR__.'/services') ;
 
 // 加载 jecat framework 
 require_once __DIR__."/framework/inc.entrance.php" ;
