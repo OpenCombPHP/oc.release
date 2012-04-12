@@ -138,9 +138,9 @@ class ExtensionMetainfo extends Object
 			$aExtMetainfo->aDataVersion = clone $aExtMetainfo->aVersion ;
 		}
 		//  data setup
-		if(!empty($aDomMetainfo->data->setup))
+		if(!empty($aDomMetainfo->data->installer))
 		{
-			$aExtMetainfo->sDataSetupClass = (string)$aDomMetainfo->data->setup ;
+			$aExtMetainfo->sDataInstallerClass = (string)$aDomMetainfo->data->installer ;
 		}
 		//  data upgrade
 		if(!empty($aDomMetainfo->data->upgrader))
@@ -351,9 +351,9 @@ class ExtensionMetainfo extends Object
 		return $this->aDataVersion ;
 	}
 	
-	public function dataSetupClass()
+	public function dataInstallerClass()
 	{
-		return $this->sDataSetupClass ;
+		return $this->sDataInstallerClass ;
 	}
 	
 	public function dataUpgradeClassIterator()
@@ -389,7 +389,7 @@ class ExtensionMetainfo extends Object
 	private $nPriority = 3 ;
 	
 	private $aDataVersion ;
-	private $sDataSetupClass ;
+	private $sDataInstallerClass ;
 	private $arrDataUpgraderClasses = array() ;
 	
 	private $arrPackages ;

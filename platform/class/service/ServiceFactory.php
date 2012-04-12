@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\jecat\framework\lang\Exception;
+
 use org\jecat\framework\mvc\controller\HttpRequest;
 
 use org\opencomb\platform\system\OcSession;
@@ -181,12 +183,16 @@ class ServiceFactory extends HttpAppFactory
 	{			
 		// 数据库
 		$sDBConfig = $aSetting->item('/service/db','config','alpha') ;
-		$aDB = new DB(
-				$aSetting->item('/service/db/'.$sDBConfig,'dsn')
-				, $aSetting->item('/service/db/'.$sDBConfig,'username')
-				, $aSetting->item('/service/db/'.$sDBConfig,'password')
-				, $aSetting->item('/service/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"))
-		) ;
+		if( !$sDsn=$aSetting->item('/service/db/'.$sDBConfig,'dsn')
+				or !$sUsername=$aSetting->item('/service/db/'.$sDBConfig,'username') 
+				or !$sPassword=$aSetting->item('/service/db/'.$sDBConfig,'password')
+		)
+		{
+			throw new Exception("数据库配置不正确，无法连接到数据库") ;
+		}
+		$sOptions = $aSetting->item('/service/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
+		
+		$aDB = new DB( $sDsn, $sUsername, $sPassword, $sOptions ) ;
 		// 表名称前缀
 		if( $sTablePrefix=$aSetting->item('/service/db/'.$sDBConfig,'table_prefix',null) )
 		{

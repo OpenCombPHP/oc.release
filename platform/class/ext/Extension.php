@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\util\Version;
+use org\jecat\framework\cache\EmptyCache;
 use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
@@ -69,7 +71,7 @@ class Extension extends Object
 	 * 当你需要访问扩展的配置时，使用 Extentsion::setting() 方法，取得扩展的配置对象。(^)setting()是一个动态方法，所以需要先得到扩展对应的 Extension 对象，最简单的方式是 Extension 类的静态方法 flyweight('xxx') 。
 	 * 当你需要访问蜂巢平台的配置时，使用 Setting::singleton() 返回整个系统的 Setting对象，它包含全系统的配置信息。(^)各个扩展的配置信息只是全系统配置树结构上的一个分支。
 	 * 
-	 * 
+	 * @return org\jecat\framework\setting\Setting
 	 */
 	public function setting()
 	{
@@ -77,7 +79,7 @@ class Extension extends Object
 	}
 	public function cache()
 	{
-		
+		return new EmptyCache() ;
 	}
 	
 	/**
@@ -159,6 +161,31 @@ class Extension extends Object
 		return $this->nRuntimePriority ;
 	}
 	
+	/**
+	 * ExtensionMetainfo::dataVersion() 返回的是扩展要求的数据版本
+	 * Extension::dataVersion() 返回的是实际系统中使用的数据版本
+	 * 
+	 * @return org\jecat\framework\util\Version
+	 */
+	public function dataVersion()
+	{
+		if( !$this->aDataVersion )
+		{
+			if( $sDataVersion = $this->setting()->item('/','data-version') )
+			{
+				$this->aDataVersion = Version::fromString($sDataVersion) ;
+			}
+			else
+			{
+				$this->aDataVersion = $this->metainfo()->dataVersion() ;
+				
+				// 存到 setting 中
+				$this->setting()->setItem('/','data-version',$this->aDataVersion->toString(false)) ;
+			}
+		}
+		return $this->aDataVersion ;
+	}
+	
 	static public function retraceExtensionName($arrStack=null)
 	{
 		if(!$arrStack)
@@ -206,6 +233,7 @@ class Extension extends Object
 	private $aFilesFolder ;
 	private $aDataFolder ;
 	private $aTmpFolder ;
+	private $aDataVersion ;
 	
 	private $nRuntimePriority = -1 ;
 	

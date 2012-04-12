@@ -1,6 +1,10 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\opencomb\platform\service\Service;
+use org\opencomb\platform\service\ServiceSerializer;
+use org\jecat\framework\message\Message;
+use org\jecat\framework\lang\Type;
 use org\jecat\framework\cache\Cache;
 use org\opencomb\platform\Platform;
 use org\jecat\framework\setting\Setting;
@@ -25,10 +29,7 @@ class ExtensionSetup extends Object
 		// 检查扩展是否已经安装
 		if( $aInstalled=$aExtMgr->extensionMetainfo( $aExtMeta->name() ) )
 		{
-			if( $aExtMeta->version()->compare($aInstalled->version())==0 )
-			{
-				throw new Exception("安装扩展操作退出，无法重复安装扩展：%s(%s version:%s installed version:%s)",array($aExtMeta->title(),$aExtMeta->name(),$aExtMeta->version(),$aInstalled->version())) ;
-			}
+			throw new Exception("安装扩展操作退出，无法重复安装扩展：%s(%s)",array($aExtMeta->title(),$aExtMeta->name())) ;
 		}
 		
 		// 检查依赖关系
@@ -37,25 +38,26 @@ class ExtensionSetup extends Object
 		// 加载新扩展的类包
 		$this->loadClassPackages($aExtMeta) ;
 		
-		// 资源升级
-		if( $aInstalled or $this->dataVersion($aExtMeta->name()) )	// 已经安装同名扩展，或系统中保留此扩展数据
+		// 检查系统中是否保留扩展的数据
+		if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
 		{
+			// 升级数据
 			$this->upgradeData($aExtMeta , $aMessageQueue) ;
 		}
 		
 		// 安装资源
 		else
 		{
-			$this->installData($aExtMeta , $aMessageQueue) ;
+			$this->installData($aExtMeta,$aMessageQueue) ;
 		}
-		
-		// 设置 setting
-		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
-		$arrInstalled[] = $aExtMeta->installPath() ;
-		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
 		
 		// 添加扩展的安装信息
 		$aExtMgr->addInstalledExtension($aExtMeta) ;
+		ServiceSerializer::singleton()->addSystemObject($aExtMgr) ;
+		
+		// 设置 setting
+		$arrExtList = $this->buildInstalledExtensionList($aExtMgr) ;
+		Setting::singleton()->setItem('/extensions','installeds',$arrExtList) ;
 		
 		// 卸载新扩展的类包
 		$this->unloadClassPackages($aExtMeta) ;
@@ -94,15 +96,15 @@ class ExtensionSetup extends Object
 	
 	const TYPE_KEEP = 'keep';
 	const TYPE_REMOVE = 'remove';
-	public function uninstall($sExtName , $sCode ,$sData)
+	
+	public function uninstall($sExtName,MessageQueue $aMessageQueue,$bRetainData=true)
 	{
 		$aExtensionManager = ExtensionManager::singleton();
-		
 		if( !$aExtMeta = $aExtensionManager->extensionMetainfo($sExtName) )
 		{
-			throw new Exception("卸载扩展失败，指定的扩展尚未安装：%s",$sExtName) ;
+			return false ;
 		}
-		
+
 		// check dependence
 		$arrDependence = array();
 		foreach($aExtensionManager->iterator() as $aExtension){
@@ -114,112 +116,42 @@ class ExtensionSetup extends Object
 				}
 			}
 		}
-		
-		if(!empty($arrDependence)){
-			throw new Exception(
-				'无法卸载扩展 `%s` ，它被 %s 依赖',
-				array(
-					$sExtName,
-					implode( ' , ' , array_keys($arrDependence) ),
-				)
-			);
-			return FALSE;
+		if(!empty($arrDependence))
+		{
+			$aMessageQueue->create(Message::success,'无法卸载扩展 `%s` ，它被 %s 依赖',array($sExtName,implode(' , ',array_keys($arrDependence) ),)) ;
+			return false ;
 		}
 		
-		// data
-		switch($sData){
-		case self::TYPE_KEEP:
-			break;
-		case self::TYPE_REMOVE:
-			// 数据库
-			
-			// 防止在平台管理之外，数据库的结构发生改变
-			Cache::singleton()->delete('/db');
-			
-			$arrTableList = array();
-			$aDB = DB::singleton() ;
-			$aReflecterFactory = $aDB->reflecterFactory() ;
-			$strDBName = $aDB->currentDBName();
-			$aDbReflecter = $aReflecterFactory->dbReflecter($strDBName);
-			$sKey = 'Tables_in_'.$strDBName ;
-			foreach( $aDbReflecter->tableNameIterator() as $value ){
-				$tableName = $value[$sKey] ;
-				if(Prototype::isExtensionTable($tableName,$sExtName)){
-					$arrTableList [] = $tableName;
-				}
-			}
-			
-			foreach($arrTableList as $sTableName){
-				$aDB->execute('DROP TABLE '.$sTableName);
-			}
-			
-			
-			/**
-			 * @example /platform/cache/db
-			 * 清理平台的缓存
-			 */
-			{
-				// 数据库的结构已经改变，需要清理缓存
-				Cache::singleton()->delete('/db');
-			}
-			
-			// settings
-			$aExtension = $aExtensionManager->extension($sExtName);
-			$aExtension->setting()->deleteKey('');
-			
-			// data
-			$aExtension->filesFolder()->delete(true);
-			break;
-		default:
-			throw new Exception(
-				'sData 参数 错误 ： `%s`',
-				array(
-					$sData,
-				)
-			);
-			break;
+		
+		// 先禁用 扩展 ------------
+		$this->disable($sExtName) ;
+
+		
+		// 处理扩展数据 ------------
+		// 记录扩展的数据版本
+		if($bRetainData)
+		{
+			$aExtension = new Extension($aExtMeta) ;
+			$aExtension->setting()->setItem('/','data-version',$aExtension->dataVersion()->toString(false)) ;
+		}
+		// 清理数据
+		else
+		{
+			ExtensionDataClearer::singleton()->clear(Service::singleton(),$sExtName,$aMessageQueue) ;
 		}
 		
-		// code
-		switch($sCode){
-		case self::TYPE_KEEP:
-			break;
-		case self::TYPE_REMOVE:
-			$aFolder = Folder::singleton()->findFolder($aExtMeta->installPath());
-			if($aFolder){
-				$aFolder->delete(true);
-			}
-			break;
-		default:
-			throw new Exception(
-				'sCode 参数 错误 ： `%s`',
-				array(
-					$sCode,
-				)
-			);
-			break;
-		}
 		
-		// 设置 setting
-		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
-		$arrEnable2 = array();
-		foreach($arrEnable as $nPriority=>$arrExtNameList){
-			$arrEnable2[$nPriority] = array();
-			foreach($arrExtNameList as $sEnableExtName){
-				if($sEnableExtName !== $sExtName){
-					$arrEnable2[$nPriority][] = $sEnableExtName;
-				}
-			}
-		}
-		Setting::singleton()->setItem('/extensions','enable',$arrEnable2) ;
-		
-		$arrInstalled = Setting::singleton()->item('/extensions','installeds') ;
-		$sInstallPath = $aExtMeta->installPath();
-		$arrInstalled = array_diff($arrInstalled,array($sInstallPath) ) ;
-		Setting::singleton()->setItem('/extensions','installeds',$arrInstalled) ;
-		
+		// 删除扩展 ------------		
+							
 		// 修改 ExtensionManager
 		$aExtensionManager->removeInstallExtension($aExtMeta);
+		ServiceSerializer::singleton()->addSystemObject($aExtensionManager) ;
+
+		// 设置 setting	
+		$aExtList = $this->buildInstalledExtensionList($aExtensionManager) ;
+		Setting::singleton()->setItem('/extensions','installeds',$aExtList) ;
+
+		$aMessageQueue->create(Message::success,'扩展`%s`已经从服务中卸载',array($sExtName)) ;
 	}
 	
 	public function disable($sExtName)
@@ -254,22 +186,22 @@ class ExtensionSetup extends Object
 			);
 			return FALSE;
 		}
-		
+
+		// -- Extension Enable --------
 		// 设置 setting
 		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
-		$arrEnable2 = array();
-		foreach($arrEnable as $nPriority=>$arrExtNameList){
-			$arrEnable2[$nPriority] = array();
-			foreach($arrExtNameList as $sEnableExtName){
-				if($sEnableExtName !== $sExtName){
-					$arrEnable2[$nPriority][] = $sEnableExtName;
-				}
+		foreach($arrEnable as &$arrExtNameList)
+		{
+			if(($pos = array_search($sExtName,$arrExtNameList))!==false)
+			{
+				unset($arrExtNameList[$pos]) ;
 			}
 		}
-		Setting::singleton()->setItem('/extensions','enable',$arrEnable2) ;
-		
+		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
+
 		// 修改 ExtensionManager
 		$aExtensionManager->removeEnableExtension($aExtMeta);
+		
 	}
 	
 	public function changePriority($sExtName,$nNewPriority){
@@ -496,11 +428,34 @@ class ExtensionSetup extends Object
 	 */
 	private function installData(ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
-		$sDataSetupClass = $aExtMeta->dataSetupClass() ;
-		if(is_string($sDataSetupClass)){
-			$aSetup = new $sDataSetupClass ;
-			$aSetup->install($aMessageQueue,$aExtMeta);
+		if( !$sDataInstallerClass = $aExtMeta->dataInstallerClass())
+		{
+			return ;
+		}
+		
+		if(!Type::hasImplements($sDataInstallerClass,'org\\opencomb\\platform\\ext\\IExtensionDataInstaller'))
+		{
+			$aMessageQueue->create(Message::error,"扩展%s提供的数据安装程序没有实现 org\\opencomb\\platform\\ext\\IExtensionDataInstaller 接口，无法执行数据按照操作。",$aExtMeta->name()) ;
+			return ;
+		}
+			
+		$aInstaller = new $sDataInstallerClass ;
+		try{
+			$aInstaller->install($aMessageQueue,$aExtMeta) ;	
+		} catch (\Extension $e) {
+			$aMessageQueue->create(Message::error,"安装扩展%s的数据时遇到了错误。",$aExtMeta->name()) ;
 		}
 	}
 	
+	
+	private function buildInstalledExtensionList(ExtensionManager $aExtMgr)
+	{
+		$arrList = array() ;
+		foreach( $aExtMgr->metainfoIterator() as $aMetainfo )
+		{
+			// 优先使用相对路径
+			$arrList[] = Folder::relativePath(Platform::singleton()->installFolder(true),$aMetainfo->installPath()) ?: $aMetainfo->installPath() ;
+		}
+		return $arrList ;
+	}
 }
