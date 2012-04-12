@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\mvc\model\db\orm ;
 
+use org\jecat\framework\db\DB;
+
 use org\jecat\framework\mvc\model\db\orm\Prototype as JcPrototype;
 
 class Prototype extends JcPrototype
@@ -29,15 +31,9 @@ class Prototype extends JcPrototype
 	 * @return boolean
 	 * 检查规则: 若 $sFullTableName 以 ${sExtName}_开头，则返回true，否则返回false
 	 */
-	static public function isExtensionTable($sFullTableName,$sExtName){
-		$sPrefix = '';
-		if( self::startsWith($sFullTableName,$sPrefix.$sExtName.'_')){
-			return true;
-		}
-		return false ;
-	}
-	static private function startsWith($haystack, $needle){
-		$length = strlen($needle);
-		return (substr($haystack, 0, $length) === $needle);
+	static public function isExtensionTable($sFullTableName,$sExtName)
+	{
+		$sTableNamePrefix = DB::singleton()->tableNamePrefix().$sExtName.'_' ;
+		return strpos($sFullTableName,$sTableNamePrefix)===0 ;
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\mvc\view\widget ;
 
+use org\jecat\framework\lang\Exception;
+
 use org\jecat\framework\mvc\MVCEventManager;
 
 use org\jecat\framework\mvc\view\widget\menu\Menu as JcMenu;
@@ -10,6 +12,21 @@ class Menu extends JcMenu
 	
 	static public function registerBuildHandle($sControllerClass,$sViewXPath,$sWidgetId,$fnHandle)
 	{
+		$aRefFunc = is_array($fnHandle) ?
+			new \ReflectionMethod($fnHandle[0],$fnHandle[1]) :
+			new \ReflectionFunction($fnHandle) ;
+		if( $aRefFunc instanceof \ReflectionMethod )
+		{
+			if(!$aRefFunc->isStatic())
+			{
+				throw new Exception("必须使用 static 方法做为 Menu::registerBuildHandle() 的事件回调函数。") ;
+			}
+			if(!$aRefFunc->isPublic())
+			{
+				throw new Exception("必须使用 public 方法做为 Menu::registerBuildHandle() 的事件回调函数。") ;
+			}
+		}
+		
 		MVCEventManager::singleton()->registerEventHandle('buildBean',$fnHandle,$sControllerClass,$sViewXPath,$sWidgetId) ;
 	}
 	
