@@ -10,7 +10,7 @@ use org\jecat\framework\mvc\view\widget\menu\Menu as JcMenu;
 class Menu extends JcMenu
 {
 	
-	static public function registerBuildHandle($sControllerClass,$sViewXPath,$sWidgetId,$fnHandle)
+	static public function registerBuildHandle($sControllerClass,$sViewXPath,$sWidgetId,$fnHandle,array $arrCallbackArgvs=null)
 	{
 		$aRefFunc = is_array($fnHandle) ?
 			new \ReflectionMethod($fnHandle[0],$fnHandle[1]) :
@@ -27,7 +27,7 @@ class Menu extends JcMenu
 			}
 		}
 		
-		MVCEventManager::singleton()->registerEventHandle('buildBean',$fnHandle,$sControllerClass,$sViewXPath,$sWidgetId) ;
+		MVCEventManager::singleton()->registerEventHandle('buildBean',$fnHandle,$sControllerClass,$sViewXPath,$sWidgetId,$arrCallbackArgvs) ;
 	}
 	
 	public function buildBean(array & $arrConfig,$sNamespace='*',\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
