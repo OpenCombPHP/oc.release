@@ -16,3 +16,5 @@ lock.shutdown.*
 /nbproject/private/
 .svn
 config.yaml
+config.php
+public

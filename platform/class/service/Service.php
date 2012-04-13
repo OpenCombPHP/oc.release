@@ -1,8 +1,11 @@
 <?php
 namespace org\opencomb\platform\service ;
 
-use org\jecat\framework\fs\Folder;
+use org\opencomb\platform\Platform;
 
+use org\opencomb\platform as oc;
+use org\jecat\framework as jc;
+use org\jecat\framework\fs\Folder;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\system\Application;
 use org\opencomb\platform\ext\ExtensionManager;
@@ -19,6 +22,15 @@ class Service extends Application
 	static public function setSingleton(self $aInstance=null)
 	{
 		parent::singleton($aInstance) ;
+	}
+	
+	public function serviceName()
+	{
+		return $this->sServiceName ;
+	}
+	public function setServiceName($sName)
+	{
+		$this->sServiceName = $sName ;
 	}
 	
 	/**
@@ -48,6 +60,7 @@ class Service extends Application
 	public function setServiceSetting(array $arrServiceSetting)
 	{
 		$this->arrServiceSetting =& $arrServiceSetting ;
+		$this->setServiceName($arrServiceSetting['name']) ;
 	}
 
 	/**
@@ -57,8 +70,7 @@ class Service extends Application
 	{
 		if(!$this->aFilesFolder)
 		{
-			$this->aFilesFolder = new Folder($this->arrServiceSetting['folder_files']) ;
-			$this->aFilesFolder->setHttpUrl($this->arrServiceSetting['folder_files_url']) ;
+			$this->aFilesFolder = Platform::singleton()->filesFolder()->findFolder($this->serviceName(),Folder::FIND_AUTO_CREATE) ;
 		}
 		return $this->aFilesFolder ;
 	}
@@ -67,6 +79,7 @@ class Service extends Application
 	private $aDataVersion ;
 	private $aFilesFolder ;
 	private $arrServiceSetting ;
+	private $sServiceName ;
 }
 
 

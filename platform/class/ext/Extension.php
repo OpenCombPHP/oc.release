@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\opencomb\platform\Platform;
+
 use org\jecat\framework\util\Version;
 use org\jecat\framework\cache\EmptyCache;
 use org\jecat\framework\setting\Setting;
@@ -91,7 +93,6 @@ class Extension extends Object
 		{
 			$aServiceFilesFolder = Service::singleton()->filesFolder() ;
 			$this->aFilesFolder = $aServiceFilesFolder->findFolder($this->metainfo()->name(),Folder::FIND_AUTO_CREATE) ;
-			$this->aFilesFolder->setHttpUrl( $aServiceFilesFolder->httpUrl() . '/' . $this->metainfo()->name() ) ;
 		}
 		return $this->aFilesFolder ;
 	}

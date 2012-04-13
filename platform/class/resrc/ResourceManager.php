@@ -40,13 +40,13 @@ class ResourceManager extends JsResourceManager
 	/**
 	 * @return org\jecat\framework\fs\File
 	 */
-	public function find($sFilename,$sNamespace='*')
+	public function find($sFilename,$sNamespace='*',$bHttpUrl=false)
 	{
 		if( $sNamespace=='*' and strstr($sFilename,':')===false )
 		{
 			$sNamespace = Extension::retraceExtensionName() ;
 		}
 		
-		return parent::find($sFilename,$sNamespace) ;
+		return parent::find($sFilename,$sNamespace,$bHttpUrl) ;
 	}
 }

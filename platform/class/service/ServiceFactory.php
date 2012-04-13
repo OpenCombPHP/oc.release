@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\opencomb\platform\resrc\PublicResourceManager;
+
 use org\jecat\framework\lang\Exception;
 
 use org\jecat\framework\mvc\controller\HttpRequest;
@@ -99,6 +101,9 @@ class ServiceFactory extends HttpAppFactory
 			// store system objects !
 			$aServiceSerializer->addSystemSingletons() ;
 			
+			// public folder
+			$this->createPublicUIFolders($aService) ;
+			
 			// 加载所有扩展
 			ExtensionLoader::singleton()->loadAllExtensions($aService,$aService->extensions()) ;
 			
@@ -107,6 +112,7 @@ class ServiceFactory extends HttpAppFactory
 			
 			// 激活所有扩展
 			ExtensionLoader::singleton()->enableExtensions($aService,$aService->extensions()) ;
+
 		}
 
 		else 
@@ -120,6 +126,12 @@ class ServiceFactory extends HttpAppFactory
 			// 激活所有扩展
 			ExtensionLoader::singleton()->enableExtensions($aService,$aService->extensions()) ;
 		} 
+		
+		// 导入所有 public ui 目录中的文件
+		if( $aService->isDebugging() )
+		{
+			$aService->publicFolders()->importFromSourceFolders() ;
+		}
 		
 		// 启用class路径缓存
 		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/service/class','enableClassPathCache',true) ) ;
@@ -211,14 +223,6 @@ class ServiceFactory extends HttpAppFactory
 				'/', "org\\opencomb\\platform\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
 		
-		// public folder
-		$aPublicFolder = new Folder(oc\PATH.'/public') ;
-		$aPublicFolder->setHttpUrl('/platform/public') ;
-		
-		$aPublicFolders = $aService->publicFolders() ;
-		$aPublicFolders->addFolder($aPublicFolder,'org.opencomb.platform') ;
-		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
-		
 		// 高速缓存
 		if( !$aService->isDebugging() and $arrHsCacheSetting=$aSetting->item('/service/cache','high-speed',null) )
 		{
@@ -236,7 +240,7 @@ class ServiceFactory extends HttpAppFactory
 		$aClassLoader = parent::createClassLoader() ;
 		
 		// Service class
-		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\CLASSPATH) ) ;
+		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\PLATFORM_FOLDER.'/class') ) ;
 
 		// 类编译包
 		$aCompiledPackage = new Package('',Folder::createFolder($arrServiceSetting['folder_compiled_class'])) ;
@@ -261,9 +265,21 @@ class ServiceFactory extends HttpAppFactory
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
 		$aSrcFileMgr->addFolder( new Folder(jc\PATH.'/template'), 'org.jecat.framework' ) ;
-		$aSrcFileMgr->addFolder( new Folder(oc\PATH.'/template') , 'org.opencomb.platform' ) ;
+		$aSrcFileMgr->addFolder( new Folder(oc\PLATFORM_FOLDER.'/template') , 'org.opencomb.platform' ) ;
 		
 		return $aSrcFileMgr ;
+	}
+
+	public function createPublicUIFolders(Service $aService)
+	{
+		$aPublicFolders = new PublicResourceManager(
+				Folder::createFolder(oc\PUBLIC_UI_FOLDER)->setHttpUrl(oc\PUBLIC_UI_URL)
+		) ;
+		$aPublicFolders->addFolder(new Folder(jc\PATH.'/public'),'org.jecat.framework') ;
+		$aPublicFolders->addFolder(new Folder(oc\PLATFORM_FOLDER.'/public'),'org.opencomb.platform') ;
+		
+		$aService->setPublicFolders($aPublicFolders) ;
+		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 	}
 }
 

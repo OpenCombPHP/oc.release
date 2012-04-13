@@ -137,6 +137,16 @@ class Platform
 		return $bReturnPath? ROOT: $this->aInstallFolder ;
 	}
 	
+	public function filesFolder()
+	{
+		if( !$this->aFilesFolder )
+		{
+			$this->aFilesFolder = new Folder(PUBLIC_FILES_FOLDER) ;
+			$this->aFilesFolder->setHttpUrl(PUBLIC_FILES_URL) ;
+		}
+		return $this->aFilesFolder ;
+	}
+	
 	// --------
 	private function __construct()
 	{
@@ -145,20 +155,20 @@ class Platform
 	
 	private function loadServiceSettings()
 	{
-		$sServiceSettingFile = SERVICES_ROOT.'/settings.inc.php' ;
+		$sServiceSettingFile = SERVICES_FOLDER.'/settings.inc.php' ;
 		
 		// load domain settings
 		if( !is_file($sServiceSettingFile) or !is_array($this->arrServiceSettings=include $sServiceSettingFile) )
 		{
 			// domains missing or broken, rebuild it
-			$hServices = opendir(SERVICES_ROOT) ;
+			$hServices = opendir(SERVICES_FOLDER) ;
 			while($sFilename=readdir($hServices))
 			{
 				if( $sFilename=='.' or $sFilename=='..')
 				{
 					continue ;
 				}
-				if( is_dir(SERVICES_ROOT.'/'.$sFilename) )
+				if( is_dir(SERVICES_FOLDER.'/'.$sFilename) )
 				{
 					$this->arrServiceSettings[$sFilename] = array(
 							'domains' => array( $sFilename==='default'? '*': $sFilename ) ,
@@ -179,8 +189,9 @@ class Platform
 	{
 		if(isset($this->arrServiceSettings[$sHost]))
 		{
+			$this->arrServiceSettings[$sHost]['name'] = $sHost ;
 			$this->arrServiceSettings[$sHost]['folder_name'] = $sHost ;
-			$this->arrServiceSettings[$sHost]['folder_path'] = SERVICES_ROOT . '/' . $sHost ;
+			$this->arrServiceSettings[$sHost]['folder_path'] = SERVICES_FOLDER . '/' . $sHost ;
 			return $this->arrServiceSettings[$sHost] ;
 		}
 		else
@@ -191,8 +202,9 @@ class Platform
 				{
 					if(fnmatch($sDomain,$sHost))
 					{
+						$arrServiceInfo['name'] = $sServiceFolder ;
 						$arrServiceInfo['folder_name'] = $sServiceFolder ;
-						$arrServiceInfo['folder_path'] = SERVICES_ROOT . '/' . $sServiceFolder ;
+						$arrServiceInfo['folder_path'] = SERVICES_FOLDER . '/' . $sServiceFolder ;
 						return $arrServiceInfo ;
 					}
 				}
@@ -208,6 +220,12 @@ class Platform
 	private $arrServiceSettings = array() ;
 	
 	private $aInstallFolder ;
+	
+	private $aVersion ;
+	
+	private $aVersionCompat ;
+	
+	private $aFilesFolder ;
 	
 }
 

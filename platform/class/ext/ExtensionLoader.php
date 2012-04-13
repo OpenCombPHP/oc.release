@@ -61,7 +61,6 @@ class ExtensionLoader extends Object
 		}
 		
 		// 注册 public 目录
-		$sExtUrl = Request::singleton()->urlBase() . FSO::relativePath(oc\ROOT,$aExtMeta->installPath()) ;
 		foreach($aExtMeta->publicFolderIterator() as $arrPublicFolder)
 		{
 			list($sFolder,$sNamespace) = $arrPublicFolder ;
@@ -70,7 +69,6 @@ class ExtensionLoader extends Object
 			{
 				throw new ExtensionException("扩展 %s 的公共文件目录 %s 不存在",array($sName,$sFolder)) ;
 			}
-			$aFolder->setHttpUrl($sExtUrl.$sFolder) ;
 			$aService->publicFolders()->addFolder($aFolder,$sNamespace) ;
 		}
 		

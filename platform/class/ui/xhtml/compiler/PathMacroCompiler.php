@@ -57,8 +57,7 @@ class PathMacroCompiler extends JcPathMacroCompiler
 			}
 			else
 			{
-				list($aFolder,$sFileName) = Service::singleton()->publicFolders()->findEx($sPath,$sNamespace) ;
-				$sUrl = $aFolder? addslashes($aFolder->httpUrl().'/'.$sFileName): '' ;
+				$sUrl = addslashes(Service::singleton()->publicFolders()->find($sPath,$sNamespace,true)) ;
 				$aDev->write( "\$aDevice->write(\"{$sUrl}\") ;" ) ;
 			}
 		}
