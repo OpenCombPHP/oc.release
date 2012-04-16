@@ -59,6 +59,11 @@ class PublicResourceManager extends ResourceManager implements \Serializable
 					}
 					else
 					{
+						$sFolderPath = dirname($sTarget) ;
+						if( !is_dir($sFolderPath) )
+						{
+							mkdir($sTarget,($sFolderPath::CREATE_DEFAULT&0777),true) ;
+						}
 						copy( $sSource, $sTarget ) ;						
 					}
 				}
