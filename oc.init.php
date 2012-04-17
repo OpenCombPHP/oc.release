@@ -4,22 +4,8 @@ namespace org\opencomb\platform ;
 ini_set('display_errors',1) ;
 error_reporting(E_ALL^E_STRICT) ;
 
-// 加载 jecat framework 
-require_once __DIR__."/framework/inc.entrance.php" ;
-
 // 配置目录
-/*
-define('org\\opencomb\\platform\\ROOT',__DIR__) ;
-define('org\\opencomb\\platform\\PLATFORM_FOLDER',ROOT.'/platform') ;
-define('org\\opencomb\\platform\\EXTENSIONS_FOLDER',ROOT.'/extensions') ;
-define('org\\opencomb\\platform\\SERVICES_FOLDER',ROOT.'/services') ;
-define('org\\opencomb\\platform\\PUBLIC_UI_FOLDER',ROOT.'/public/ui') ;
-define('org\\opencomb\\platform\\PUBLIC_UI_URL','public/ui') ;
-define('org\\opencomb\\platform\\PUBLIC_FILES_FOLDER',ROOT.'/public/files') ;
-define('org\\opencomb\\platform\\PUBLIC_FILES_URL','public/files') ;
-*/
-
-$sOcConfigPath = 'oc.config.php' ;
+$sOcConfigPath = __DIR__.'/oc.config.php' ;
 if( file_exists($sOcConfigPath) )
 {
 	include $sOcConfigPath ;
@@ -30,6 +16,7 @@ else
 	if( is_file(__DIR__.'/setup/setup.php') )
 	{
 		echo "<a href='setup/setup.php'>start setup ...</a>" ;
+		exit() ;
 	}
 	// 自动重建 oc.config.php
 	else
@@ -51,6 +38,9 @@ define('org\\opencomb\\platform\\PUBLIC_FILES_URL','public/files') ;
 	}
 }
 
+// 加载 jecat framework
+require_once __DIR__."/framework/inc.entrance.php" ;
+
 // load jecat core class
 require_once \org\jecat\framework\CLASSPATH."/system/HttpAppFactory.php" ;
 require_once \org\jecat\framework\CLASSPATH."/setting/ISetting.php" ;
@@ -64,10 +54,10 @@ require_once \org\jecat\framework\CLASSPATH.'/cache/FSCache.php' ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/EmptyCache.php' ;
 
 // load opencomb core class
-require_once PLATFORM_FOLDER."/class/Platform.php" ;
-require_once PLATFORM_FOLDER."/class/service/Service.php" ;
-require_once PLATFORM_FOLDER."/class/service/ServiceFactory.php" ;
-require_once PLATFORM_FOLDER."/class/service/ServiceSerializer.php" ;
+require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/Platform.php" ;
+require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/service/Service.php" ;
+require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/service/ServiceFactory.php" ;
+require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/service/ServiceSerializer.php" ;
 
 
 // 初始化 platform

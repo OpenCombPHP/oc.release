@@ -13,8 +13,17 @@ use org\opencomb\platform as oc;
 
 class ExtensionLoader extends Object
 {
-	public function loadAllExtensions(Service $aService,ExtensionManager $aExtensionManager)
+	public function loadAllExtensions(Service $aService=null,ExtensionManager $aExtensionManager=null)
 	{
+		if(!$aService)
+		{
+			$aService = Service::singleton() ;
+		}
+		if(!$aExtensionManager)
+		{
+			$aExtensionManager = $aService->extensions() ;
+		}
+		
 		foreach($aExtensionManager->extensionPriorities() as $nPriority)
 		{
 			foreach($aExtensionManager->enableExtensionNameIterator($nPriority) as $sExtName)

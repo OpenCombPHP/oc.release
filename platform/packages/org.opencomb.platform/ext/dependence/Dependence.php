@@ -1,7 +1,7 @@
 <?php
 namespace org\opencomb\platform\ext\dependence ;
 
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 use org\jecat\framework\util\VersionScope;
 
 class Dependence
@@ -20,7 +20,6 @@ class Dependence
 			
 			$aDependence->addRequire($aRequire) ;
 		}
-		
 		return $aDependence ;
 	}
 	
@@ -32,11 +31,11 @@ class Dependence
 	/**
 	 *  @param $bEnable bool 安装时为false,激活时为true
 	 */
-	public function check(Platform $aPlatform,$bExtensionEnabled)
+	public function check(Service $aService,$bExtensionEnabled)
 	{
 		foreach($this->arrRequires as $aRequeir)
 		{
-			$aRequeir->check($aPlatform,$bExtensionEnabled) ;
+			$aRequeir->check($aService,$bExtensionEnabled) ;
 		}
 	}
 	

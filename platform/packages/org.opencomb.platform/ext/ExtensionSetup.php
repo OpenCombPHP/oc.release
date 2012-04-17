@@ -92,6 +92,9 @@ class ExtensionSetup extends Object
 		
 		// 修改 ExtensionManager
 		$aExtMgr->addEnableExtension($aExtMeta);
+		
+		// 刷新系统缓存
+		ServiceSerializer::singleton()->addSystemObject($aExtMgr) ;
 	}
 	
 	const TYPE_KEEP = 'keep';
@@ -201,7 +204,9 @@ class ExtensionSetup extends Object
 
 		// 修改 ExtensionManager
 		$aExtensionManager->removeEnableExtension($aExtMeta);
-		
+
+		// 刷新系统缓存
+		ServiceSerializer::singleton()->addSystemObject($aExtensionManager) ;
 	}
 	
 	public function changePriority($sExtName,$nNewPriority){
@@ -258,6 +263,9 @@ class ExtensionSetup extends Object
 			$arrEnableNew[$nNewPriority] = array($sExtName);
 		}
 		$aSetting->setItem('/extensions','enable',$arrEnableNew) ;
+		
+		// 刷新系统缓存
+		ServiceSerializer::singleton()->addSystemObject($aExtMgr) ;
 	}
 	
 	const TYPE_DIRE_UP = 'up' ;
@@ -370,7 +378,7 @@ class ExtensionSetup extends Object
 	{
 		if( $aDenpendence = $aExtMeta->dependence() )
 		{
-			$aDenpendence->check(Platform::singleton(),$bEnable) ;
+			$aDenpendence->check(Service::singleton(),$bEnable) ;
 		}
 	}
 	

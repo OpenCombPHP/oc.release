@@ -239,8 +239,9 @@ class ServiceFactory extends HttpAppFactory
 		// 重建对像
 		$aClassLoader = parent::createClassLoader() ;
 		
-		// Service class
-		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\PLATFORM_FOLDER.'/class') ) ;
+		// Service packages
+		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\PLATFORM_FOLDER.'/packages/org.opencomb.platform') ) ;
+		$aClassLoader->addPackage( 'net\\phpconcept\\pclzip', new Folder(\org\opencomb\platform\PLATFORM_FOLDER.'/packages/net.phpconcept.pclzip') ) ;
 
 		// 类编译包
 		$aCompiledPackage = new Package('',Folder::createFolder($arrServiceSetting['folder_compiled_class'])) ;

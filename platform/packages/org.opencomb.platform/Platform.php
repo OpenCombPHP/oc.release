@@ -126,7 +126,7 @@ class Platform
 		}
 
 		// 创建请求的服务
-		$aService = ServiceFactory::singleton()->create($arrServiceSetting) ;
+		return ServiceFactory::singleton()->create($arrServiceSetting) ;
 	}
 	
 	/**

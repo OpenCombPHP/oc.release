@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\fs\FSIterator;
+
 use org\opencomb\platform\ext\dependence\Dependence;
 use org\jecat\framework\util\VersionCompat;
 use org\jecat\framework\util\VersionScope;
@@ -235,6 +237,13 @@ class ExtensionMetainfo extends Object
 			throw new ExtensionException("扩展%s的metainfo.xml存在错误:%s",array($aDomMetainfo->name,$e->message())) ;
 		}
 		
+		// licences
+		// --------------
+		if(!empty($aDomMetainfo->licences['folder']))
+		{
+			$aExtMetainfo->sLicencesFolder = (string)$aDomMetainfo->licences['folder'] ;
+		}
+		
 		return $aExtMetainfo ;
 	}
 	
@@ -321,22 +330,6 @@ class ExtensionMetainfo extends Object
 	{
 		return new \ArrayIterator($this->arrBeanFolders) ;
 	}
-			
-	/**
-	 * 
-	 * @return org\jecat\framework\fs\Folder 
-	 */
-	public function publicDataFolder()
-	{
-		$aFilesystem = Folder::singleton() ;
-		
-		if( !$aFolder=$aFilesystem->find('data/public/'.$this->sName) )
-		{
-			$aFolder = $aFilesystem->createChildFolder('data/public/'.$this->sName) ;
-		}
-		
-		return $aFolder ;
-	}
 	
 	public function priority()
 	{
@@ -369,7 +362,21 @@ class ExtensionMetainfo extends Object
 		return $this->aDependence ;
 	}
 	
-	
+	public function licenceIterator()
+	{
+		if( !$this->sLicencesFolder )
+		{
+			return new \EmptyIterator() ;
+		}
+		
+		$aFolder = new Folder($this->installPath().'/'.$this->sLicencesFolder) ;
+		if( !$aFolder->exists() )
+		{
+			return new \EmptyIterator() ;
+		}
+		
+		return $aFolder->iterator(FSIterator::RETURN_FSO|FSIterator::FILE) ; 
+	}
 	
 	static public function formatPath($sPath)
 	{
@@ -396,6 +403,7 @@ class ExtensionMetainfo extends Object
 	private $arrTemplateFolders = array() ;
 	private $arrPublicFolders = array() ;
 	private $arrBeanFolders = array() ;
+	private $sLicencesFolder ;
 	
 	private $aDependence ;
 	

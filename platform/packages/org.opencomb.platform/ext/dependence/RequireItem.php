@@ -1,11 +1,13 @@
 <?php
 namespace org\opencomb\platform\ext\dependence ;
 
+use org\opencomb\platform\Platform;
+
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\util\VersionScope;
 use org\jecat\framework\util\Version;
 use org\jecat\framework\util\VersionCompat;
-use org\opencomb\platform\Platform;
+use org\opencomb\platform\service\Service;
 
 class RequireItem
 {
@@ -46,7 +48,7 @@ class RequireItem
 	/**
 	 *  @param $bEnable bool 安装时为false,激活时为true
 	 */
-	public function check(Platform $aPlatform,$bExtensionEnabled)
+	public function check(Service $aService,$bExtensionEnabled)
 	{
 		switch ($this->sType)
 		{
@@ -60,12 +62,12 @@ class RequireItem
 				return $this->checkVersion(Version::FromString(\org\jecat\framework\VERSION)) ;
 				break ;
 			case self::TYPE_PLATFORM :
-				return $this->checkVersion($aPlatform->version()) ;
+				return $this->checkVersion(Platform::singleton()->version()) ;
 				break;
 			case self::TYPE_EXTENSION :
 				// 激活时为 true
 				if($bExtensionEnabled){
-					foreach($aPlatform->extensions()->iterator() as $aExtension){
+					foreach($aService->extensions()->iterator() as $aExtension){
 						if($aExtension->metainfo()->name() === $this->itemName()){
 							return $this->checkVersion( $aExtension->metainfo()->versionCompat() );
 						}
@@ -75,7 +77,7 @@ class RequireItem
 				}
 				// 安装时为 false
 				else{
-					$aExtMeta = $aPlatform->extensions()->extensionMetainfo($this->itemName()) ;
+					$aExtMeta = $aService->extensions()->extensionMetainfo($this->itemName()) ;
 					if(!$aExtMeta)
 					{
 						throw new Exception('依赖扩展 `%s` 未安装',$this->itemName() );

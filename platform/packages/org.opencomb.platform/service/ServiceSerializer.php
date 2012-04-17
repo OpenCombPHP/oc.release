@@ -27,11 +27,10 @@ class ServiceSerializer extends Object
 			$sClass = get_class($aObject) ;
 		}
 		
-		if( !$this->arrSystemObjects or !in_array($aObject,$this->arrSystemObjects,true) or $flyweightKey!=$flyweightKey and $sClass!=$sClass )
+		$arrItem = array( $aObject, $sClass, &$flyweightKey ) ;
+		if( !$this->arrSystemObjects or !in_array($arrItem,$this->arrSystemObjects,true) )
 		{
-			$this->arrSystemObjects[] = array(
-					$aObject, $sClass, &$flyweightKey
-			) ;
+			$this->arrSystemObjects[] = $arrItem ;
 		}
 		
 		$arrInfo = array($sClass, $flyweightKey) ;
@@ -60,6 +59,11 @@ class ServiceSerializer extends Object
 		{
 			$this->addSystemObject($sClass::singleton(),$sClass) ;
 		}
+	}
+	
+	public function clearSystemObjects()
+	{
+		$this->arrSystemObjects = array() ;
 	}
 	
 	public function store()
