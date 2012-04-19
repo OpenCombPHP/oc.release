@@ -78,6 +78,11 @@ class ExtensionLoader extends Object
 			{
 				throw new ExtensionException("扩展 %s 的公共文件目录 %s 不存在",array($sName,$sFolder)) ;
 			}
+			if(!$aExtMeta->httpUrl())
+			{
+				throw new ExtensionException("扩展 %s 安装目录的 http url 设置缺失，无法提供其公共目录 %s 的http url",array($sName,$sFolder)) ;
+			}
+			$aFolder->setHttpUrl($aExtMeta->httpUrl() . '/' . ltrim($sFolder,'/')) ;
 			$aService->publicFolders()->addFolder($aFolder,$sNamespace) ;
 		}
 		

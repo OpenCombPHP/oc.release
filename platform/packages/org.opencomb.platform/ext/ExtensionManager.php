@@ -1,10 +1,10 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\opencomb\platform\ext\ExtensionManager;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\lang\Object;
+use org\opencomb\platform as oc;
 
 class ExtensionManager extends Object
 {
@@ -27,7 +27,15 @@ class ExtensionManager extends Object
 		// 如果指定的item不存在返回 null （该item以数组形式保存在 setting中） 。
 		foreach( $aSetting->item("/extensions",'installeds')?: array()  as $sExtPath )
 		{
-			$aExtension = ExtensionMetainfo::load($sExtPath) ;
+			try{
+				$aExtension = ExtensionMetainfo::load(
+						oc\EXTENSIONS_FOLDER.'/'.$sExtPath
+						, oc\EXTENSIONS_URL.'/'.$sExtPath
+				) ;
+			} catch (\Exception $e) {
+				throw new Exception("保存在 service 的 setting 中的扩展路径无效：%s，扩展路径必须是 extensions 目录下的相对路径。"
+						,array($sExtPath),$e) ;
+			}
 			$this->addInstalledExtension($aExtension) ;
 		}
 		

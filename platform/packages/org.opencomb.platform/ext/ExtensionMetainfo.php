@@ -1,8 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\fs\FSO;
 use org\jecat\framework\fs\FSIterator;
-
 use org\opencomb\platform\ext\dependence\Dependence;
 use org\jecat\framework\util\VersionCompat;
 use org\jecat\framework\util\VersionScope;
@@ -21,13 +21,13 @@ class ExtensionMetainfo extends Object
 	 * @param $extensionFoler	string,Folder
 	 * @return ExtensionMetainfo
 	 */
-	static public function load($extensionFoler)
+	static public function load($extensionFoler,$sHttpUrl=null)
 	{
 		if( is_string($extensionFoler) )
 		{
-			if( substr($extensionFoler,0,1)!=='/' )
+			if( substr($extensionFoler,0,1)!=='/' and strpos($extensionFoler,':')!==false )
 			{
-				$sExtPath = oc\ROOT . '/' . $extensionFoler ;
+				$sExtPath = oc\EXTENSIONS_FOLDER . '/' . $extensionFoler ;
 			}
 			else
 			{
@@ -63,10 +63,10 @@ class ExtensionMetainfo extends Object
 			throw new ExtensionException("扩展 metainfo 文件内容无效：%s",$aMetainfoFile->path()) ;
 		}
 		
-		return self::loadFromXML($aDomMetainfo , $sExtPath);
+		return self::loadFromXML($aDomMetainfo,$sExtPath,$sHttpUrl);
 	}
 	
-	static public function loadFromXML(\SimpleXMLElement $aDomMetainfo ,$sExtPath = ''){
+	static public function loadFromXML(\SimpleXMLElement $aDomMetainfo,$sExtPath='',$sHttpUrl=null){
 		// 检查必须的参数
 		foreach( array('name','version','title') as $sNodeName )
 		{
@@ -253,8 +253,8 @@ class ExtensionMetainfo extends Object
 		
 		$this->sName = $sName ;
 		$this->aVersion = $aVersion ;
-		$this->sExtensionPath = $sExtPath ;
 		$this->sClassName = $sClass ;
+		$this->setInstallPath($sExtPath) ;
 	}
 
 	public function name()
@@ -292,7 +292,22 @@ class ExtensionMetainfo extends Object
 	{
 		return $this->aVersionCompat ;
 	}
-	
+
+	public function setInstallPath($sFolderPath,$sHttpUrl=null)
+	{
+		// 计算 http url
+		if($sHttpUrl===null)
+		{
+			$sHttpUrl = FSO::relativePath(oc\EXTENSIONS_FOLDER,$sFolderPath) ;
+			if(strpos($sHttpUrl,'..')===false)
+			{
+				$sHttpUrl = oc\EXTENSIONS_URL.'/'.$sHttpUrl ;
+			}
+		}
+		
+		$this->sHttpUrl = $sHttpUrl ;
+		$this->sExtensionPath = $sFolderPath ;
+	}
 	public function installPath()
 	{
 		return $this->sExtensionPath ;
@@ -354,6 +369,11 @@ class ExtensionMetainfo extends Object
 		return new \ArrayIterator($this->arrDataUpgraderClasses) ;
 	}
 	
+	public function httpUrl()
+	{
+		return $this->sHttpUrl ;
+	}
+	
 	/**
 	 * @return org\opencomb\platform\ext\dependence\Dependence
 	 */
@@ -394,6 +414,7 @@ class ExtensionMetainfo extends Object
 	private $sDescription ;
 	private $sClassName ;
 	private $nPriority = 3 ;
+	private $sHttpUrl = null ;
 	
 	private $aDataVersion ;
 	private $sDataInstallerClass ;

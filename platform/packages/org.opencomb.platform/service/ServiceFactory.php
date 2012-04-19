@@ -101,9 +101,6 @@ class ServiceFactory extends HttpAppFactory
 			// store system objects !
 			$aServiceSerializer->addSystemSingletons() ;
 			
-			// public folder
-			$this->createPublicUIFolders($aService) ;
-			
 			// 加载所有扩展
 			ExtensionLoader::singleton()->loadAllExtensions($aService,$aService->extensions()) ;
 			
@@ -125,12 +122,6 @@ class ServiceFactory extends HttpAppFactory
 			
 			// 激活所有扩展
 			ExtensionLoader::singleton()->enableExtensions($aService,$aService->extensions()) ;
-		} 
-		
-		// 导入所有 public ui 目录中的文件
-		if( $aService->isDebugging() )
-		{
-			$aService->publicFolders()->importFromSourceFolders() ;
 		}
 		
 		// 启用class路径缓存
@@ -269,18 +260,6 @@ class ServiceFactory extends HttpAppFactory
 		$aSrcFileMgr->addFolder( new Folder(oc\PLATFORM_FOLDER.'/template') , 'org.opencomb.platform' ) ;
 		
 		return $aSrcFileMgr ;
-	}
-
-	public function createPublicUIFolders(Service $aService)
-	{
-		$aPublicFolders = new PublicResourceManager(
-				Folder::createFolder(oc\PUBLIC_UI_FOLDER)->setHttpUrl(oc\PUBLIC_UI_URL)
-		) ;
-		$aPublicFolders->addFolder(new Folder(jc\PATH.'/public'),'org.jecat.framework') ;
-		$aPublicFolders->addFolder(new Folder(oc\PLATFORM_FOLDER.'/public'),'org.opencomb.platform') ;
-		
-		$aService->setPublicFolders($aPublicFolders) ;
-		HtmlResourcePool::setSingleton( new HtmlResourcePool($aPublicFolders) ) ;
 	}
 }
 

@@ -4,11 +4,21 @@ namespace org\opencomb\platform ;
 ini_set('display_errors',1) ;
 error_reporting(E_ALL^E_STRICT) ;
 
+define('org\\opencomb\\platform\\ROOT',__DIR__) ;
+
 // 配置目录
-$sOcConfigPath = __DIR__.'/oc.config.php' ;
-if( file_exists($sOcConfigPath) )
+$sOcConfigFile = __DIR__.'/oc.config.php' ;
+if( file_exists($sOcConfigFile) )
 {
-	include $sOcConfigPath ;
+	include $sOcConfigFile ;
+	if(!defined('org\\opencomb\\platform\\FRAMEWORK_FOLDER'))
+	{
+		define('org\\opencomb\\platform\\FRAMEWORK_FOLDER',ROOT.'/framework') ;		
+	}
+	if(!defined('org\\opencomb\\platform\\EXTENSIONS_URL'))
+	{
+		define('org\\opencomb\\platform\\EXTENSIONS_URL','extensions') ;
+	}
 }
 else
 {
@@ -21,25 +31,24 @@ else
 	// 自动重建 oc.config.php
 	else
 	{
-		file_put_contents($sOcConfigPath,"<?php
+		file_put_contents($sOcConfigFile,"<?php
 namespace org\opencomb\platform ;
 
-define('org\\opencomb\\platform\\ROOT',__DIR__) ;
+define('org\\opencomb\\platform\\FRAMEWORK_FOLDER',ROOT.'/framework') ;
 define('org\\opencomb\\platform\\PLATFORM_FOLDER',ROOT.'/platform') ;
 define('org\\opencomb\\platform\\EXTENSIONS_FOLDER',ROOT.'/extensions') ;
+define('org\\opencomb\\platform\\EXTENSIONS_URL','extensions') ;
 define('org\\opencomb\\platform\\SERVICES_FOLDER',ROOT.'/services') ;
-define('org\\opencomb\\platform\\PUBLIC_UI_FOLDER',ROOT.'/public/ui') ;
-define('org\\opencomb\\platform\\PUBLIC_UI_URL','public/ui') ;
 define('org\\opencomb\\platform\\PUBLIC_FILES_FOLDER',ROOT.'/public/files') ;
 define('org\\opencomb\\platform\\PUBLIC_FILES_URL','public/files') ;
 
 ") ;
-		include $sOcConfigPath ;
+		include $sOcConfigFile ;
 	}
 }
 
 // 加载 jecat framework
-require_once __DIR__."/framework/inc.entrance.php" ;
+require_once FRAMEWORK_FOLDER."/inc.entrance.php" ;
 
 // load jecat core class
 require_once \org\jecat\framework\CLASSPATH."/system/HttpAppFactory.php" ;

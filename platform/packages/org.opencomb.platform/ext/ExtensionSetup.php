@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\fs\FSO;
 use org\opencomb\platform\service\Service;
 use org\opencomb\platform\service\ServiceSerializer;
 use org\jecat\framework\message\Message;
@@ -16,10 +17,11 @@ use org\jecat\framework\lang\oop\ClassLoader;
 use org\opencomb\platform\ext\dependence\RequireItem;
 use org\jecat\framework\db\DB;
 use org\opencomb\platform\mvc\model\db\orm\Prototype;
+use org\opencomb\platform as oc;
 
 class ExtensionSetup extends Object
 {
-	public function install(Folder $aExtensionFolder , MessageQueue $aMessageQueue)
+	public function install(Folder $aExtensionFolder,MessageQueue $aMessageQueue)
 	{
 		$aExtMgr = ExtensionManager::singleton() ;
 		
@@ -462,7 +464,7 @@ class ExtensionSetup extends Object
 		foreach( $aExtMgr->metainfoIterator() as $aMetainfo )
 		{
 			// 优先使用相对路径
-			$arrList[] = Folder::relativePath(Platform::singleton()->installFolder(true),$aMetainfo->installPath()) ?: $aMetainfo->installPath() ;
+			$arrList[] = Folder::relativePath(oc\EXTENSIONS_FOLDER,$aMetainfo->installPath()) ?: $aMetainfo->installPath() ;
 		}
 		return $arrList ;
 	}
