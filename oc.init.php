@@ -7,33 +7,6 @@ error_reporting(E_ALL^E_STRICT) ;
 define('org\\opencomb\\platform\\ROOT',__DIR__) ;
 
 // 配置目录
-$sOcConfigFile = __DIR__.'/oc.config.php' ;
-if( file_exists($sOcConfigFile) )
-{
-	include $sOcConfigFile ;
-	if(!defined('org\\opencomb\\platform\\FRAMEWORK_FOLDER'))
-	{
-		define('org\\opencomb\\platform\\FRAMEWORK_FOLDER',ROOT.'/framework') ;		
-	}
-	if(!defined('org\\opencomb\\platform\\EXTENSIONS_URL'))
-	{
-		define('org\\opencomb\\platform\\EXTENSIONS_URL','extensions') ;
-	}
-}
-else
-{
-	// 尚未安装
-	if( is_file(__DIR__.'/setup/setup.php') )
-	{
-		echo "<a href='setup/setup.php'>start setup ...</a>" ;
-		exit() ;
-	}
-	// 自动重建 oc.config.php
-	else
-	{
-		file_put_contents($sOcConfigFile,"<?php
-namespace org\opencomb\platform ;
-
 define('org\\opencomb\\platform\\FRAMEWORK_FOLDER',ROOT.'/framework') ;
 define('org\\opencomb\\platform\\PLATFORM_FOLDER',ROOT.'/platform') ;
 define('org\\opencomb\\platform\\EXTENSIONS_FOLDER',ROOT.'/extensions') ;
@@ -42,10 +15,6 @@ define('org\\opencomb\\platform\\SERVICES_FOLDER',ROOT.'/services') ;
 define('org\\opencomb\\platform\\PUBLIC_FILES_FOLDER',ROOT.'/public/files') ;
 define('org\\opencomb\\platform\\PUBLIC_FILES_URL','public/files') ;
 
-") ;
-		include $sOcConfigFile ;
-	}
-}
 
 // 加载 jecat framework
 require_once FRAMEWORK_FOLDER."/inc.entrance.php" ;

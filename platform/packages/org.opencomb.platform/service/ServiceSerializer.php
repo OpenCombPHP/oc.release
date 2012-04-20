@@ -69,8 +69,8 @@ class ServiceSerializer extends Object
 	public function store()
 	{
 		$aOriService = Service::switchSingleton($this->aService) ;
-		
-		$aCache = Cache::singleton() ;
+
+		$aCache = $this->cache() ;
 		
 		// 缓存对像
 		foreach($this->arrSystemObjects as $key=>$arrObjectInfo)
@@ -97,7 +97,7 @@ class ServiceSerializer extends Object
 		
 		$arrShareObjectsMemento = Object::shareObjectMemento() ;
 		
-		$aCache = Cache::singleton() ;
+		$aCache = $this->cache() ;
 		
 		// 恢复对像信息
 		if( !$this->arrInstanceInfos=$aCache->item($this->cacheStorePath('service-serialize-info',null),array()) )
@@ -184,8 +184,19 @@ class ServiceSerializer extends Object
 		}
 		return "/system/objects/".str_replace('\\','.',$sClass).$flyweightKey ;
 	}
+
+	public function cache()
+	{
+		return $this->aCache ?: Cache::singleton() ;
+	}
+	public function setCache(Cache $aCache)
+	{
+		return $this->aCache ?: Cache::singleton() ;
+	}
 	
 	private $arrSystemObjects ;
+	
+	private $aCache ;
 	
 	private $arrInstanceInfos = array() ;
 }

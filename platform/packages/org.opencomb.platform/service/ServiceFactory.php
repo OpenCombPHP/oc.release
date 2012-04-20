@@ -59,18 +59,13 @@ class ServiceFactory extends HttpAppFactory
 		$aSetting = FsSetting::createFromPath($arrServiceSetting['folder_setting']) ;
 		Setting::setSingleton($aSetting) ;
 
-		// 初始化 cache (debug模式下不使用缓存)
-		if( !$aService->isDebugging() )
-		{
-			$aCache = new FSCache($arrServiceSetting['folder_cache']) ;
-			Cache::setSingleton($aCache) ;
-		}
-
-		$aServiceSerializer = ServiceSerializer::singleton(true,$aService) ;
+		// 初始化 cache
+		$aCache = $this->createCache($aService,$arrServiceSetting['folder_cache']) ;
 		
 		// 从缓存中恢复 Service ---------------
-		if( !$aServiceSerializer->restore() )
-		{			
+		$aServiceSerializer=$this->createServiceSerializer($aService) ;
+		if( !$aSetting->item('service','serialize',false) or ($aServiceSerializer and !$aServiceSerializer->restore()) )
+		{
 			// 重建 Service
 			// --------------------------
 			
@@ -99,7 +94,10 @@ class ServiceFactory extends HttpAppFactory
 				->registerBeanClass("org\\opencomb\\platform\\mvc\\view\\widget\\Menu",'menu') ;
 			
 			// store system objects !
-			$aServiceSerializer->addSystemSingletons() ;
+			if(isset($aServiceSerializer))
+			{
+				$aServiceSerializer->addSystemSingletons() ;
+			}
 			
 			// 加载所有扩展
 			ExtensionLoader::singleton()->loadAllExtensions($aService,$aService->extensions()) ;
@@ -174,6 +172,27 @@ class ServiceFactory extends HttpAppFactory
 		}
 	}
 	
+	protected function createServiceSerializer(Service $aService)
+	{
+		return ServiceSerializer::singleton(true,$aService) ;
+	}
+	
+	protected function createCache(Service $aService)
+	{
+		// (debug模式下不使用缓存)
+		if( !$aService->isDebugging() )
+		{
+			$aCache = new FSCache($sSerivceCacheFolder) ;
+			Cache::setSingleton($aCache) ;
+			
+			return $aCache ;
+		}
+		else 
+		{
+			return null ;
+		}
+	}
+	
 	private function initServiceRequestResponse(Service $aService)
 	{
 		// Request
@@ -196,6 +215,7 @@ class ServiceFactory extends HttpAppFactory
 		$sOptions = $aSetting->item('/service/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
 		
 		$aDB = new DB( $sDsn, $sUsername, $sPassword, $sOptions ) ;
+		
 		// 表名称前缀
 		if( $sTablePrefix=$aSetting->item('/service/db/'.$sDBConfig,'table_prefix',null) )
 		{

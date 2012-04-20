@@ -152,34 +152,45 @@ class Platform
 	{
 		$this->aInstallFolder = new Folder(ROOT) ;
 	}
-	
+
 	private function loadServiceSettings()
 	{
 		$sServiceSettingFile = SERVICES_FOLDER.'/settings.inc.php' ;
-		
+	
 		// load domain settings
-		if( !is_file($sServiceSettingFile) or !is_array($this->arrServiceSettings=include $sServiceSettingFile) )
+		if( !is_file($sServiceSettingFile) )
 		{
 			// domains missing or broken, rebuild it
-			$hServices = opendir(SERVICES_FOLDER) ;
-			while($sFilename=readdir($hServices))
+			if( $hServices = opendir(SERVICES_FOLDER) )
 			{
-				if( $sFilename=='.' or $sFilename=='..')
+				while($sFilename=readdir($hServices))
 				{
-					continue ;
+					if( $sFilename=='.' or $sFilename=='..')
+					{
+						continue ;
+					}
+					if( is_dir(SERVICES_FOLDER.'/'.$sFilename) )
+					{
+						$this->arrServiceSettings[$sFilename] = array(
+								'domains' => array( $sFilename==='default'? '*': $sFilename ) ,
+						) ;
+					}
 				}
-				if( is_dir(SERVICES_FOLDER.'/'.$sFilename) )
+				closedir($hServices) ;
+					
+				if( !file_put_contents($sServiceSettingFile,'<?php return $arrServiceSettings = '.var_export($this->arrServiceSettings,true).';') )
 				{
-					$this->arrServiceSettings[$sFilename] = array(
-							'domains' => array( $sFilename==='default'? '*': $sFilename ) ,
-					) ;
+					throw new \Exception('can not write file: '.$sServiceSettingFile) ;
 				}
 			}
-			closedir($hServices) ;
-		
-			if( !file_put_contents($sServiceSettingFile,'<?php return '.var_export($this->arrServiceSettings,true).';') )
+		}
+		else
+		{
+			$this->arrServiceSettings = include $sServiceSettingFile ;
+	
+			if(!is_array($this->arrServiceSettings))
 			{
-				throw new \Exception('can not write file: '.$sServiceSettingFile) ;
+				throw new \Exception($sServiceSettingFile."文件遭到了损坏，删除该文件后，系统会自动重建。") ;
 			}
 		}
 	}
