@@ -1,15 +1,14 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\jecat\framework\setting\ISetting;
+
 use org\opencomb\platform\resrc\PublicResourceManager;
-
 use org\jecat\framework\lang\Exception;
-
 use org\jecat\framework\mvc\controller\HttpRequest;
-
 use org\opencomb\platform\system\OcSession;
 use org\jecat\framework\cache\FSCache;
-use org\jecat\framework\setting\imp\FsSetting;
+use org\jecat\framework\setting\FsSetting;
 use org\jecat\framework\cache\Cache;
 use org\jecat\framework\lang\oop\Package;
 use org\jecat\framework\fs\Folder;
@@ -56,15 +55,15 @@ class ServiceFactory extends HttpAppFactory
 		Folder::setSingleton($aFolder) ;
 		
 		// setting
-		$aSetting = FsSetting::createFromPath($arrServiceSetting['folder_setting']) ;
-		Setting::setSingleton($aSetting) ;
+		$aSetting = new FsSetting($arrServiceSetting['folder_setting'].'/service.inc.php') ;
+		$aService->setSetting($aSetting) ;
 
 		// 初始化 cache
 		$aCache = $this->createCache($aService,$arrServiceSetting['folder_cache']) ;
 		
 		// 从缓存中恢复 Service ---------------
 		$aServiceSerializer=$this->createServiceSerializer($aService) ;
-		if( !$aSetting->item('service','serialize',false) or ($aServiceSerializer and !$aServiceSerializer->restore()) )
+		if( !$aSetting->item('/','serialize',false) or ($aServiceSerializer and !$aServiceSerializer->restore()) )
 		{
 			// 重建 Service
 			// --------------------------
@@ -123,7 +122,7 @@ class ServiceFactory extends HttpAppFactory
 		}
 		
 		// 启用class路径缓存
-		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/service/class','enableClassPathCache',true) ) ;
+		ClassLoader::singleton()->setEnableClassCache( $aSetting->item('/class','enableClassPathCache',true) ) ;
 				
 		if($aOriApp)
 		{
@@ -177,7 +176,7 @@ class ServiceFactory extends HttpAppFactory
 		return ServiceSerializer::singleton(true,$aService) ;
 	}
 	
-	protected function createCache(Service $aService)
+	protected function createCache(Service $aService,$sSerivceCacheFolder)
 	{
 		// (debug模式下不使用缓存)
 		if( !$aService->isDebugging() )
@@ -201,23 +200,23 @@ class ServiceFactory extends HttpAppFactory
 		// Response
 		Response::setSingleton( $this->createResponse($aService) ) ;
 	}
-	private function initServiceUnrestorableSystem(Service $aService,Folder $aFolder,Setting $aSetting,array & $arrServiceSetting)
+	private function initServiceUnrestorableSystem(Service $aService,Folder $aFolder,ISetting $aSetting,array & $arrServiceSetting)
 	{			
 		// 数据库
-		$sDBConfig = $aSetting->item('/service/db','config','alpha') ;
-		if( !$sDsn=$aSetting->item('/service/db/'.$sDBConfig,'dsn')
-				or !$sUsername=$aSetting->item('/service/db/'.$sDBConfig,'username') 
-				or !$sPassword=$aSetting->item('/service/db/'.$sDBConfig,'password')
+		$sDBConfig = $aSetting->item('/db','config','alpha') ;
+		if( !$sDsn=$aSetting->item('/db/'.$sDBConfig,'dsn')
+				or !$sUsername=$aSetting->item('/db/'.$sDBConfig,'username') 
+				or !$sPassword=$aSetting->item('/db/'.$sDBConfig,'password')
 		)
 		{
 			throw new Exception("数据库配置不正确，无法连接到数据库") ;
 		}
-		$sOptions = $aSetting->item('/service/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
+		$sOptions = $aSetting->item('/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
 		
 		$aDB = new DB( $sDsn, $sUsername, $sPassword, $sOptions ) ;
 		
 		// 表名称前缀
-		if( $sTablePrefix=$aSetting->item('/service/db/'.$sDBConfig,'table_prefix',null) )
+		if( $sTablePrefix=$aSetting->item('/db/'.$sDBConfig,'table_prefix',null) )
 		{
 			$aDB->setTableNamePrefix($sTablePrefix) ;
 		}
@@ -235,7 +234,7 @@ class ServiceFactory extends HttpAppFactory
 		) ;
 		
 		// 高速缓存
-		if( !$aService->isDebugging() and $arrHsCacheSetting=$aSetting->item('/service/cache','high-speed',null) )
+		if( !$aService->isDebugging() and $arrHsCacheSetting=$aSetting->item('/cache','high-speed',null) )
 		{
 			//try{
 				$aHighSpeedCache = call_user_func( array($arrHsCacheSetting['driver'],'createInstance'),$arrHsCacheSetting['parameters'] ) ;

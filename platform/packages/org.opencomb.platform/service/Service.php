@@ -2,7 +2,6 @@
 namespace org\opencomb\platform\service ;
 
 use org\opencomb\platform\Platform;
-
 use org\opencomb\platform as oc;
 use org\jecat\framework as jc;
 use org\jecat\framework\fs\Folder;
@@ -46,8 +45,8 @@ class Service extends Application
 	 */
 	public function signature()
 	{
-		$aSetting = Setting::singleton() ;
-		if( !$sSignature = $aSetting->item('/service','signature') )
+		$aSetting = $this->setting() ;
+		if( !$sSignature = $aSetting->item('','signature') )
 		{
 			$sSignature = md5( microtime() . rand(0,100000) ) ;
 			$aSetting->setItem('/service','signature',$sSignature) ;
@@ -74,6 +73,7 @@ class Service extends Application
 		}
 		return $this->aFilesFolder ;
 	}
+	
 	
 	private $aExtensionManager ;
 	private $aDataVersion ;

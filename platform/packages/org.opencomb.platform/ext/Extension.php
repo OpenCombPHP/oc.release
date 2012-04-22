@@ -71,13 +71,17 @@ class Extension extends Object
 	 * 
 	 * = (^)比较：蜂巢平台 和 蜂巢扩展 的配置信息 =
 	 * 当你需要访问扩展的配置时，使用 Extentsion::setting() 方法，取得扩展的配置对象。(^)setting()是一个动态方法，所以需要先得到扩展对应的 Extension 对象，最简单的方式是 Extension 类的静态方法 flyweight('xxx') 。
-	 * 当你需要访问蜂巢平台的配置时，使用 Setting::singleton() 返回整个系统的 Setting对象，它包含全系统的配置信息。(^)各个扩展的配置信息只是全系统配置树结构上的一个分支。
+	 * 当你需要访问蜂巢平台的配置时，使用 Service::singleton()->setting() 返回整个系统的 Setting对象，它包含全系统的配置信息。(^)各个扩展的配置信息只是全系统配置树结构上的一个分支。
 	 * 
-	 * @return org\jecat\framework\setting\Setting
+	 * @return org\jecat\framework\setting\ISetting
 	 */
 	public function setting()
 	{
-		return Setting::singleton()->separate('extensions/'.$this->aMetainfo->name()) ;
+		if(!$this->aSetting)
+		{
+			$this->aSetting = Service::singleton()->setting()->separate('extensions/'.$this->aMetainfo->name()) ;
+		}
+		return $this->aSetting ;
 	}
 	public function cache()
 	{
@@ -235,6 +239,7 @@ class Extension extends Object
 	private $aDataFolder ;
 	private $aTmpFolder ;
 	private $aDataVersion ;
+	private $aSetting ;
 	
 	private $nRuntimePriority = -1 ;
 	

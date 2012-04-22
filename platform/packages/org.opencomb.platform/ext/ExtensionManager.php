@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\opencomb\platform\service\Service;
+
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\lang\Object;
@@ -18,7 +20,7 @@ class ExtensionManager extends Object
 		if(!$aSetting)
 		{
 			// 取得 Setting 的单例对象
-			$aSetting = Setting::singleton() ;
+			$aSetting = Service::singleton()->setting() ;
 		}
 		
 		$this->arrInstalledExtensions = array() ;

@@ -46,7 +46,6 @@ class ServiceSerializer extends Object
 				'org\\jecat\\framework\\lang\\oop\\ClassLoader' ,
 				'org\\jecat\\framework\\system\\AccessRouter' ,
 				'org\\jecat\\framework\\locale\\LocaleManager' ,
-				'org\\jecat\\framework\\setting\\Setting' ,
 				'org\\jecat\\framework\\ui\\SourceFileManager' ,
 				'org\\jecat\\framework\\ui\\xhtml\\weave\\WeaveManager' ,
 				'org\\jecat\\framework\\bean\\BeanFactory' ,

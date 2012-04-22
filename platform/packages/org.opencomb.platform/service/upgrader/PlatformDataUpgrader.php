@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\system\upgrader ;
 
+use org\opencomb\platform\service\Service;
+
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\util\Version;
@@ -115,7 +117,7 @@ class PlatformDataUpgrader extends Object{
 			);
 		}
 		
-		$aSetting = Setting::singleton() ;
+		$aSetting = Service::singleton()->setting() ;
 		$aMessageQueue = $this->messageQueue();
 		foreach($arrPath as $sPath){
 			$aUpgrader = new $sPath ;
@@ -132,7 +134,7 @@ class PlatformDataUpgrader extends Object{
 	}
 	
 	private function dataVersion(){
-		$aSetting = Setting::singleton() ;
+		$aSetting = Service::singleton()->setting() ;
 		$sVersion = $aSetting->item('/platform','data_version','0.0') ;
 		return Version::fromString($sVersion);
 	}

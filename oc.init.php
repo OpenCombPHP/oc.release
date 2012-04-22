@@ -22,11 +22,7 @@ require_once FRAMEWORK_FOLDER."/inc.entrance.php" ;
 // load jecat core class
 require_once \org\jecat\framework\CLASSPATH."/system/HttpAppFactory.php" ;
 require_once \org\jecat\framework\CLASSPATH."/setting/ISetting.php" ;
-require_once \org\jecat\framework\CLASSPATH."/setting/Setting.php" ;
-require_once \org\jecat\framework\CLASSPATH."/setting/IKey.php" ;
-require_once \org\jecat\framework\CLASSPATH."/setting/Key.php" ;
-require_once \org\jecat\framework\CLASSPATH."/setting/imp/FsSetting.php" ;
-require_once \org\jecat\framework\CLASSPATH."/setting/imp/FsKey.php" ;
+require_once \org\jecat\framework\CLASSPATH."/setting/FsSetting.php" ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/Cache.php' ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/FSCache.php' ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/EmptyCache.php' ;
