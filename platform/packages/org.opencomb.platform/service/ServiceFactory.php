@@ -177,7 +177,7 @@ class ServiceFactory extends HttpAppFactory
 		return ServiceSerializer::singleton(true,$aService) ;
 	}
 	
-	protected function createCache(Service $aService)
+	protected function createCache(Service $aService,$sSerivceCacheFolder)
 	{
 		// (debug模式下不使用缓存)
 		if( !$aService->isDebugging() )
