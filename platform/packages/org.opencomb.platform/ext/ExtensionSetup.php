@@ -1,13 +1,10 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\jecat\framework\fs\FSO;
 use org\opencomb\platform\service\Service;
 use org\opencomb\platform\service\ServiceSerializer;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\lang\Type;
-use org\jecat\framework\cache\Cache;
-use org\opencomb\platform\Platform;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\Exception;
@@ -15,8 +12,6 @@ use org\jecat\framework\lang\Object;
 use org\jecat\framework\message\MessageQueue;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\opencomb\platform\ext\dependence\RequireItem;
-use org\jecat\framework\db\DB;
-use org\opencomb\platform\mvc\model\db\orm\Prototype;
 use org\opencomb\platform as oc;
 
 class ExtensionSetup extends Object
@@ -469,3 +464,4 @@ class ExtensionSetup extends Object
 		return $arrList ;
 	}
 }
+

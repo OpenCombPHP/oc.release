@@ -2,7 +2,6 @@
 namespace org\opencomb\platform\ext ;
 
 use org\jecat\framework\cache\Cache;
-
 use org\jecat\framework\db\DB;
 use org\opencomb\platform\mvc\model\db\orm\Prototype;
 use org\jecat\framework\message\Message;
@@ -78,5 +77,3 @@ class ExtensionDataClearer extends Object
 		Service::switchSingleton($aOriService) ;
 	}
 }
-
-?>

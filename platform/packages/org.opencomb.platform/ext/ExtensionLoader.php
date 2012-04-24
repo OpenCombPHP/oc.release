@@ -1,15 +1,12 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\jecat\framework\mvc\controller\Request;
-use org\jecat\framework\fs\FSO;
 use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\mvc\view\UIFactory;
-use org\opencomb\platform as oc;
 
 class ExtensionLoader extends Object
 {
@@ -124,5 +121,6 @@ class ExtensionLoader extends Object
 	}
 	
 }
+
 
 

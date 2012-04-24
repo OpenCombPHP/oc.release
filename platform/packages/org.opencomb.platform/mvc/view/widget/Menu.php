@@ -2,9 +2,7 @@
 namespace org\opencomb\platform\mvc\view\widget ;
 
 use org\jecat\framework\lang\Exception;
-
 use org\jecat\framework\mvc\MVCEventManager;
-
 use org\jecat\framework\mvc\view\widget\menu\Menu as JcMenu;
 
 class Menu extends JcMenu
@@ -73,5 +71,6 @@ class Menu extends JcMenu
 		
 	}
 }
+
 
 

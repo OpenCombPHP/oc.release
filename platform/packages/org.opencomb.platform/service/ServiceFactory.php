@@ -1,12 +1,7 @@
 <?php
 namespace org\opencomb\platform\service ;
 
-use org\opencomb\platform\resrc\PublicResourceManager;
-
 use org\jecat\framework\lang\Exception;
-
-use org\jecat\framework\mvc\controller\HttpRequest;
-
 use org\opencomb\platform\system\OcSession;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\imp\FsSetting;
@@ -23,7 +18,6 @@ use org\jecat\framework\locale\LocaleManager;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\system\Application;
-use org\jecat\framework\resrc\HtmlResourcePool;
 use org\jecat\framework\ui\xhtml\UIFactory;
 use org\opencomb\platform\ui\SourceFileManager;
 use org\jecat\framework\system\HttpAppFactory;
@@ -282,4 +276,5 @@ class ServiceFactory extends HttpAppFactory
 		return $aSrcFileMgr ;
 	}
 }
+
 

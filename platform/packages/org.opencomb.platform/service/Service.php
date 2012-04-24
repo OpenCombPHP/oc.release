@@ -2,9 +2,6 @@
 namespace org\opencomb\platform\service ;
 
 use org\opencomb\platform\Platform;
-
-use org\opencomb\platform as oc;
-use org\jecat\framework as jc;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\system\Application;
@@ -81,6 +78,7 @@ class Service extends Application
 	private $arrServiceSetting ;
 	private $sServiceName ;
 }
+
 
 
 

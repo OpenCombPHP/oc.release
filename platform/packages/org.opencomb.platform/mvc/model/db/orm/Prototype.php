@@ -2,7 +2,6 @@
 namespace org\opencomb\platform\mvc\model\db\orm ;
 
 use org\jecat\framework\db\DB;
-
 use org\jecat\framework\mvc\model\db\orm\Prototype as JcPrototype;
 
 class Prototype extends JcPrototype
@@ -37,3 +36,4 @@ class Prototype extends JcPrototype
 		return strpos($sFullTableName,$sTableNamePrefix)===0 ;
 	}
 }
+

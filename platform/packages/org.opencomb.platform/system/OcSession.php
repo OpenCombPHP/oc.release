@@ -45,3 +45,4 @@ class OcSession extends OriginalSession
 		return md5($sSrc) ;
 	}
 }
+

@@ -2,7 +2,6 @@
 namespace org\opencomb\platform\resrc ;
 
 use org\jecat\framework\fs\Folder;
-use org\opencomb\platform\ext\Extension;
 
 class PublicResourceManager extends ResourceManager implements \Serializable
 {
@@ -96,3 +95,4 @@ class PublicResourceManager extends ResourceManager implements \Serializable
 	
 	private $aPublicFolder ;
 }
+

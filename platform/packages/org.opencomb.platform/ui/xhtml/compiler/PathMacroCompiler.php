@@ -63,3 +63,4 @@ class PathMacroCompiler extends JcPathMacroCompiler
 		}
 	}
 }
+

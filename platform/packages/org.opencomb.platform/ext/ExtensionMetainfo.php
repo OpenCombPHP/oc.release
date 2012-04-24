@@ -429,3 +429,4 @@ class ExtensionMetainfo extends Object
 	private $aDependence ;
 	
 }
+

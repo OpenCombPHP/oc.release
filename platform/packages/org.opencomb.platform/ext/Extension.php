@@ -1,8 +1,6 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
-use org\opencomb\platform\Platform;
-
 use org\jecat\framework\util\Version;
 use org\jecat\framework\cache\EmptyCache;
 use org\jecat\framework\setting\Setting;
@@ -239,5 +237,6 @@ class Extension extends Object
 	private $nRuntimePriority = -1 ;
 	
 }
+
 
 

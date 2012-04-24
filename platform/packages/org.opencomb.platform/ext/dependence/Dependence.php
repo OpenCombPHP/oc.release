@@ -47,3 +47,4 @@ class Dependence
 	private $arrRequires = array() ;
 	
 }
+

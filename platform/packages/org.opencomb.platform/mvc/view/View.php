@@ -7,3 +7,4 @@ class View extends FormView
 {
 
 }
+

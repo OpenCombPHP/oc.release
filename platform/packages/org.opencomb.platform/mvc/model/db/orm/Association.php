@@ -16,3 +16,4 @@ class Association extends JcAssociation
 	}
 }
 
+

@@ -48,3 +48,4 @@ class SourceFileManager extends JcSourceFileManager
 		}
 	}
 }
+

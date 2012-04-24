@@ -50,3 +50,4 @@ class ResourceManager extends JsResourceManager
 		return parent::find($sFilename,$sNamespace,$bHttpUrl) ;
 	}
 }
+
