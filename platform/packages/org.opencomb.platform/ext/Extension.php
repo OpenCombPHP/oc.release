@@ -1,6 +1,12 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\util\EventManager;
+
+use org\jecat\framework\ui\xhtml\weave\WeaveManager;
+
+use org\jecat\framework\lang\aop\AOP;
+
 use org\jecat\framework\util\Version;
 use org\jecat\framework\cache\EmptyCache;
 use org\jecat\framework\setting\Setting;
@@ -143,6 +149,15 @@ class Extension extends Object
 	{
 		return $this->aMetainfo ;
 	}
+	
+	public function initRegisterAspect(AOP $aAop)
+	{}
+	
+	public function initRegisterEvent(EventManager $aEventMgr)
+	{}
+	
+	public function initRegisterUITemplateWeave(WeaveManager $aWeave)
+	{}
 	
 	public function load()
 	{}

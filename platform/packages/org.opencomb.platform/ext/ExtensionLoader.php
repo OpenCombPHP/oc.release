@@ -1,6 +1,9 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\lang\aop\AOP;
+use org\jecat\framework\util\EventManager;
+use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\platform\service\Service;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\Folder;
@@ -107,6 +110,10 @@ class ExtensionLoader extends Object
 		
 		// 执行扩展的加载函数
 		$aExtension->load($aService) ;
+
+		$aExtension->initRegisterAspect(AOP::singleton()) ;
+		$aExtension->initRegisterEvent(EventManager::singleton()) ;
+		$aExtension->initRegisterUITemplateWeave(WeaveManager::singleton()) ;
 		
 		return $aExtension ;
 	}
