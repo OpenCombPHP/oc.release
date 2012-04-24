@@ -2,7 +2,7 @@
 namespace org\opencomb\platform\mvc\view\widget ;
 
 use org\jecat\framework\lang\Exception;
-use org\jecat\framework\mvc\MVCEventManager;
+use org\jecat\framework\util\EventManager;
 use org\jecat\framework\mvc\view\widget\menu\Menu as JcMenu;
 
 class Menu extends JcMenu
@@ -24,17 +24,25 @@ class Menu extends JcMenu
 				throw new Exception("必须使用 public 方法做为 Menu::registerBuildHandle() 的事件回调函数。") ;
 			}
 		}
-		
-		MVCEventManager::singleton()->registerEventHandle('buildBean',$fnHandle,$sControllerClass,$sViewXPath,$sWidgetId,$arrCallbackArgvs) ;
+
+		$sObjectId = $sControllerClass.'-'.$sViewXPath.'-'.$sWidgetId ;
+		EventManager::singleton()->registerEventHandle(
+						__CLASS__
+						, 'beforeBuildBean'
+						, $fnHandle
+						, $arrCallbackArgvs
+						, $sObjectId
+		) ;
 	}
 	
 	public function buildBean(array & $arrConfig,$sNamespace='*',\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
 	{
 		// 触发事件
 		list($sControllerClass,$sViewXPath,$sWidgetId) = $this->mvcLocationInfo() ;
-		$arrArgvs = array(&$arrConfig,&$sNamespace,$aBeanFactory) ;
-		MVCEventManager::singleton()->emitEvent(__FUNCTION__,$arrArgvs,$sControllerClass,$sViewXPath,$sWidgetId) ;
+		$sObjectId = $sControllerClass.'-'.$sViewXPath.'-'.$sWidgetId ;
 		
+		$arrArgvs = array(&$arrConfig,&$sNamespace,$aBeanFactory) ;		
+		EventManager::singleton()->emitEvent(__CLASS__,'beforeBuildBean',$arrArgvs,$sObjectId) ;
 		
 		return parent::buildBean($arrConfig,$sNamespace,$aBeanFactory) ;
 	}

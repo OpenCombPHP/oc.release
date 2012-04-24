@@ -51,7 +51,7 @@ class ServiceSerializer extends Object
 				'org\\jecat\\framework\\ui\\xhtml\\weave\\WeaveManager' ,
 				'org\\jecat\\framework\\bean\\BeanFactory' ,
 				'org\\jecat\\framework\\lang\\aop\\AOP' ,
-				'org\\jecat\\framework\\mvc\\MVCEventManager' ,
+				'org\\jecat\\framework\\util\\EventManager' ,
 				'org\\opencomb\\platform\\ext\\ExtensionManager' ,
 		) ;
 		
