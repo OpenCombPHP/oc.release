@@ -14,7 +14,7 @@ use org\jecat\framework\db\DB;
 use org\jecat\framework\mvc\controller\Response;
 use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\setting\Setting;
-use org\jecat\framework\locale\LocaleManager;
+use org\jecat\framework\locale\Locale;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\system\Application;
@@ -58,7 +58,7 @@ class ServiceFactory extends HttpAppFactory
 		
 		// 从缓存中恢复 Service ---------------
 		$aServiceSerializer=$this->createServiceSerializer($aService) ;
-		if( !$aSetting->item('service','serialize',false) or ($aServiceSerializer and !$aServiceSerializer->restore()) )
+		if( !$aSetting->item('service','serialize',false) or ($aServiceSerializer and !$aServiceSerializer->restore($aSetting)) )
 		{
 			// 重建 Service
 			// --------------------------
@@ -72,8 +72,10 @@ class ServiceFactory extends HttpAppFactory
 			// AccessRouter
 			JcAccessRouter::setSingleton($this->createAccessRouter($aService)) ;
 			
-			// LocalManager
-			LocaleManager::setSingleton($this->createLocaleManager($aService)) ;
+			// Locale
+			Locale::createSessionLocale(
+				$aSetting->item('service/locale','language','zh'), $aSetting->item('service/locale','country','CN'), true
+			) ;
 				
 			// 模板文件
 			JcSourceFileManager::setSingleton($this->createUISourceFileManager($arrServiceSetting)) ;

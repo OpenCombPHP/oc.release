@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\jecat\framework\setting\Setting;
+use org\jecat\framework\locale\Locale;
 use org\jecat\framework\cache\Cache;
 use org\jecat\framework\lang\aop\AOP;
 use org\jecat\framework\lang\Object;
@@ -20,7 +22,7 @@ class ServiceSerializer extends Object
 		}
 	}
 	
-	public function addSystemObject(Object $aObject,$sClass=null,$flyweightKey=null)
+	public function addSystemObject($aObject,$sClass=null,$flyweightKey=null)
 	{
 		if(!$sClass)
 		{
@@ -45,7 +47,7 @@ class ServiceSerializer extends Object
 		$arrClasses = array(
 				'org\\jecat\\framework\\lang\\oop\\ClassLoader' ,
 				'org\\jecat\\framework\\system\\AccessRouter' ,
-				'org\\jecat\\framework\\locale\\LocaleManager' ,
+				'org\\jecat\\framework\\locale\\LanguagePackageFolders' ,
 				'org\\jecat\\framework\\setting\\Setting' ,
 				'org\\jecat\\framework\\ui\\SourceFileManager' ,
 				'org\\jecat\\framework\\ui\\xhtml\\weave\\WeaveManager' ,
@@ -86,12 +88,16 @@ class ServiceSerializer extends Object
 		
 		// 保存 Service 的 publicFolder 对像
 		$aCache->setItem($this->cacheStorePath("org\\jecat\\framework\\fs\\FileSystem",'public-folder'),$this->aService->publicFolders()) ;
-				
+
+		// 保存 Locale
+		$aLocale = Locale::singleton() ;
+		$this->addSystemObject($aLocale,'org\\jecat\\framework\\locale\\Locale',$aLocale->localeName()) ;
+		
 		// 还原 Service 
 		Service::switchSingleton($aOriService) ;
 	}
 	
-	public function restore()
+	public function restore(Setting $aSetting)
 	{
 		$aOriService = Service::switchSingleton($this->aService) ;
 		
@@ -164,6 +170,11 @@ class ServiceSerializer extends Object
 				return false ;
 			}
 		}
+
+		// 恢复 Locale
+		$sLang = Locale::sessionLanguage($aSetting->item('service/locale','language','zh')) ;
+		$sCountry = Locale::sessionCountry($aSetting->item('service/locale','country','CN')) ;
+		$this->addSystemObject($aLocale,'org\\jecat\\framework\\locale\\Locale',$aLocale->localeName()) ;
 			
 		// 还原 Service 
 		Service::switchSingleton($aOriService) ;
