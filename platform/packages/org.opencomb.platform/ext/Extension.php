@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\ext ;
 
+use org\jecat\framework\cache\FSCache;
+
 use org\jecat\framework\util\EventManager;
 
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
@@ -85,7 +87,13 @@ class Extension extends Object
 	}
 	public function cache()
 	{
-		return new EmptyCache() ;
+		if(!$this->aCache)
+		{
+			$this->aCache = new FSCache(
+					Folder::singleton()->findFolder('data/cache/'.$this->metainfo()->name(),Folder::FIND_AUTO_CREATE)->path()
+			) ;
+		}
+		return $this->aCache ;
 	}
 	
 	/**
@@ -244,6 +252,7 @@ class Extension extends Object
 	
 	private $aMetainfo ;
 	
+	private $aCache ;
 	private $aFilesFolder ;
 	private $aDataFolder ;
 	private $aTmpFolder ;
