@@ -14,6 +14,7 @@ use org\jecat\framework\util\Version;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\lang\Object;
 use org\opencomb\platform as oc;
+use org\jecat\framework\setting\Setting;
 
 class ExtensionMetainfo extends Object
 {
@@ -147,7 +148,7 @@ class ExtensionMetainfo extends Object
 		//  data upgrade
 		if(!empty($aDomMetainfo->data->upgrader))
 		{
-			foreach($aDomMetainfo->xpath('/data/upgrader') as $aUpgrader)
+			foreach($aDomMetainfo->xpath('data/upgrader') as $aUpgrader)
 			{
 				if(empty($aUpgrader['from']))
 				{
@@ -349,6 +350,11 @@ class ExtensionMetainfo extends Object
 	public function priority()
 	{
 		return $this->nPriority ;
+	}
+	
+	public function setting()
+	{
+		return Setting::singleton()->separate('extensions/'.$this->name()) ;
 	}
 	
 	/**

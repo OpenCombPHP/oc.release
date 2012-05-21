@@ -1,5 +1,5 @@
 <?php
-namespace org\opencomb\platform\system\upgrader ;
+namespace org\opencomb\platform\service\upgrader ;
 
 class CalcPath{
 	/**
