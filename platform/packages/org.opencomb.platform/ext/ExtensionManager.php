@@ -36,7 +36,7 @@ class ExtensionManager extends Object
 				throw new Exception("保存在 service 的 setting 中的扩展路径无效：%s，扩展路径必须是 extensions 目录下的相对路径。"
 						,array($sExtPath),$e) ;
 			}
-			$this->addInstalledExtension($aExtension) ;
+			$this->setInstalledExtension($aExtension) ;
 		}
 		
 		// 取得Settnig中的另一项item数据：激活使用的扩展名称数组
@@ -179,12 +179,9 @@ class ExtensionManager extends Object
 		}
 	}
 	
-	public function addInstalledExtension(ExtensionMetainfo $aExtMetainfo)
+	public function setInstalledExtension(ExtensionMetainfo $aExtMetainfo)
 	{
-		if( !isset($this->arrInstalledExtensions[$aExtMetainfo->name()]) )
-		{
-			$this->arrInstalledExtensions[$aExtMetainfo->name()] = $aExtMetainfo ;
-		}
+		$this->arrInstalledExtensions[$aExtMetainfo->name()] = $aExtMetainfo ;
 	}
 	
 	/**

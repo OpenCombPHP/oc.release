@@ -11,7 +11,6 @@ use org\jecat\framework\lang\aop\AOP;
 
 use org\jecat\framework\util\Version;
 use org\jecat\framework\cache\EmptyCache;
-use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\ext\ExtensionMetainfo;
 use org\jecat\framework\system\Application;
 use org\opencomb\platform\service\Service;
@@ -83,8 +82,9 @@ class Extension extends Object
 	 */
 	public function setting()
 	{
-		return Setting::singleton()->separate('extensions/'.$this->aMetainfo->name()) ;
+		return $this->aMetainfo->setting();
 	}
+	
 	public function cache()
 	{
 		if(!$this->aCache)

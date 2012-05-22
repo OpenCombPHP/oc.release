@@ -13,6 +13,7 @@ use org\jecat\framework\message\MessageQueue;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\opencomb\platform\ext\dependence\RequireItem;
 use org\opencomb\platform as oc;
+use org\jecat\framework\util\Version;
 
 class ExtensionSetup extends Object
 {
@@ -24,9 +25,17 @@ class ExtensionSetup extends Object
 		$aExtMeta = ExtensionMetainfo::load($aExtensionFolder) ;
 		
 		// 检查扩展是否已经安装
-		if( $aInstalled=$aExtMgr->extensionMetainfo( $aExtMeta->name() ) )
+		// 名称和版本都一致才算重复
+		if( $aInstalled=$aExtMgr->extensionMetainfo( $aExtMeta->name() ) and $aInstalled->version()->compare( $aExtMeta->version() ) ===0 )
 		{
-			throw new Exception("安装扩展操作退出，无法重复安装扩展：%s(%s)",array($aExtMeta->title(),$aExtMeta->name())) ;
+			throw new Exception(
+				"安装扩展操作退出，无法重复安装扩展：%s(%s : %s)",
+				array(
+					$aExtMeta->title(),
+					$aExtMeta->name(),
+					$aExtMeta->version()
+				)
+			) ;
 		}
 		
 		// 检查依赖关系
@@ -39,7 +48,7 @@ class ExtensionSetup extends Object
 		if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
 		{
 			// 升级数据
-			$this->upgradeData($aExtMeta , $aMessageQueue) ;
+			$this->upgradeData(Version::fromString($sDataVersion),$aExtMeta , $aMessageQueue) ;
 		}
 		
 		// 安装资源
@@ -48,8 +57,13 @@ class ExtensionSetup extends Object
 			$this->installData($aExtMeta,$aMessageQueue) ;
 		}
 		
+		// 写入数据版本
+		$aExtMeta->setting()->setItem('/','data-version',$aExtMeta->dataVersion()->toString(false)) ;
+		
 		// 添加扩展的安装信息
-		$aExtMgr->addInstalledExtension($aExtMeta) ;
+		// 已经存在相同扩展，则是替换
+		$aExtMgr->setInstalledExtension($aExtMeta) ;
+		
 		ServiceSerializer::singleton()->addSystemObject($aExtMgr) ;
 		
 		// 设置 setting
@@ -141,8 +155,8 @@ class ExtensionSetup extends Object
 		}
 		
 		
-		// 删除扩展 ------------		
-							
+		// 删除扩展 ------------
+		
 		// 修改 ExtensionManager
 		$aExtensionManager->removeInstallExtension($aExtMeta);
 		ServiceSerializer::singleton()->addSystemObject($aExtensionManager) ;
@@ -423,9 +437,60 @@ class ExtensionSetup extends Object
 	/**
 	 * 升级扩展的资源版本
 	 */
-	private function upgradeData(ExtensionMetainfo $aExtMeta)
+	private function upgradeData(Version $aFromVersion , ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
+		$arrEdge = array();
+		$arrVersion = array();
+		foreach($aExtMeta->dataUpgradeClassIterator() as $aDataUpgradeClass){
+			$arrEdge[ $aDataUpgradeClass['class' ] ] = array(
+				'from' => $aDataUpgradeClass['from']->toString(),
+				'to' => $aDataUpgradeClass['to']->toString(),
+			);
+			$arrVersion[ $aDataUpgradeClass['from']->toString() ] = $aDataUpgradeClass['from'];
+			$arrVersion[ $aDataUpgradeClass['to']->toString() ] = $aDataUpgradeClass['to'];
+		}
 		
+		// 借用平台升级计算路径的类来计算路径
+		$aCalcPath = new \org\opencomb\platform\service\upgrader\CalcPath ;
+		$arrPath = $aCalcPath->calc( $arrEdge , $aFromVersion->toString() , $aExtMeta->version()->toString() );
+		
+		if($arrPath){
+			foreach($arrPath as $sDataUpgraderClass ){
+				if(!Type::hasImplements($sDataUpgraderClass,'org\\opencomb\\platform\\ext\\IExtensionDataUpgrader'))
+				{
+					throw new Exception(
+						'扩展%s提供的数据升级程序没有实现 org\\opencomb\\platform\\ext\\IExtensionDataUpgrader 接口，无法执行数据升级操作',
+						$aExtMeta->name()
+					);
+					return ;
+				}
+			
+				$aUpgrader = new $sDataUpgraderClass ;
+				try{
+					$aUpgrader->upgrade($aMessageQueue, $arrVersion[ $arrEdge[$sDataUpgraderClass]['from'] ],$aExtMeta) ;
+					$aMessageQueue->create(
+						Message::success,
+						"成功将扩展%s的数据从`%s`升级到`%s`",
+						array(
+							$aExtMeta->name(),
+							$arrEdge[$sDataUpgraderClass]['from'],
+							$arrEdge[$sDataUpgraderClass]['to'],
+						)
+					) ;
+				} catch (\Extension $e) {
+					$aMessageQueue->create(Message::error,"安装扩展%s的数据时遇到了错误。",$aExtMeta->name()) ;
+				}
+			}
+		}else{
+			throw new Exception(
+				'扩展%s未提供从版本`%s`至版本`%s`的数据升级程序',
+				array(
+					$aExtMeta->name(),
+					$aFromVersion->toString(),
+					$aExtMeta->version()->toString()
+				)
+			);
+		}
 	}
 	
 	/**
@@ -440,7 +505,10 @@ class ExtensionSetup extends Object
 		
 		if(!Type::hasImplements($sDataInstallerClass,'org\\opencomb\\platform\\ext\\IExtensionDataInstaller'))
 		{
-			$aMessageQueue->create(Message::error,"扩展%s提供的数据安装程序没有实现 org\\opencomb\\platform\\ext\\IExtensionDataInstaller 接口，无法执行数据按照操作。",$aExtMeta->name()) ;
+			throw new Exception(
+				'扩展%s提供的数据安装程序没有实现 org\\opencomb\\platform\\ext\\IExtensionDataInstaller 接口，无法执行数据按照操作',
+				$aExtMeta->name()
+			);
 			return ;
 		}
 			
