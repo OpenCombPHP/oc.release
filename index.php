@@ -9,7 +9,7 @@ use org\opencomb\platform\system\upgrader\PlatformDataUpgrader ;
 $fTimeStart = microtime(true) ;
 
 // 初始化 jcat 框架
-$aPlatform = require 'oc.init.php' ;
+$aService = require 'oc.init.php' ;
 $fInitFinish = microtime(true) ;
 
 
@@ -25,7 +25,7 @@ else
 	echo "<h1>Page Not Found</h1>" ;
 }
 
-if( empty($_REQUEST['rspn']) )
+if( empty($_REQUEST['rspn']) and $aService->isDebugging() )
 {
 	echo $fInitFinish - $fTimeStart, '<br />', microtime(true) - $fTimeStart ;
 }
