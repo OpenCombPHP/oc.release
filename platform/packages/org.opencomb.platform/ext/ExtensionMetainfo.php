@@ -26,7 +26,7 @@ class ExtensionMetainfo extends Object
 	{
 		if( is_string($extensionFoler) )
 		{
-			if( substr($extensionFoler,0,1)!=='/' and strpos($extensionFoler,':')!==false )
+			if( substr($extensionFoler,0,1)!=='/' and strpos($extensionFoler,':')===false )
 			{
 				$sExtPath = oc\EXTENSIONS_FOLDER . '/' . $extensionFoler ;
 			}
