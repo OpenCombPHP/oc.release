@@ -47,9 +47,6 @@ class Platform
 		if(!self::$aGlobalInstance)
 		{
 			self::$aGlobalInstance = new self() ;
-			
-			// 加载服务配置
-			self::$aGlobalInstance->loadServiceSettings() ;
 		}
 		
 		return self::$aGlobalInstance ;
