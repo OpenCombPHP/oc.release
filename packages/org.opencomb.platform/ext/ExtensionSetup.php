@@ -439,6 +439,9 @@ class ExtensionSetup extends Object
 	 */
 	private function upgradeData(Version $aFromVersion , ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
+		if($aFromVersion->compare( $aExtMeta->version() ) === 0){
+			return ;
+		}
 		$arrEdge = array();
 		$arrVersion = array();
 		foreach($aExtMeta->dataUpgradeClassIterator() as $aDataUpgradeClass){
