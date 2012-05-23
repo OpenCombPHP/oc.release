@@ -45,7 +45,7 @@ class ExtensionLoader extends Object
 		// 加载类包
 		foreach($aExtMeta->packageIterator() as $arrPackage)
 		{
-			list($sNamespace,$sPackagePath) = $arrPackage ;
+			list($sPackagePath,$sNamespace) = $arrPackage ;
 			
 			$aPackageFolder = new Folder($aExtMeta->installPath().$sPackagePath) ;
 			if(!$aPackageFolder->exists())

@@ -26,7 +26,7 @@ class ExtensionMetainfo extends Object
 	{
 		if( is_string($extensionFoler) )
 		{
-			if( substr($extensionFoler,0,1)!=='/' and strpos($extensionFoler,':')!==false )
+			if( substr($extensionFoler,0,1)!=='/' and strpos($extensionFoler,':')===false )
 			{
 				$sExtPath = oc\EXTENSIONS_FOLDER . '/' . $extensionFoler ;
 			}
@@ -185,9 +185,28 @@ class ExtensionMetainfo extends Object
 			
 			$sFolder = (string)$aPackage['folder'] ;
 			Folder::formatPath($sFolder) ;
-			$aExtMetainfo->arrPackages[] = array($sNamespace,$sFolder) ;
+			$aExtMetainfo->arrPackages[] = array($sFolder,$sNamespace) ;
 		}
-	
+		/*
+			如果在metainfo.xml未定义package，则自动检测。
+			检测规则：寻找/packages目录。如果找到，则packages下的目录是package，目录名是namespace。
+		*/
+		if( empty( $aExtMetainfo->arrPackages ) ){
+			$aPackagesFolder = new Folder( $sExtPath.'/packages');
+			if( $aPackagesFolder->exists() ){
+				$aFolderIter = $aPackagesFolder->iterator(FSIterator::CONTAIN_FOLDER | FSIterator::RETURN_FSO);
+				foreach($aFolderIter as $aSubFolder ){
+					$sNamespace = $aSubFolder->name();
+					$sNamespace = str_replace('.','\\',$sNamespace) ;
+					$sNamespace = str_replace('/','\\',$sNamespace) ;
+					
+					$sFolder = '/packages/'.$aSubFolder->name();
+					Folder::formatPath($sFolder) ;
+					$aExtMetainfo->arrPackages[] = array($sFolder,$sNamespace) ;
+				}
+			}
+		}
+		
 		// template
 		// --------------
 		foreach($aDomMetainfo->xpath('/Extension/template') as $nIdx=>$aNode)
@@ -228,6 +247,39 @@ class ExtensionMetainfo extends Object
 			$sNamespace = empty($aNode['for'])? $sExtName: trim($aNode['for']) ;
 
 			$aExtMetainfo->arrBeanFolders[] = array($sFolder,$sNamespace) ;
+		}
+		/*
+			如果在metainfo.xml中未定义template,public,bean，则自动检测。
+		*/
+		$arrPtg = array('template','public','bean');
+		foreach($arrPtg as $sPtg){
+			$sPhPtg = ucwords($sPtg);
+			$sMemberName = 'arr'.$sPhPtg.'Folders';
+			$arrMember = & $aExtMetainfo->$sMemberName;
+			if( empty( $arrMember ) ){
+				// 复数
+				$aMultiFolder = new Folder( $sExtPath.'/'.$sPtg.'s' );
+				if( $aMultiFolder->exists() ){
+					$aFolderIter = $aMultiFolder->iterator( FSIterator::CONTAIN_FOLDER | FSIterator::RETURN_FSO );
+					foreach( $aFolderIter as $aSubFolder ){
+						$sNamespace = $aSubFolder->name() ;
+						$sNamespace = str_replace('.','\\',$sNamespace) ;
+						$sNamespace = str_replace('/','\\',$sNamespace) ;
+					
+						$sFolder = '/'.$sPtg.'s/'.$aSubFolder->name();
+						Folder::formatPath($sFolder) ;
+						$arrMember [] = array($sFolder,$sNamespace) ;
+					}
+				}
+			
+				// 单数
+				$aSingleFolder = new Folder( $sExtPath.'/'.$sPtg );
+				if( $aSingleFolder->exists() ){
+					$sNamespace = $sExtName ;
+					$sFolder = '/'.$sPtg;
+					$arrMember[] = array($sFolder,$sNamespace);
+				}
+			}
 		}
 		
 		// dependence
@@ -426,7 +478,10 @@ class ExtensionMetainfo extends Object
 	private $sDataInstallerClass ;
 	private $arrDataUpgraderClasses = array() ;
 	
-	private $arrPackages ;
+	/*
+		下面四个，统一成 folder在前，namespace在后。
+	*/
+	private $arrPackages = array();
 	private $arrTemplateFolders = array() ;
 	private $arrPublicFolders = array() ;
 	private $arrBeanFolders = array() ;
