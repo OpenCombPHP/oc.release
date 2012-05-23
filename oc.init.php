@@ -1,29 +1,7 @@
 <?php 
 namespace org\opencomb\platform ;
 
-ini_set('display_errors',1) ;
-error_reporting(E_ALL^E_STRICT) ;
-
-define('org\\opencomb\\platform\\ROOT',__DIR__) ;
-
-// 配置目录
-define('org\\opencomb\\platform\\FRAMEWORK_FOLDER',ROOT.'/framework') ;
-define('org\\opencomb\\platform\\PLATFORM_FOLDER',ROOT.'/platform') ;
-define('org\\opencomb\\platform\\EXTENSIONS_FOLDER',ROOT.'/extensions') ;
-define('org\\opencomb\\platform\\EXTENSIONS_URL','extensions') ;
-define('org\\opencomb\\platform\\SERVICES_FOLDER',ROOT.'/services') ;
-define('org\\opencomb\\platform\\PUBLIC_FILES_FOLDER',ROOT.'/public/files') ;
-define('org\\opencomb\\platform\\PUBLIC_FILES_URL','public/files') ;
-
-// 加载 jecat framework
-require_once FRAMEWORK_FOLDER."/inc.entrance.php" ;
-
-// 检查是否完成安装
-if( !is_dir(SERVICES_FOLDER) and is_file(__DIR__.'/setup/setup.php') )
-{
-	echo "<a>Install ... </a>" ;
-	exit() ;
-}
+define( "org\\opencomb\\platform\\PATH", __DIR__ ) ;
 
 // load jecat core class
 require_once \org\jecat\framework\CLASSPATH."/system/HttpAppFactory.php" ;
@@ -38,18 +16,15 @@ require_once \org\jecat\framework\CLASSPATH.'/cache/FSCache.php' ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/EmptyCache.php' ;
 
 // load opencomb core class
-require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/Platform.php" ;
-require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/service/Service.php" ;
-require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/service/ServiceFactory.php" ;
-require_once PLATFORM_FOLDER."/packages/org.opencomb.platform/service/ServiceSerializer.php" ;
+require_once PATH."/packages/org.opencomb.platform/Platform.php" ;
+require_once PATH."/packages/org.opencomb.platform/service/Service.php" ;
+require_once PATH."/packages/org.opencomb.platform/service/ServiceFactory.php" ;
+require_once PATH."/packages/org.opencomb.platform/service/ServiceSerializer.php" ;
 
 
-// 初始化 platform
-$aPlatform = Platform::singleton() ;
 
 
 // 创建 service
-$aService = $aPlatform->createService($_SERVER['HTTP_HOST']) ;
 // Service::setInstance($aService) ;
 
 
@@ -74,4 +49,3 @@ if(TRUE === $aDataUpgrader->process()){
 }*/
 
 // 
-return $aService ;

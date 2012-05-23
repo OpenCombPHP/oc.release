@@ -247,8 +247,8 @@ class ServiceFactory extends HttpAppFactory
 		$aClassLoader = parent::createClassLoader() ;
 		
 		// Service packages
-		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\PLATFORM_FOLDER.'/packages/org.opencomb.platform') ) ;
-		$aClassLoader->addPackage( 'net\\phpconcept\\pclzip', new Folder(\org\opencomb\platform\PLATFORM_FOLDER.'/packages/net.phpconcept.pclzip') ) ;
+		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\PATH.'/packages/org.opencomb.platform') ) ;
+		$aClassLoader->addPackage( 'net\\phpconcept\\pclzip', new Folder(\org\opencomb\platform\PATH.'/packages/net.phpconcept.pclzip') ) ;
 
 		// 类编译包
 		$aCompiledPackage = new Package('',Folder::createFolder($arrServiceSetting['folder_compiled_class'])) ;
@@ -273,7 +273,7 @@ class ServiceFactory extends HttpAppFactory
 		MvcUIFactory::singleton()->setSourceFileManager($aSrcFileMgr) ;
 		
 		$aSrcFileMgr->addFolder( new Folder(jc\PATH.'/template'), 'org.jecat.framework' ) ;
-		$aSrcFileMgr->addFolder( new Folder(oc\PLATFORM_FOLDER.'/template') , 'org.opencomb.platform' ) ;
+		$aSrcFileMgr->addFolder( new Folder(oc\PATH.'/template') , 'org.opencomb.platform' ) ;
 		
 		return $aSrcFileMgr ;
 	}
