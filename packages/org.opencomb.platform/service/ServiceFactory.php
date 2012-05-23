@@ -22,6 +22,7 @@ use org\jecat\framework\ui\xhtml\UIFactory;
 use org\opencomb\platform\ui\SourceFileManager;
 use org\jecat\framework\system\HttpAppFactory;
 use org\jecat\framework\lang\oop\ClassLoader;
+use org\jecat\framework\resrc\ResourceManager;
 use org\jecat\framework as jc;
 use org\opencomb\platform as oc;
 use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory;
@@ -239,6 +240,12 @@ class ServiceFactory extends HttpAppFactory
 			//} catch (\Exception $e)
 			{}
 		}
+		
+		// html resource folders
+		$aPublicFolders = new ResourceManager() ;
+		$aPublicFolders->addFolder(new Folder($arrServiceSetting['framework_folder'].'/public',0,$arrServiceSetting['framework_url']."/public"),'org.jecat.framework') ;
+		$aPublicFolders->addFolder(new Folder($arrServiceSetting['platform_folder'].'/public',0,$arrServiceSetting['platform_url']."/public"),'org.opencomb.platform') ;
+		$aService->setPublicFolders($aPublicFolders) ;
 	}
 		
 	public function createClassLoader(array & $arrServiceSetting)

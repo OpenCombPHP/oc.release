@@ -35,7 +35,7 @@ use org\opencomb\platform\service\ServiceFactory;
  */
 class Platform
 {
-	const version = '0.3.0.1' ;
+	const version = '0.3.2.0' ;
 	const data_version = '0.3.1' ;
 	const version_compat = "" ;
 	
@@ -114,22 +114,6 @@ class Platform
 	}
 	
 	/**
-	 * 创建平台上的服务实例
-	 * 
-	 * @throws org\opencomb\platform\service\Service
-	 */
-	public function createService($sHost)
-	{
-		if( !$arrServiceSetting =& $this->serviceSetting($sHost) )
-		{
-			throw new \Exception('requesting service is invalid: '.$sHost) ;
-		}
-
-		// 创建请求的服务
-		return ServiceFactory::singleton()->create($arrServiceSetting) ;
-	}
-	
-	/**
 	 * @return org\jecat\framework\fs\Folder
 	 */
 	public function installFolder($bReturnPath=false)
@@ -152,83 +136,8 @@ class Platform
 	{
 		$this->aInstallFolder = new Folder(ROOT) ;
 	}
-
-	private function loadServiceSettings()
-	{
-		$sServiceSettingFile = SERVICES_FOLDER.'/settings.inc.php' ;
-	
-		// load domain settings
-		if( !is_file($sServiceSettingFile) )
-		{
-			// domains missing or broken, rebuild it
-			if( $hServices = opendir(SERVICES_FOLDER) )
-			{
-				while($sFilename=readdir($hServices))
-				{
-					if( $sFilename=='.' or $sFilename=='..')
-					{
-						continue ;
-					}
-					if( is_dir(SERVICES_FOLDER.'/'.$sFilename) )
-					{
-						$this->arrServiceSettings[$sFilename] = array(
-								'domains' => array( $sFilename==='default'? '*': $sFilename ) ,
-						) ;
-					}
-				}
-				closedir($hServices) ;
-					
-				if( !file_put_contents($sServiceSettingFile,'<?php return $arrServiceSettings = '.var_export($this->arrServiceSettings,true).';') )
-				{
-					throw new \Exception('can not write file: '.$sServiceSettingFile) ;
-				}
-			}
-		}
-		else
-		{
-			$this->arrServiceSettings = include $sServiceSettingFile ;
-	
-			if(!is_array($this->arrServiceSettings))
-			{
-				throw new \Exception($sServiceSettingFile."文件遭到了损坏，删除该文件后，系统会自动重建。") ;
-			}
-		}
-	}
-
-
-	private function & serviceSetting($sHost)
-	{
-		if(isset($this->arrServiceSettings[$sHost]))
-		{
-			$this->arrServiceSettings[$sHost]['name'] = $sHost ;
-			$this->arrServiceSettings[$sHost]['folder_name'] = $sHost ;
-			$this->arrServiceSettings[$sHost]['folder_path'] = SERVICES_FOLDER . '/' . $sHost ;
-			return $this->arrServiceSettings[$sHost] ;
-		}
-		else
-		{
-			foreach($this->arrServiceSettings as $sServiceFolder=>&$arrServiceInfo)
-			{
-				foreach($arrServiceInfo['domains'] as &$sDomain)
-				{
-					if(fnmatch($sDomain,$sHost))
-					{
-						$arrServiceInfo['name'] = $sServiceFolder ;
-						$arrServiceInfo['folder_name'] = $sServiceFolder ;
-						$arrServiceInfo['folder_path'] = SERVICES_FOLDER . '/' . $sServiceFolder ;
-						return $arrServiceInfo ;
-					}
-				}
-			}
-
-			$arrService = null ;
-			return $arrService ;
-		}
-	}
 		
 	static private $aGlobalInstance ; 
-	
-	private $arrServiceSettings = array() ;
 	
 	private $aInstallFolder ;
 	
