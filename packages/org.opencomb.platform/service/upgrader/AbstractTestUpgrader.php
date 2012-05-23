@@ -1,5 +1,5 @@
 <?php
-namespace org\opencomb\platform\system\upgrader ;
+namespace org\opencomb\platform\service\upgrader ;
 
 use org\jecat\framework\message\MessageQueue;
 use org\jecat\framework\message\Message;

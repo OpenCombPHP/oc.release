@@ -142,6 +142,8 @@ class Platform
 	
 	private $aVersionCompat ;
 	
+	private $aDataVersion;
+	
 	private $aFilesFolder ;
 	
 }

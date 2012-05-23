@@ -1,12 +1,12 @@
 <?php
-namespace org\opencomb\platform\system\upgrader ;
+namespace org\opencomb\platform\service\upgrader ;
 
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\fs\Folder;
 use org\jecat\framework\util\Version;
 use org\jecat\framework\setting\Setting;
 use org\opencomb\platform\Platform;
-use org\opencomb\platform\system\PlatformShutdowner;
+use org\opencomb\platform\service\ServiceShutdowner;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\message\MessageQueue;
@@ -29,8 +29,8 @@ class PlatformDataUpgrader extends Object{
 		
 		if( self::CheckResult_NeedUpgrade === $this->check() ){
 			// shut down system
-			$aPlatformShutdowner = PlatformShutdowner :: singleton() ;
-			$aPlatformShutdowner->shutdown();
+			$aServiceShutdowner = ServiceShutdowner :: singleton() ;
+			$aServiceShutdowner->shutdown();
 			
 			// upgrade
 			$aDataVersion = $this->dataVersion () ;
@@ -40,11 +40,11 @@ class PlatformDataUpgrader extends Object{
 				$this->upgrade() ;
 			
 				// restore system
-				$aPlatformShutdowner->restore() ;
+				$aServiceShutdowner->restore() ;
 				fclose($aLockRes);
 				return TRUE;
 			}catch(Exception $e){
-				$aPlatformShutdowner->restore() ;
+				$aServiceShutdowner->restore() ;
 				fclose($aLockRes);
 				
 				throw new Exception('升级过程发生异常',array(),$e);
