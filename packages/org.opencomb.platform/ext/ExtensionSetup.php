@@ -406,13 +406,13 @@ class ExtensionSetup extends Object
 		// 加载class
 		$aExtFolder = new Folder($aExtMeta->installPath());
 		foreach( $aExtMeta->packageIterator() as $package){
-			// $package[0] 是 namespace
-			// $package[1] 是 文件夹，从$aExtMeta->installPath()算起
-			$sSourceFolder = $aExtFolder->path().$package[1];
+			// $package[0] 是 文件夹，从$aExtMeta->installPath()算起
+			// $package[1] 是 namespace
+			$sSourceFolder = $aExtFolder->path().$package[0];
 			if(in_array($sSourceFolder,$arrClassLoaderPackagePath)){
 				continue;
 			}
-			$this->arrLoadedClassPackages[] = $aClassLoader->addPackage($package[0],new Folder($sSourceFolder));
+			$this->arrLoadedClassPackages[] = $aClassLoader->addPackage($package[1],new Folder($sSourceFolder));
 		}
 	}
 	private function unloadClassPackages(ExtensionMetainfo $aExtMeta)
