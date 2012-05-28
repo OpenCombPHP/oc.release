@@ -1,6 +1,10 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\jecat\framework\mvc\model\Prototype;
+
+use org\jecat\framework\util\EventManager;
+
 use org\jecat\framework\lang\Exception;
 use org\opencomb\platform\system\OcSession;
 use org\jecat\framework\cache\FSCache;
@@ -86,8 +90,6 @@ class ServiceFactory extends HttpAppFactory
 			
 			// BeanFactory 类别名
 			BeanFactory::singleton()
-				->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Prototype','prototype')
-				->registerBeanClass('org\\opencomb\\platform\\mvc\\model\\db\\orm\\Association','association')
 				->registerBeanClass("org\\opencomb\\platform\\mvc\\view\\widget\\Menu",'menu') ;
 			
 			// store system objects !
@@ -95,6 +97,13 @@ class ServiceFactory extends HttpAppFactory
 			{
 				$aServiceSerializer->addSystemSingletons() ;
 			}
+		
+			// 注册事件
+			EventManager::singleton()->registerEventHandle(
+					'org\\jecat\\framework\\mvc\\model\\Prototype'
+					, Prototype::transTable
+					, array('org\\opencomb\\platform\\mvc\\model\\Prototype','transTable')
+			) ;
 			
 			// 加载所有扩展
 			ExtensionLoader::singleton()->loadAllExtensions($aService,$aService->extensions()) ;
@@ -207,7 +216,7 @@ class ServiceFactory extends HttpAppFactory
 				or !$sPassword=$aSetting->item('/service/db/'.$sDBConfig,'password')
 		)
 		{
-			throw new Exception("数据库配置不正确，无法连接到数据库") ;
+			throw new Exception("数据库配置无效") ;
 		}
 		$sOptions = $aSetting->item('/service/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
 		
