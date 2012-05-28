@@ -123,7 +123,7 @@ class PlatformDataUpgrader extends Object{
 				throw new Exception('Upgrader `%s` 未实现指定接口 ： IUpgrader',$sPath);
 			}
 			$aUpgrader->process($aMessageQueue);
-			$aSetting->setItem('/platform','data_version',$arrMap[$sPath]['to']);
+			$aSetting->setItem('/service','data_version',$arrMap[$sPath]['to']);
 		}
 	}
 	
@@ -133,7 +133,7 @@ class PlatformDataUpgrader extends Object{
 	
 	private function dataVersion(){
 		$aSetting = Setting::singleton() ;
-		$sVersion = $aSetting->item('/platform','data_version','0.0') ;
+		$sVersion = $aSetting->item('/service','data_version','0.0') ;
 		return Version::fromString($sVersion);
 	}
 	
