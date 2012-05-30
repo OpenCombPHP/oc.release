@@ -249,36 +249,35 @@ class ExtensionMetainfo extends Object
 			$aExtMetainfo->arrBeanFolders[] = array($sFolder,$sNamespace) ;
 		}
 		/*
-			如果在metainfo.xml中未定义template,public,bean，则自动检测。
+			自动检测template,public,bean。
 		*/
 		$arrPtg = array('template','public','bean');
 		foreach($arrPtg as $sPtg){
 			$sPhPtg = ucwords($sPtg);
 			$sMemberName = 'arr'.$sPhPtg.'Folders';
 			$arrMember = & $aExtMetainfo->$sMemberName;
-			if( empty( $arrMember ) ){
-				// 复数
-				$aMultiFolder = new Folder( $sExtPath.'/'.$sPtg.'s' );
-				if( $aMultiFolder->exists() ){
-					$aFolderIter = $aMultiFolder->iterator( FSIterator::CONTAIN_FOLDER | FSIterator::RETURN_FSO );
-					foreach( $aFolderIter as $aSubFolder ){
-						$sNamespace = $aSubFolder->name() ;
-						$sNamespace = str_replace('.','\\',$sNamespace) ;
-						$sNamespace = str_replace('/','\\',$sNamespace) ;
-					
-						$sFolder = '/'.$sPtg.'s/'.$aSubFolder->name();
-						Folder::formatPath($sFolder) ;
-						$arrMember [] = array($sFolder,$sNamespace) ;
-					}
-				}
 			
-				// 单数
-				$aSingleFolder = new Folder( $sExtPath.'/'.$sPtg );
-				if( $aSingleFolder->exists() ){
-					$sNamespace = $sExtName ;
-					$sFolder = '/'.$sPtg;
-					$arrMember[] = array($sFolder,$sNamespace);
+			// 复数
+			$aMultiFolder = new Folder( $sExtPath.'/'.$sPtg.'s' );
+			if( $aMultiFolder->exists() ){
+				$aFolderIter = $aMultiFolder->iterator( FSIterator::CONTAIN_FOLDER | FSIterator::RETURN_FSO );
+				foreach( $aFolderIter as $aSubFolder ){
+					$sNamespace = $aSubFolder->name() ;
+					$sNamespace = str_replace('.','\\',$sNamespace) ;
+					$sNamespace = str_replace('/','\\',$sNamespace) ;
+				
+					$sFolder = '/'.$sPtg.'s/'.$aSubFolder->name();
+					Folder::formatPath($sFolder) ;
+					$arrMember [] = array($sFolder,$sNamespace) ;
 				}
+			}
+			
+			// 单数
+			$aSingleFolder = new Folder( $sExtPath.'/'.$sPtg );
+			if( $aSingleFolder->exists() ){
+				$sNamespace = $sExtName ;
+				$sFolder = '/'.$sPtg;
+				$arrMember[] = array($sFolder,$sNamespace);
 			}
 		}
 		
