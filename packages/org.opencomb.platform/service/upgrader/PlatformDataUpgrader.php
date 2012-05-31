@@ -25,7 +25,7 @@ class PlatformDataUpgrader extends Object{
 		$aLockFile = Folder::singleton()->findFile( $sLockFileName ,Folder::FIND_AUTO_CREATE) ;
 		
 		$aLockRes = fopen($aLockFile->path(),'w');
-		flock($aLockRes,LOCK_EX);
+		@flock($aLockRes,LOCK_EX);
 		
 		if( self::CheckResult_NeedUpgrade === $this->check() ){
 			// shut down system
