@@ -149,7 +149,7 @@ class ExtensionManager extends Object
 	public function extensionNameByClass($sClass)
 	{
 		$nClassLen = strlen($sClass) ;
-			
+
 		for(end($this->arrExtensionPackages);$sNamespace=key($this->arrExtensionPackages);prev($this->arrExtensionPackages))
 		{
 			$nNamespaceLen = strlen($sNamespace) ;

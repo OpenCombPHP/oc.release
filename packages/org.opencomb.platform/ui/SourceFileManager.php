@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\ui ;
 
+use org\jecat\framework\lang\Exception;
+
 use org\jecat\framework\fs\Folder;
 use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager;
@@ -44,7 +46,7 @@ class SourceFileManager extends JcSourceFileManager
 		}
 		else 
 		{
-			return array(Extension::retraceExtensionName(), $sFilename) ;
+			throw new Exception("文件名缺少命名空间：%s",$sFilename) ;
 		}
 	}
 }

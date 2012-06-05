@@ -54,28 +54,11 @@ class Menu extends JcMenu
     	{
     		return array(null,null,$this->id()) ;
     	}
-    	
-    	do {
-    		if($sXPath)
-    		{
-    			$sXPath = '/' . $sXPath ;
-    		}
-    		$sXPath = $aView->name() . $sXPath ;
-    		
-    		if( $aController=$aView->controller() )
-    		{
-    			break ;
-    		}
-    		
-    		if(!$aView->parent())
-    		{
-    			break ;
-    		}
-    		$aView = $aView->parent() ;
-    	}while( 1 ) ;
-    	
-    	
-    	return array( $aController?get_class($aController):null , $sXPath, $this->id() ) ;
+    	else	
+    	{
+    		$aController = $aView->controller(true) ;
+    		return array( $aController?get_class($aController):null , $aView->xpath(), $this->id() ) ;
+    	}
 		
 	}
 }

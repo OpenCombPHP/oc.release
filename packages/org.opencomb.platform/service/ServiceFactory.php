@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\service ;
 
+use org\opencomb\platform\util\EventHandlers;
+
 use org\jecat\framework\mvc\model\Prototype;
 
 use org\jecat\framework\util\EventManager;
@@ -99,11 +101,7 @@ class ServiceFactory extends HttpAppFactory
 			}
 		
 			// 注册事件
-			EventManager::singleton()->registerEventHandle(
-					'org\\jecat\\framework\\mvc\\model\\Prototype'
-					, Prototype::transTable
-					, array('org\\opencomb\\platform\\mvc\\model\\Prototype','transTable')
-			) ;
+			EventHandlers::registerEventHandlers(EventManager::singleton()) ;
 			
 			// 加载所有扩展
 			ExtensionLoader::singleton()->loadAllExtensions($aService,$aService->extensions()) ;
