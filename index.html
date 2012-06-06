@@ -4,11 +4,11 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Oc.release : opencomb" />
+    <meta name="description" content="蜂巢平台是一个云计算框架" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Oc.release</title>
+    <title>蜂巢云计算应用框架</title>
   </head>
 
   <body>
@@ -16,10 +16,9 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="https://github.com/OpenComb/oc.release">View on GitHub</a>
 
-          <h1 id="project_title">Oc.release</h1>
-          <h2 id="project_tagline">opencomb</h2>
+          <h1 id="project_title">蜂巢平台</h1>
+          <h2 id="project_tagline">OpenComb Platform</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/OpenComb/oc.release/zipball/master">Download this project as a .zip file</a>
@@ -31,32 +30,88 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+        <h1>欢迎访问蜂巢平台的主页</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>
+	蜂巢平台（OpenComb Platform）是一个基于 PHP5.3 实现的深度云计算应用框架。蜂巢采用了扩展模式，系统中的功能和特性，都由扩展提供。
+	因此，用户可以通过开发和安装扩展来部署各种类型的互联网应用。
+</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
 
-<h3>Designer Templates</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
 
-<h3>Rather Drive Stick?</h3>
+<h3>“扩展驱动模式”</h3>
+<p>
+	许多软件都提供了插件机制，允许加载由第三方开发的插件，对主程序的功能起到补充作用。
+	但是在插件模式中，相比起主程序，第三方插件仅仅扮演着“二等公民”的角色，只能对主程序起到有限的影响和作用。
+	而在蜂巢的“扩展驱动模式”下，扩展才是真正的主角，系统的所有功能都是由扩展提供的。
+</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>
+	并且，一个扩展可以增强另一个扩展，而不只是孤立地提供功能。因此，您的所有需求，都可以由一系列扩展的组合来达成。
+</p>
 
-<h3>Authors and Contributors</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h3>网页自由布局</h3>
+<p>
+“视图”就是网页里的显示区块，蜂巢允许你以拖拽的方式，自由布置网页上的视图。
+同时，蜂巢还允许你将任何一个网页中的视图合并到另一个网页中显示。
+</p>
 
-<h3>Support or Contact</h3>
+<h3>“拒绝修改源代码”</h3>
+<p>
+改变系统的行为，不应该通过“篡改”源代码来实现，那样会导致系统或扩展无法平滑升级。
+蜂巢提供了多项特别的技术（类如：OOD/AOP、模版编织、可覆盖的类/包以及资源文件等等），来确保对扩展的增强可以避开修改源文件，无论是系统还是扩展都可以平滑升级。
+</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<hr />
+<p>以下是开发人员感兴趣的内容：</p>
+
+<h3>面向二次开发</h3>
+<p>
+您过去使用的系统，即使开放源代码，其功能的设计也是封闭的，基于这些系统进行二次开发，不但困难，而且常常会破坏系统的稳定和健壮。
+能够允许第三方开发者来扩展和增强系统的功能，是我们在设计蜂巢的系统时首要考虑的目标。蜂巢无论是源代码还是系统设计，都是开放的。
+</p>
+
+<h3>深度云计算</h3>
+<p>
+蜂巢也是一个实现在软件层次上的云计算应用框架：基于蜂巢开发的不同应用，能够做为一个系统共同工作。
+无论是财务软件、OA系统、客户关系管理、仓储/物流，还是在线商城、BBS/社区、CMS、Blog，以及您自己开发的应用，
+如果您一开始就采用了蜂巢，那么将这些应用整合成一个统一的系统，就不再是一项招标工程，您自己在周五下午就可以搞定。
+</p>
+
+<h3>面向方面编程(AOP)</h3>
+<p>
+蜂巢实现了PHP语言的AOP方案，允许你在系统中定义执行点，并在执行点上“切入”一些新的代码，从而改变或禁用系统已有的行为。
+AOP是蜂巢扩展和扩展直接主要的增强方案之一。
+</p>
+
+<h3>模版编织</h3>
+<p>
+模版编织和AOP很像，但它是针对网页模版的。蜂巢没有采用流行的PHP网页模版引擎，而是设计了一个更高级的模版引擎：能够定位到模版中的任何一个元素，并在其上“织入”另一段模版代码。
+当你需要开发一个新扩展来增强某个扩展时，模版编织是一项非常有用的技术。
+</p>
+
+<h3>BEAN/POD 对象构建</h3>
+<p>
+BEAN/POD 对象构建是一种通过PHP数组(array)来配置对象内部属性的接口，它的目标是简化 OOP中的对象创建过程。
+Controller/View/Model/Widget/Verifier 等等业务逻辑中常用的对象，都可以通过一个 bean config 规范的数组(array)来创建，这使得在蜂巢中开发很像某些 js 框架的习惯。
+</p>
+
+<h3>二次发布</h3>
+<p>
+蜂巢采用了开放的授权协议，而且还提供了一些用于打包扩展和制作发行版本的工具，您可以基于蜂巢开发属于您自己的成品，并以您自己的名称和Logo重新发布。
+</p>
+
+<h3>“代码即知识”</h3>
+<p>
+蜂巢提供了一个文档编译引擎，用于分析源代码并生成对应 API文档、WIKI，以及例子。
+这使得蜂巢的开发文档、例子的编写工作变的轻松了。文档的时效性也更强——它们都是从当前版本的源代码中编译出来的。
+</p>
+      
+      
+      
       </section>
     </div>
 
