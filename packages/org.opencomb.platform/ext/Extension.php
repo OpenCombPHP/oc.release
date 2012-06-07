@@ -105,6 +105,7 @@ class Extension extends Object
 		{
 			$aServiceFilesFolder = Service::singleton()->filesFolder() ;
 			$this->aFilesFolder = $aServiceFilesFolder->findFolder($this->metainfo()->name(),Folder::FIND_AUTO_CREATE) ;
+			$this->aFilesFolder->setHttpUrl($aServiceFilesFolder->httpUrl().'/'.$this->metainfo()->name()) ;
 		}
 		return $this->aFilesFolder ;
 	}
