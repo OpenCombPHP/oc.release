@@ -214,7 +214,9 @@ class ServiceFactory extends HttpAppFactory
 				or !$sPassword=$aSetting->item('/service/db/'.$sDBConfig,'password')
 		)
 		{
-			throw new Exception("数据库配置无效") ;
+			throw new Exception("数据库配置无效(config: %s;dsn: %s; user: %s; passwd: %s)",array(
+			  $sDBConfig, @$sDsn, @$sUsername, (@$sPassword? '[used]': '[empty]')
+			)) ;
 		}
 		$sOptions = $aSetting->item('/service/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
 		
