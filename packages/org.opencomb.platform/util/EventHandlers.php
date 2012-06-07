@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\util ;
 
+use org\jecat\framework\db\DB;
+
 use org\jecat\framework\mvc\view\UIFactory;
 
 use org\jecat\framework\mvc\view\View;
