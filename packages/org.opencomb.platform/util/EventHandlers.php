@@ -1,6 +1,8 @@
 <?php
 namespace org\opencomb\platform\util ;
 
+use org\jecat\framework\util\EventReturnValue;
+
 use org\jecat\framework\db\DB;
 
 use org\jecat\framework\mvc\view\UIFactory;
@@ -17,8 +19,8 @@ class EventHandlers
 	{
 		$aEventManager->registerEventHandle(
 				'org\\jecat\\framework\\mvc\\controller\\Controller'
-				, Controller::defaultViewTemplate
-				, array(__CLASS__,'defaultViewTemplate')
+				, Controller::createDefaultView
+				, array(__CLASS__,'createDefaultView')
 		) ;
 		
 		$aEventManager->registerEventHandle(
@@ -31,17 +33,16 @@ class EventHandlers
 	/**
 	 * 默认的模板名称
 	 */
-	static public function defaultViewTemplate(Controller $aController,&$sDefaultTemplate)
+	static public function createDefaultView(Controller $aController)
 	{
 		// 用自己的类名做为模板文件名创建一个视图
-		$sTemplateFilename = '' ;
 		$sClassName = get_class($aController) ;
 		$sExtensionName = ExtensionManager::singleton()->extensionNameByClass( $sClassName ) ;
 		
 		// 无法确定所属目录
 		if(!$sExtensionName)
 		{
-			$sDefaultTemplate = null ;
+			$sTemplate = null ;
 			return ;
 		}
 
@@ -59,13 +60,9 @@ class EventHandlers
 		
 		if( UIFactory::singleton()->sourceFileManager()->find($sFileName,$sExtensionName) )
 		{
-			$sDefaultTemplate = $sFileName ;
-		}
-		else
-		{
-			$sDefaultTemplate = null ;
-		}
-	} 
+			return new EventReturnValue(new View($sExtensionName.':'.$sFileName)) ;
+		}		
+	}
 	
 
 	/**
