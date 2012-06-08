@@ -19,6 +19,12 @@ class EventHandlers
 	{
 		$aEventManager->registerEventHandle(
 				'org\\jecat\\framework\\mvc\\controller\\Controller'
+				, Controller::defaultName
+				, array(__CLASS__,'defaultName')
+		) ;
+		
+		$aEventManager->registerEventHandle(
+				'org\\jecat\\framework\\mvc\\controller\\Controller'
 				, Controller::createDefaultView
 				, array(__CLASS__,'createDefaultView')
 		) ;
@@ -28,6 +34,35 @@ class EventHandlers
 				, Prototype::transTable
 				, array(__CLASS__,'transTable')
 		) ;
+	}
+	
+	/**
+	 * 默认的模板名称
+	 */
+	static public function defaultName(Controller $aController,& $sName)
+	{
+		if( $sName )
+		{
+			return ;
+		}
+		
+		// 用自己的类名做为模板文件名创建一个视图
+		$sName = get_class($aController) ;
+		
+		// 无法确定所属目录
+		if( $sExtensionName=ExtensionManager::singleton()->extensionNameByClass($sName) )
+		{
+			// 子目录
+			$arrSlices = explode('\\', $sName) ;
+			if( count($arrSlices)>3 )		// 去掉前面的3段（org/com,组织名,扩展名）
+			{
+				$arrSlices = array_slice($arrSlices,3) ;
+				$sName = implode('.',$arrSlices) ;
+				return ;
+			}
+		}
+		
+		$sName = str_replace('\\','.',$sName) ;
 	}
 	
 	/**
