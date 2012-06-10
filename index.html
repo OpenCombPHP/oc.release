@@ -6,8 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="蜂巢平台是一个云计算框架" />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
+	<script type="text/javascript" src="./javascripts/jquery.js"></script>
+	<script type="text/javascript" src="./javascripts/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+	<script type="text/javascript" src="./javascripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	<link rel="stylesheet" type="text/css" href="./javascripts/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+	<link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+	<script>
+		$(function(){
+			$("#m1,#m2,#m3").fancybox({
+				'width'				: '1000',
+				'height'			: '800',
+				'titlePosition' 	: 'over'
+			});
+		});
+	</script>
+	
     <title>蜂巢云计算应用框架</title>
   </head>
 
@@ -18,12 +31,14 @@
         <header class="inner">
 
           <h1 id="project_title">蜂巢平台</h1>
+          	<span id='alpha1'>alpha</span>
           <h2 id="project_tagline">OpenComb Platform</h2>
-			
+			<span id='alpha2'>alpha</span>
 			<section id="contact">
 				<h3>联系方式</h3>
+				<iframe width="63" height="24" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0" scrolling="no" border="0" src="http://widget.weibo.com/relationship/followbutton.php?language=zh_cn&width=63&height=24&uid=2816118244&style=1&btn=red&dpc=1"></iframe>
+				<iframe id="previewmc" src="http://follow.v.t.qq.com/index.php?c=follow&a=quick&name=opencomb&style=5&t=1339319741839&f=0" width="125" height="24" frameborder="0" scrolling="no" allowtransparency="true" style="margin:0 auto;"></iframe>
 				<a id="weibo" class='contact_link' href="http://q.weibo.com/1657701">新浪微群:1657701</a>
-				<a id="qq_t" class='contact_link' href="http://t.qq.com/opencomb">腾讯微博:opencomb</a>
 				<a id="qq" class='contact_link' href="#">QQ群:132156813</a>
 			</section>
 			
@@ -64,6 +79,13 @@
 <p>
 “视图”就是网页里的显示区块，蜂巢允许你以拖拽的方式，自由布置网页上的视图。
 同时，蜂巢还允许你将任何一个网页中的视图合并到另一个网页中显示。
+<br/>
+<a href="http://zj001.wonei.com/opencomb_movie/layout.swf" id="m1">
+	<img src="images/movie.png" style="width:40px;height:40px;"/>
+</a>
+<a href="http://zj001.wonei.com/opencomb_movie/uiweave.swf" id="m2">
+	<img src="images/movie.png" style="width:40px;height:40px;"/>
+</a>
 </p>
 
 <h3>“拒绝修改源代码”</h3>
@@ -93,6 +115,10 @@
 <p>
 模版编织和AOP很像，但它是针对网页模版的。蜂巢没有采用流行的PHP网页模版引擎，而是设计了一个更高级的模版引擎：能够定位到模版中的任何一个元素，并在其上“织入”另一段模版代码。
 当你需要开发一个新扩展来增强某个扩展时，模版编织是一项非常有用的技术。
+<br/>
+<a href="http://zj001.wonei.com/opencomb_movie/uiweave.swf" id="m3">
+	<img src="images/movie.png" style="width:40px;height:40px;"/>
+</a>
 </p>
 
 <h3>面向方面编程(AOP)</h3>

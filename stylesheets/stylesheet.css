@@ -276,6 +276,20 @@ Full-Width Styles
   padding: 20px 10px;
   margin: 0 auto;
 }
+.inner span {
+	display:block;
+	position:absolute;
+	color:red;
+	font-size:12px;
+}
+#alpha1{
+	top: 55px;
+	left: 174px;
+}
+#alpha2{
+	top: 130px;
+	left: 215px;
+}
 
 #forkme_banner {
   display: block;
@@ -330,7 +344,9 @@ Full-Width Styles
 	height: 70px;
 	font-size:14px;
 }
-
+#contact iframe{
+	
+}
 #contact h3{
 	font-size:18px;
 	color:white;
