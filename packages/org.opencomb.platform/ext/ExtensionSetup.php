@@ -439,7 +439,8 @@ class ExtensionSetup extends Object
 	 */
 	private function upgradeData(Version $aFromVersion , ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
-		if($aFromVersion->compare( $aExtMeta->version() ) === 0){
+		$aToVersion = $aExtMeta->dataVersion() ;
+		if($aFromVersion->compare( $aToVersion ) === 0){
 			return ;
 		}
 		$arrEdge = array();
@@ -455,7 +456,7 @@ class ExtensionSetup extends Object
 		
 		// 借用平台升级计算路径的类来计算路径
 		$aCalcPath = new \org\opencomb\platform\service\upgrader\CalcPath ;
-		$arrPath = $aCalcPath->calc( $arrEdge , $aFromVersion->toString() , $aExtMeta->version()->toString() );
+		$arrPath = $aCalcPath->calc( $arrEdge , $aFromVersion->toString() , $aToVersion->toString() );
 		
 		if($arrPath){
 			foreach($arrPath as $sDataUpgraderClass ){
@@ -490,7 +491,7 @@ class ExtensionSetup extends Object
 				array(
 					$aExtMeta->name(),
 					$aFromVersion->toString(),
-					$aExtMeta->version()->toString()
+					$aToVersion->toString()
 				)
 			);
 		}
