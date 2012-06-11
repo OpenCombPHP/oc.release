@@ -161,7 +161,7 @@ class ExtensionMetainfo extends Object
 				$aExtMetainfo->arrDataUpgraderClasses[] = array(
 							'from' => Version::FromString((string)$aUpgrader['from']) ,
 							'to' => Version::FromString((string)$aUpgrader['to']) ,
-							'class' => (string)$aUpgrader
+							'class' => trim((string)$aUpgrader)
 				) ;
 			}
 		}
