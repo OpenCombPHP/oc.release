@@ -13,10 +13,23 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 	<script>
 		$(function(){
-			$("#m1,#m2,#m3").fancybox({
+			$("#m1").fancybox({
 				'width'				: '1000',
 				'height'			: '800',
-				'titlePosition' 	: 'over'
+				'titlePosition' 	: 'over',
+				'title'           : '此视频介绍如何将散放的frame和view组合成3列混合布局'
+			});
+			$("#m2").fancybox({
+				'width'				: '1000',
+				'height'			: '800',
+				'titlePosition' 	: 'over',
+				'title'           : '此视频介绍如何将文章内容页面合并到首页, 页面融合功能可以合并任意2个页面, 合并后可再通过页面布局进行布局调整'
+			});
+			$("#m3").fancybox({
+				'width'				: '1000',
+				'height'			: '800',
+				'titlePosition' 	: 'over',
+				'title'           : '此视频介绍如何利用模板编织功能迅速找到指定元素的位置, 并随意添加html代码到元素的前后不同位置'
 			});
 		});
 	</script>
