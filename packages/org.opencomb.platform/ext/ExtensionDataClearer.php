@@ -3,7 +3,6 @@ namespace org\opencomb\platform\ext ;
 
 use org\jecat\framework\cache\Cache;
 use org\jecat\framework\db\DB;
-use org\opencomb\platform\mvc\model\db\orm\Prototype;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\message\MessageQueue;
 use org\opencomb\platform\service\Service;
@@ -41,7 +40,7 @@ class ExtensionDataClearer extends Object
 		$aDbReflecter = $aDB->reflecterFactory()->dbReflecter($aDB->currentDBName());
 		foreach( $aDbReflecter->tableNameIterator() as $sTableName )
 		{
-			if(Prototype::isExtensionTable($sTableName,$sExtName))
+			if(self::isExtensionTable($sTableName,$sExtName))
 			{
 				try{
 					$aDB->execute('DROP TABLE '.$sTableName) ;
@@ -75,5 +74,16 @@ class ExtensionDataClearer extends Object
 		}
 		
 		Service::switchSingleton($aOriService) ;
+	}
+	
+	/**
+	 * @brief 检查表 \a $sFullTableName 是否是扩展 $sExtName 的数据表
+	 * @return boolean
+	 * 检查规则: 若 $sFullTableName 以 ${sExtName}_开头，则返回true，否则返回false
+	 */
+	static public function isExtensionTable($sFullTableName,$sExtName)
+	{
+		$sTableNamePrefix = DB::singleton()->tableNamePrefix().$sExtName.'_' ;
+		return strpos($sFullTableName,$sTableNamePrefix)===0 ;
 	}
 }

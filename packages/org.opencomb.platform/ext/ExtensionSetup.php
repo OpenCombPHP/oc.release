@@ -96,9 +96,11 @@ class ExtensionSetup extends Object
 		// 检查依赖关系
 		$this->checkDependence($aExtMeta,true) ;
 		
+		// 优先级
+		$nPriority = $aExtMeta->priority() ;
 		// 设置 setting
 		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
-		$arrEnable[$aExtMeta->priority()][] = $sExtName ;
+		$arrEnable[$nPriority][] = $sExtName ;
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
 		
 		// 修改 ExtensionManager
@@ -106,6 +108,10 @@ class ExtensionSetup extends Object
 		
 		// 刷新系统缓存
 		ServiceSerializer::singleton()->addSystemObject($aExtMgr) ;
+		
+		// 设置 priority
+		$aExt = $aExtMgr->extension($sExtName);
+		$aExt->setRuntimePriority( $nPriority );
 	}
 	
 	const TYPE_KEEP = 'keep';
