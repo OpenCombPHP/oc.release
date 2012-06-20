@@ -58,7 +58,7 @@ class PathMacroCompiler extends JcPathMacroCompiler
 			else
 			{
 				$sUrl = addslashes(Service::singleton()->publicFolders()->find($sPath,$sNamespace,true)) ;
-				$aDev->write( "\$aDevice->write(\"{$sUrl}\") ;" ) ;
+				$aDev->putCode( "\$aDevice->write(\"{$sUrl}\") ;" ) ;
 			}
 		}
 	}
