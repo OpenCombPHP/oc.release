@@ -143,7 +143,7 @@ class ExtensionMetainfo extends Object
 		//  data setup
 		if(!empty($aDomMetainfo->data->installer))
 		{
-			$aExtMetainfo->sDataInstallerClass = (string)$aDomMetainfo->data->installer ;
+			$aExtMetainfo->sDataInstallerClass = trim((string)$aDomMetainfo->data->installer) ;
 		}
 		//  data upgrade
 		if(!empty($aDomMetainfo->data->upgrader))

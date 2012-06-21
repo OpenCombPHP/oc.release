@@ -11,6 +11,8 @@ class ExtensionManager extends Object
 	/**
 	 * @example /配置/读取item
 	 * @forwiki /配置
+	 * @forclass org\opencomb\platform\ext\ExtensionMetainfo
+	 * @formethod __construct
 	 * @param Setting $aSetting
 	 */
 	public function __construct(Setting $aSetting=null)
