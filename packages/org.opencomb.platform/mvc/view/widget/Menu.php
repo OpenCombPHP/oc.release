@@ -38,8 +38,15 @@ class Menu extends JcMenu
 	public function buildBean(array & $arrConfig,$sNamespace='*',\org\jecat\framework\bean\BeanFactory $aBeanFactory=null)
 	{
 		// 触发事件
-		list($sControllerClass,$sViewXPath,$sWidgetId) = $this->mvcLocationInfo() ;
-		$sObjectId = $sControllerClass.'-'.$sViewXPath.'-'.$sWidgetId ;
+    	if( !$aView = $this->view() )
+    	{
+			$sObjectId = '--'.$this->id() ;
+    	}
+    	else	
+    	{
+    		$aController = $aView->controller(true) ;
+			$sObjectId = ($aController?get_class($aController):null).'-'.$aView->xpath(false).'-'.$this->id() ;
+    	}
 		
 		$arrArgvs = array(&$arrConfig,&$sNamespace,$aBeanFactory) ;		
 		EventManager::singleton()->emitEvent(__CLASS__,'beforeBuildBean',$arrArgvs,$sObjectId) ;
@@ -57,7 +64,7 @@ class Menu extends JcMenu
     	else	
     	{
     		$aController = $aView->controller(true) ;
-    		return array( $aController?get_class($aController):null , $aView->xpath(), $this->id() ) ;
+    		return array( $aController?get_class($aController):null , $aView->xpath(false), $this->id() ) ;
     	}
 		
 	}
