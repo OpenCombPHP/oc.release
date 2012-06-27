@@ -89,11 +89,7 @@ class ServiceFactory extends HttpAppFactory
 			
 			// 初始化系统无须store/restore的部分
 			$this->initServiceUnrestorableSystem($aService,$aFolder,$aSetting,$arrServiceSetting) ;
-			
-			// BeanFactory 类别名
-			BeanFactory::singleton()
-				->registerBeanClass("org\\opencomb\\platform\\mvc\\view\\widget\\Menu",'menu') ;
-			
+						
 			// store system objects !
 			if(isset($aServiceSerializer))
 			{
