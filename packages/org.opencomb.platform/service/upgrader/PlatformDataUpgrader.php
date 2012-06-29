@@ -164,7 +164,7 @@ CODE;
 CODE;
 	}
 	
-	private function messageQueue(){
+	public function messageQueue(){
 		return $this->aMessageQueue ;
 	}
 	
