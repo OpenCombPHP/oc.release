@@ -294,6 +294,8 @@ class ExtensionMetainfo extends Object
 		if(!empty($aDomMetainfo->licences['folder']))
 		{
 			$aExtMetainfo->sLicencesFolder = (string)$aDomMetainfo->licences['folder'] ;
+		}else{
+			$aExtMetainfo->sLicencesFolder = '/licence';
 		}
 		
 		return $aExtMetainfo ;
