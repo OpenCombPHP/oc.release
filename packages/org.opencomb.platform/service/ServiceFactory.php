@@ -2,11 +2,7 @@
 namespace org\opencomb\platform\service ;
 
 use org\opencomb\platform\util\EventHandlers;
-
-use org\jecat\framework\mvc\model\Prototype;
-
 use org\jecat\framework\util\EventManager;
-
 use org\jecat\framework\lang\Exception;
 use org\opencomb\platform\system\OcSession;
 use org\jecat\framework\cache\FSCache;
@@ -21,7 +17,6 @@ use org\jecat\framework\mvc\controller\Response;
 use org\jecat\framework\mvc\controller\Request;
 use org\jecat\framework\setting\Setting;
 use org\jecat\framework\locale\Locale;
-use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\system\Application;
 use org\jecat\framework\ui\xhtml\UIFactory;
@@ -59,7 +54,7 @@ class ServiceFactory extends HttpAppFactory
 		// setting
 		$aSetting = FsSetting::createFromPath($arrServiceSetting['folder_setting']) ;
 		Setting::setSingleton($aSetting) ;
-
+		
 		// 初始化 cache
 		$aCache = $this->createCache($aService,$arrServiceSetting['folder_cache']) ;
 		
@@ -83,19 +78,19 @@ class ServiceFactory extends HttpAppFactory
 			Locale::createSessionLocale(
 				$aSetting->item('service/locale','language','zh'), $aSetting->item('service/locale','country','CN'), true
 			) ;
-				
+			
 			// 模板文件
 			JcSourceFileManager::setSingleton($this->createUISourceFileManager($arrServiceSetting)) ;
 			
 			// 初始化系统无须store/restore的部分
 			$this->initServiceUnrestorableSystem($aService,$aFolder,$aSetting,$arrServiceSetting) ;
-						
+			
 			// store system objects !
 			if(isset($aServiceSerializer))
 			{
 				$aServiceSerializer->addSystemSingletons() ;
 			}
-		
+			
 			// 注册事件
 			EventHandlers::registerEventHandlers(EventManager::singleton()) ;
 			
@@ -103,13 +98,11 @@ class ServiceFactory extends HttpAppFactory
 			ExtensionLoader::singleton()->loadAllExtensions($aService,$aService->extensions()) ;
 			
 			// 计算 UI template 的编译策略签名
-			UIFactory::singleton()->calculateCompileStrategySignture() ;			
+			UIFactory::singleton()->calculateCompileStrategySignture() ;
 			
 			// 激活所有扩展
 			ExtensionLoader::singleton()->enableExtensions($aService,$aService->extensions()) ;
-
 		}
-
 		else 
 		{
 			// 初始化系统无须store/restore的部分
@@ -124,7 +117,7 @@ class ServiceFactory extends HttpAppFactory
 		
 		// 启用class路径缓存
 		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/service/class','enableClassPathCache',true) ) ;
-				
+		
 		if($aOriApp)
 		{
 			Application::switchSingleton($aOriApp) ;
@@ -151,12 +144,12 @@ class ServiceFactory extends HttpAppFactory
 		{
 			$arrServiceSetting['folder_compiled_template'] = $arrServiceSetting['folder_path'] . '/data/compiled/template' ;
 		}
-	
+		
 		if(empty($arrServiceSetting['folder_setting']))
 		{
 			$arrServiceSetting['folder_setting'] = $arrServiceSetting['folder_path'] . '/setting' ;
 		}
-
+		
 		if(empty($arrServiceSetting['folder_files']))
 		{
 			$arrServiceSetting['folder_files'] = $arrServiceSetting['folder_path'] . '/files' ;
@@ -202,7 +195,7 @@ class ServiceFactory extends HttpAppFactory
 		Response::setSingleton( $this->createResponse($aService) ) ;
 	}
 	private function initServiceUnrestorableSystem(Service $aService,Folder $aFolder,Setting $aSetting,array & $arrServiceSetting)
-	{			
+	{
 		// 数据库
 		$sDBConfig = $aSetting->item('/service/db','config','alpha') ;
 		if( !$sDsn=$aSetting->item('/service/db/'.$sDBConfig,'dsn')
@@ -224,10 +217,10 @@ class ServiceFactory extends HttpAppFactory
 			$aDB->setTableNamePrefix($sTablePrefix) ;
 		}
 		DB::setSingleton($aDB) ;
-
+		
 		// 会话
 		Session::setSingleton( new OcSession() ) ;
-
+		
 		// 模板引擎宏
 		UIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
 				'/', "org\\opencomb\\platform\\ui\\xhtml\\compiler\\PathMacroCompiler"
@@ -235,6 +228,7 @@ class ServiceFactory extends HttpAppFactory
 		MvcUIFactory::singleton()->compilerManager()->compilerByName('org\\jecat\\framework\\ui\xhtml\\Macro')->setSubCompiler(
 				'/', "org\\opencomb\\platform\\ui\\xhtml\\compiler\\PathMacroCompiler"
 		) ;
+		
 		
 		// 高速缓存
 		if( !$aService->isDebugging() and $arrHsCacheSetting=$aSetting->item('/service/cache','high-speed',null) )
@@ -252,16 +246,16 @@ class ServiceFactory extends HttpAppFactory
 		$aPublicFolders->addFolder(new Folder($arrServiceSetting['platform_folder'].'/public',0,$arrServiceSetting['platform_url']."/public"),'org.opencomb.platform') ;
 		$aService->setPublicFolders($aPublicFolders) ;
 	}
-		
+	
 	public function createClassLoader(array & $arrServiceSetting)
-	{		
+	{
 		// 重建对像
 		$aClassLoader = parent::createClassLoader() ;
 		
 		// Service packages
 		$aClassLoader->addPackage( 'org\\opencomb\\platform', new Folder(\org\opencomb\platform\PATH.'/packages/org.opencomb.platform') ) ;
 		$aClassLoader->addPackage( 'net\\phpconcept\\pclzip', new Folder(\org\opencomb\platform\PATH.'/packages/net.phpconcept.pclzip') ) ;
-
+		
 		// 类编译包
 		$aCompiledPackage = new Package('',Folder::createFolder($arrServiceSetting['folder_compiled_class'])) ;
 		$aClassLoader->addPackage( $aCompiledPackage, null, Package::compiled ) ;
@@ -290,5 +284,3 @@ class ServiceFactory extends HttpAppFactory
 		return $aSrcFileMgr ;
 	}
 }
-
-

@@ -10,6 +10,8 @@ use org\jecat\framework\fs\Folder;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\bean\BeanFactory;
 use org\jecat\framework\mvc\view\UIFactory;
+use org\jecat\framework\message\MessageQueue;
+use org\jecat\framework\util\Version;
 
 class ExtensionLoader extends Object
 {
@@ -31,6 +33,8 @@ class ExtensionLoader extends Object
 				$this->loadExtension($aService,$aExtensionManager,$sExtName,$nPriority) ;
 			}
 		}
+		$aMesgQ = MessageQueue::flyWeight('extensionDataUpgrade');
+		$aMesgQ->display();
 	}
 	
 	public function loadExtension(Service $aService,ExtensionManager $aExtensionManager,$sName,$nPriority=-1)
@@ -107,6 +111,23 @@ class ExtensionLoader extends Object
 			$nPriority = end($aExtensionManager->extensionPriorities()) ;
 		}
 		$aExtension->setRuntimePriority($nPriority) ;
+		
+		// 检查系统中是否保留扩展的数据
+		$aMesgQ = MessageQueue::flyWeight('extensionDataUpgrade');
+		// 扩展的数据版本
+		$aExtDataVersion = $aExtMeta->dataVersion();
+		// 系统中已安装的数据版本
+		if( $sDataVersion = $aExtMeta->setting()->item('/','data-version') )
+		{
+			$aDataVersion = Version::fromString($sDataVersion);
+			if( $aDataVersion->compare( $aExtDataVersion ) != 0){
+				ExtensionSetup::singleton()->upgradeData( $aDataVersion , $aExtMeta , $aMesgQ );
+				$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false) ) ;
+			}
+		}else{
+			ExtensionSetup::singleton()->installData($aExtMeta,$aMesgQ ) ;
+			$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false)) ;
+		}
 		
 		// 执行扩展的加载函数
 		$aExtension->load($aService) ;

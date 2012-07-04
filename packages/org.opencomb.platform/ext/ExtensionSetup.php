@@ -44,6 +44,7 @@ class ExtensionSetup extends Object
 		// 加载新扩展的类包
 		$this->loadClassPackages($aExtMeta) ;
 		
+		/*
 		// 检查系统中是否保留扩展的数据
 		if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
 		{
@@ -59,6 +60,7 @@ class ExtensionSetup extends Object
 		
 		// 写入数据版本
 		$aExtMeta->setting()->setItem('/','data-version',$aExtMeta->dataVersion()->toString(false)) ;
+		*/
 		
 		// 添加扩展的安装信息
 		// 已经存在相同扩展，则是替换
@@ -443,11 +445,11 @@ class ExtensionSetup extends Object
 	/**
 	 * 升级扩展的资源版本
 	 */
-	private function upgradeData(Version $aFromVersion , ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
+	public function upgradeData(Version $aFromVersion , ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
 		$aToVersion = $aExtMeta->dataVersion() ;
 		if($aFromVersion->compare( $aToVersion ) === 0){
-			return ;
+			return false;
 		}
 		$arrEdge = array();
 		$arrVersion = array();
@@ -501,12 +503,13 @@ class ExtensionSetup extends Object
 				)
 			);
 		}
+		return true;
 	}
 	
 	/**
 	 * 安装资源
 	 */
-	private function installData(ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
+	public function installData(ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
 		if( !$sDataInstallerClass = $aExtMeta->dataInstallerClass())
 		{
