@@ -121,12 +121,14 @@ class ExtensionLoader extends Object
 		{
 			$aDataVersion = Version::fromString($sDataVersion);
 			if( $aDataVersion->compare( $aExtDataVersion ) != 0){
-				ExtensionSetup::singleton()->upgradeData( $aDataVersion , $aExtMeta , $aMesgQ );
-				$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false) ) ;
+				if(ExtensionSetup::singleton()->upgradeData( $aDataVersion , $aExtMeta , $aMesgQ )){
+					$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false) ) ;
+				}
 			}
 		}else{
-			ExtensionSetup::singleton()->installData($aExtMeta,$aMesgQ ) ;
-			$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false)) ;
+			if( ExtensionSetup::singleton()->installData($aExtMeta,$aMesgQ ) ){
+				$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false)) ;
+			}
 		}
 		
 		// 执行扩展的加载函数

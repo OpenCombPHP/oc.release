@@ -468,6 +468,16 @@ class ExtensionSetup extends Object
 		
 		if($arrPath){
 			foreach($arrPath as $sDataUpgraderClass ){
+				if(!class_exists($sDataUpgraderClass)){
+					throw new Exception(
+						'扩展%s的metainfo.xml文件中写了data upgrader，但类%s不存在',
+						array(
+							$aExtMeta->name(),
+							$sDataUpgraderClass
+						)
+					);
+				}
+				
 				if(!Type::hasImplements($sDataUpgraderClass,'org\\opencomb\\platform\\ext\\IExtensionDataUpgrader'))
 				{
 					throw new Exception(
@@ -513,7 +523,17 @@ class ExtensionSetup extends Object
 	{
 		if( !$sDataInstallerClass = $aExtMeta->dataInstallerClass())
 		{
-			return ;
+			return false;
+		}
+		
+		if(!class_exists($sDataInstallerClass)){
+			throw new Exception(
+				'扩展%s的metainfo.xml文件中写了data installer，但类%s不存在',
+				array(
+					$aExtMeta->name(),
+					$sDataInstallerClass
+				)
+			);
 		}
 		
 		if(!Type::hasImplements($sDataInstallerClass,'org\\opencomb\\platform\\ext\\IExtensionDataInstaller'))
@@ -531,6 +551,7 @@ class ExtensionSetup extends Object
 		} catch (\Extension $e) {
 			$aMessageQueue->create(Message::error,"安装扩展%s的数据时遇到了错误。",$aExtMeta->name()) ;
 		}
+		return true;
 	}
 	
 	
