@@ -13,6 +13,8 @@ use org\jecat\framework\mvc\view\UIFactory;
 use org\jecat\framework\message\MessageQueue;
 use org\jecat\framework\util\Version;
 
+use org\jecat\framework\setting\Setting;
+
 class ExtensionLoader extends Object
 {
 	public function loadAllExtensions(Service $aService=null,ExtensionManager $aExtensionManager=null)
@@ -112,22 +114,25 @@ class ExtensionLoader extends Object
 		}
 		$aExtension->setRuntimePriority($nPriority) ;
 		
-		// 检查系统中是否保留扩展的数据
-		$aMesgQ = MessageQueue::flyWeight('extensionDataUpgrade');
-		// 扩展的数据版本
-		$aExtDataVersion = $aExtMeta->dataVersion();
-		// 系统中已安装的数据版本
-		if( $sDataVersion = $aExtMeta->setting()->item('/','data-version') )
-		{
-			$aDataVersion = Version::fromString($sDataVersion);
-			if( $aDataVersion->compare( $aExtDataVersion ) != 0){
-				if(ExtensionSetup::singleton()->upgradeData( $aDataVersion , $aExtMeta , $aMesgQ )){
-					$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false) ) ;
+		$bEnableDataUpgrader = Setting::singleton()->item('/extensions','enableDataUpgrader',false);
+		if($bEnableDataUpgrader && $aExtMeta->dataVersion() ){
+			// 检查系统中是否保留扩展的数据
+			$aMesgQ = MessageQueue::flyWeight('extensionDataUpgrade');
+			// 扩展的数据版本
+			$aExtDataVersion = $aExtMeta->dataVersion();
+			// 系统中已安装的数据版本
+			if( $sDataVersion = $aExtMeta->setting()->item('/','data-version') )
+			{
+				$aDataVersion = Version::fromString($sDataVersion);
+				if( $aDataVersion->compare( $aExtDataVersion ) != 0){
+					if(ExtensionSetup::singleton()->upgradeData( $aDataVersion , $aExtMeta , $aMesgQ )){
+						$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false) ) ;
+					}
 				}
-			}
-		}else{
-			if( ExtensionSetup::singleton()->installData($aExtMeta,$aMesgQ ) ){
-				$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false)) ;
+			}else{
+				if( ExtensionSetup::singleton()->installData($aExtMeta,$aMesgQ ) ){
+					$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false)) ;
+				}
 			}
 		}
 		

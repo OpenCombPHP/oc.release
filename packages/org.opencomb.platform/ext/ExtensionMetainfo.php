@@ -138,7 +138,7 @@ class ExtensionMetainfo extends Object
 		}
 		else
 		{
-			$aExtMetainfo->aDataVersion = clone $aExtMetainfo->aVersion ;
+			$aExtMetainfo->aDataVersion = null ;
 		}
 		//  data setup
 		if(!empty($aDomMetainfo->data->installer))
