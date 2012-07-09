@@ -505,11 +505,12 @@ class ExtensionSetup extends Object
 			}
 		}else{
 			throw new Exception(
-				'扩展%s未提供从版本`%s`至版本`%s`的数据升级程序',
+				'扩展%s未提供从版本`%s`至版本`%s`的数据升级程序。扩展提供的升级程序有：%s',
 				array(
 					$aExtMeta->name(),
 					$aFromVersion->toString(),
-					$aToVersion->toString()
+					$aToVersion->toString(),
+					var_export($arrPath,true),
 				)
 			);
 		}

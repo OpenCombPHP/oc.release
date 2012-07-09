@@ -107,10 +107,11 @@ class PlatformDataUpgrader extends Object{
 		
 		if( false === $arrPath ){
 			throw new Exception(
-				'未找到合适的升级路径 : from %s to %s',
+				'未找到合适的升级路径 : 从 %s 到 %s 。 系统提供的升级程序有 ： %s',
 				array(
 					$aFromVersion,
 					$aToVersion,
+					var_export($arrMap,true)
 				)
 			);
 		}

@@ -92,16 +92,26 @@ class RequireItem
 		if($aVersion instanceof VersionCompat){
 			if(!$aVersion->check($this->aRequireVersionScope)){
 				throw new Exception(
-					'request `'.$this->type().':'.$this->itemName().'` version failed . '.
-					'request for `'.$this->aRequireVersionScope.'` and provide is `'.$aVersion.'`'
+					'依赖关系%s:%s不满足，要求的版本为%s，提供的版本为%s',
+					array(
+						$this->type(),
+						$this->itemName(),
+						$this->aRequireVersionScope,
+						$aVersion
+					)
 				);
 				return false;
 			}
 		}else if($aVersion instanceof Version){
 			if(!$this->aRequireVersionScope->isInScope($aVersion)){
 				throw new Exception(
-					'request `'.$this->type().':'.$this->itemName().'` version failed . '.
-					'request for `'.$this->aRequireVersionScope.'` and provide is `'.$aVersion.'`'
+					'依赖关系%s:%s不满足，要求的版本为%s，提供的版本为%s',
+					array(
+						$this->type(),
+						$this->itemName(),
+						$this->aRequireVersionScope,
+						$aVersion
+					)
 				);
 				return false;
 			}
@@ -124,13 +134,23 @@ class RequireItem
 	
 	private function checkLanguageVersion(){
 		if($this->itemName() !== 'php'){
-			throw new Exception('request language failed . not support '.$this->itemName());
+			throw new Exception(
+				'依赖语言不满足，不支持`%s`语言 ',
+				$this->itemName()
+			);
 			return false;
 		}else{
 			preg_match('|[\d\.]*|',phpversion(),$sPhpVersion);
 			$aPhpVersion = Version::fromString($sPhpVersion[0]);
 			if(!$this->aRequireVersionScope->isInScope($aPhpVersion)){
-				throw new Exception('request `'.$this->itemName().'` version failed . request for `'.$this->aRequireVersionScope.'` and provide is `'.$aPhpVersion.'`');
+				throw new Exception(
+					'依赖语言不满足，要求的版本为%s，提供的版本为%s',
+					array(
+						$this->itemName(),
+						$this->aRequireVersionScope,
+						$aPhpVersion
+					)
+				);
 				return false;
 			}
 		}
@@ -140,12 +160,22 @@ class RequireItem
 	private function checkLanguageModuleVersion(){
 		$sPhpVersion = phpversion($this->itemName());
 		if(empty($sPhpVersion)){
-			throw new Exception('request language module `'.$this->itemName().'` failed : not exist.');
+			throw new Exception(
+				'依赖语言模块不满足，%s不存在',
+				$this->itemName()
+			);
 		}
 		preg_match('|[\d\.]*|',$sPhpVersion,$arrMatch);
 		$aPhpVersion = Version::fromString($arrMatch[0]);
 		if(!$this->aRequireVersionScope->isInScope($aPhpVersion)){
-			throw new Exception('request `'.$this->itemName().'` version failed . request for `'.$this->aRequireVersionScope.'` and provide is `'.$aPhpVersion.'`');
+			throw new Exception(
+				'依赖语言模块不满足，要求的版本为%s，提供的版本为%s',
+				array(
+					$this->itemName(),
+					$this->aRequireVersionScope,
+					$aPhpVersion
+				)
+			);
 			return false;
 		}
 		return true;
