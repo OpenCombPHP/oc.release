@@ -32,10 +32,6 @@ class PlatformDataUpgrader extends Object{
 			$aServiceShutdowner = ServiceShutdowner :: singleton() ;
 			$aServiceShutdowner->shutdown();
 			
-			// upgrade
-			$aDataVersion = $this->dataVersion () ;
-			$aCurrentVersion = $this->currentVersion() ;
-			
 			try{
 				$this->upgrade() ;
 			
