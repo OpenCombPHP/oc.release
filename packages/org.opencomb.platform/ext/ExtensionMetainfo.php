@@ -134,7 +134,7 @@ class ExtensionMetainfo extends Object
 		//  data version
 		if(!empty($aDomMetainfo->data->version))
 		{
-			$aExtMetainfo->aDataVersion = Version::FromString((string)$aDomMetainfo->data->version) ;
+			$aExtMetainfo->aDataVersion = Version::FromString(trim((string)$aDomMetainfo->data->version)) ;
 		}
 		else
 		{

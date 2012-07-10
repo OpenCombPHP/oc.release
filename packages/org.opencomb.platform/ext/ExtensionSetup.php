@@ -44,23 +44,22 @@ class ExtensionSetup extends Object
 		// 加载新扩展的类包
 		$this->loadClassPackages($aExtMeta) ;
 		
-		/*
-		// 检查系统中是否保留扩展的数据
-		if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
-		{
-			// 升级数据
-			$this->upgradeData(Version::fromString($sDataVersion),$aExtMeta , $aMessageQueue) ;
-		}
+		if( $aExtMeta->dataVersion() ){
+			// 检查系统中是否保留扩展的数据
+			if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
+			{
+				// 升级数据
+				//$this->upgradeData(Version::fromString($sDataVersion),$aExtMeta , $aMessageQueue) ;
+			}
 		
-		// 安装资源
-		else
-		{
-			$this->installData($aExtMeta,$aMessageQueue) ;
+			// 安装资源
+			else
+			{
+				$this->installData($aExtMeta,$aMessageQueue) ;
+				// 写入数据版本
+				$aExtMeta->setting()->setItem('/','data-version',$aExtMeta->dataVersion()->toString(false)) ;
+			}
 		}
-		
-		// 写入数据版本
-		$aExtMeta->setting()->setItem('/','data-version',$aExtMeta->dataVersion()->toString(false)) ;
-		*/
 		
 		// 添加扩展的安装信息
 		// 已经存在相同扩展，则是替换
