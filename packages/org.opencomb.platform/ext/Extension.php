@@ -201,9 +201,6 @@ class Extension extends Object
 			else
 			{
 				$this->aDataVersion = $this->metainfo()->dataVersion() ;
-				
-				// 存到 setting 中
-				$this->setting()->setItem('/','data-version',$this->aDataVersion->toString(false)) ;
 			}
 		}
 		return $this->aDataVersion ;

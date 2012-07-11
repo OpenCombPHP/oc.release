@@ -125,12 +125,12 @@ class ExtensionLoader extends Object
 				$aDataVersion = Version::fromString($sDataVersion);
 				if( $aDataVersion->compare( $aExtDataVersion ) != 0){
 					if(ExtensionSetup::singleton()->upgradeData( $aDataVersion , $aExtMeta , $aMesgQ )){
-						$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false) ) ;
+						$aExtMeta->setting()->setItem('/','data-version',(string)$aExtDataVersion ) ;
 					}
 				}
 			}else{
 				if( ExtensionSetup::singleton()->installData($aExtMeta,$aMesgQ ) ){
-					$aExtMeta->setting()->setItem('/','data-version',$aExtDataVersion->toString(false)) ;
+					$aExtMeta->setting()->setItem('/','data-version',(string)$aExtDataVersion) ;
 				}
 			}
 		}

@@ -58,7 +58,7 @@ class ExtensionSetup extends Object
 			{
 				$this->installData($aExtMeta,$aMessageQueue) ;
 				// 写入数据版本
-				$aExtMeta->setting()->setItem('/','data-version',$aExtMeta->dataVersion()->toString(false)) ;
+				$aExtMeta->setting()->setItem('/','data-version',(string)$aExtMeta->dataVersion() ) ;
 			}
 		}
 		
@@ -153,8 +153,9 @@ class ExtensionSetup extends Object
 		// 记录扩展的数据版本
 		if($bRetainData)
 		{
-			$aExtension = new Extension($aExtMeta) ;
-			$aExtension->setting()->setItem('/','data-version',$aExtension->dataVersion()->toString(false)) ;
+			// 安装和升级的时候已经正确在setting中保存了数据版本，卸载的时候没必要再写一遍
+			// $aExtension = new Extension($aExtMeta) ;
+			// $aExtension->setting()->setItem('/','data-version',$aExtension->dataVersion()->toString(false)) ;
 		}
 		// 清理数据
 		else
