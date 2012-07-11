@@ -35,8 +35,6 @@ class ExtensionLoader extends Object
 				$this->loadExtension($aService,$aExtensionManager,$sExtName,$nPriority) ;
 			}
 		}
-		$aMesgQ = MessageQueue::flyWeight('extensionDataUpgrade');
-		$aMesgQ->display();
 	}
 	
 	public function loadExtension(Service $aService,ExtensionManager $aExtensionManager,$sName,$nPriority=-1)
@@ -114,10 +112,11 @@ class ExtensionLoader extends Object
 		}
 		$aExtension->setRuntimePriority($nPriority) ;
 		
-		$bEnableDataUpgrader = Setting::singleton()->item('/extensions','enableDataUpgrader',false);
-		if($bEnableDataUpgrader && $aExtMeta->dataVersion() ){
+		$bEnableDataUpgrader = $aService->isEnableDataUpgrader();
+		$bDebug = $aService->isDebugging() ;
+		if( ($bEnableDataUpgrader or $bDebug ) && $aExtMeta->dataVersion() ){
 			// 检查系统中是否保留扩展的数据
-			$aMesgQ = MessageQueue::flyWeight('extensionDataUpgrade');
+			$aMesgQ = MessageQueue::flyWeight('dataUpgrade');
 			// 扩展的数据版本
 			$aExtDataVersion = $aExtMeta->dataVersion();
 			// 系统中已安装的数据版本

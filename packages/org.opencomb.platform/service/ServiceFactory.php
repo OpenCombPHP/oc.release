@@ -29,6 +29,8 @@ use org\opencomb\platform as oc;
 use org\jecat\framework\mvc\view\UIFactory as MvcUIFactory;
 use org\jecat\framework\ui\SourceFileManager as JcSourceFileManager;
 use org\jecat\framework\system\AccessRouter as JcAccessRouter;
+use org\opencomb\platform\service\upgrader\PlatformDataUpgrader ;
+use org\jecat\framework\message\MessageQueue;
 
 class ServiceFactory extends HttpAppFactory
 {
@@ -122,6 +124,10 @@ class ServiceFactory extends HttpAppFactory
 		{
 			Application::switchSingleton($aOriApp) ;
 		}
+		
+		$aMesgQ = MessageQueue::flyWeight('dataUpgrade');
+		$aMesgQ->display();
+		$aService->setEnableDataUpgrader(false);
 		
 		return $aService ;
 	}
@@ -245,6 +251,19 @@ class ServiceFactory extends HttpAppFactory
 		$aPublicFolders->addFolder(new Folder($arrServiceSetting['framework_folder'].'/public',0,$arrServiceSetting['framework_url']."/public"),'org.jecat.framework') ;
 		$aPublicFolders->addFolder(new Folder($arrServiceSetting['platform_folder'].'/public',0,$arrServiceSetting['platform_url']."/public"),'org.opencomb.platform') ;
 		$aService->setPublicFolders($aPublicFolders) ;
+		
+		
+		$bEnableDataUpgrader = $aService->isEnableDataUpgrader() ;
+		$bDebug = $aService->isDebugging();
+		
+		if( $bEnableDataUpgrader or $bDebug ){
+			// 检查 service 升级
+			$aDataUpgrader = PlatformDataUpgrader::singleton() ; 
+			$aMessageQueue = MessageQueue::flyWeight('dataUpgrade');
+			if(TRUE === $aDataUpgrader->process($aMessageQueue)){
+				// $aDataUpgrader->relocation();
+			}
+		}
 	}
 	
 	public function createClassLoader(array & $arrServiceSetting)

@@ -72,6 +72,17 @@ class Service extends Application
 		return $this->aFilesFolder ;
 	}
 	
+	public function isEnableDataUpgrader(){
+		$aSetting = Setting::singleton() ;
+		$bEnableDataUpgrader = $aSetting->item('/service','bEnableDataUpgrader',false);
+		return $bEnableDataUpgrader ;
+	}
+	
+	public function setEnableDataUpgrader($b){
+		$aSetting = Setting::singleton() ;
+		$bEnableDataUpgrader = $aSetting->setItem('/service','bEnableDataUpgrader',(bool)$b);
+	}
+	
 	private $aExtensionManager ;
 	private $aDataVersion ;
 	private $aFilesFolder ;
