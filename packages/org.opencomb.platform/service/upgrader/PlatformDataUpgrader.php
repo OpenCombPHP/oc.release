@@ -15,12 +15,7 @@ use org\jecat\framework\message\MessageQueue;
 	org\opencomb\platform\system\upgrader ;
 */
 class PlatformDataUpgrader extends Object{
-	public function process(MessageQueue $aMessageQueue = null ){
-		if( null === $aMessageQueue ){
-			$this->aMessageQueue = new MessageQueue ;
-		}else{
-			$this->aMessageQueue = $aMessageQueue ;
-		}
+	public function process(MessageQueue $aMessageQueue){
 		$sLockFileName = '/'.basename(__FILE__,".php").'Lock.html' ;
 		$aLockFile = Folder::singleton()->findFile( $sLockFileName ,Folder::FIND_AUTO_CREATE) ;
 		
@@ -33,7 +28,7 @@ class PlatformDataUpgrader extends Object{
 			$aServiceShutdowner->shutdown();
 			
 			try{
-				$this->upgrade() ;
+				$this->upgrade($aMessageQueue) ;
 			
 				// restore system
 				$aServiceShutdowner->restore() ;
@@ -67,7 +62,7 @@ class PlatformDataUpgrader extends Object{
 		}
 	}
 	
-	public function upgrade(){
+	public function upgrade(MessageQueue $aMessageQueue){
 		$aFromVersion = $this->dataVersion() ;
 		$aToVersion = $this->currentVersion() ;
 		
@@ -113,7 +108,6 @@ class PlatformDataUpgrader extends Object{
 		}
 		
 		$aSetting = Setting::singleton() ;
-		$aMessageQueue = $this->messageQueue();
 		foreach($arrPath as $sPath){
 			$aUpgrader = new $sPath ;
 			if( ! $aUpgrader instanceof IUpgrader){
@@ -160,12 +154,6 @@ CODE;
 </html>
 CODE;
 	}
-	
-	public function messageQueue(){
-		return $this->aMessageQueue ;
-	}
-	
-	private $aMessageQueue = null;
 }
 
 
