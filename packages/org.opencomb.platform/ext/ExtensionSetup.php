@@ -524,9 +524,25 @@ class ExtensionSetup extends Object
 	 */
 	public function installData(ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
+		if( !$aExtMeta->dataVersion() ){
+			throw new Exception(
+				'扩展`%s(%s)`的metainfo.xml中没有data version，不需要安装数据',
+				array(
+					$aExtMeta->title(),
+					$aExtMeta->name(),
+				)
+			);
+		}
 		if( !$sDataInstallerClass = $aExtMeta->dataInstallerClass())
 		{
-			return false;
+			throw new Exception(
+				'扩展`%s(%s)`的metainfo.xml文件中有data version (%s)但没有data installer，无法执行数据安装',
+				array(
+					$aExtMeta->title(),
+					$aExtMeta->name(),
+					$aExtMeta->dataVersion()
+				)
+			);
 		}
 		
 		if(!class_exists($sDataInstallerClass)){
