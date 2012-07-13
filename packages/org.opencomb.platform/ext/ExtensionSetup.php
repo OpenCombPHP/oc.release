@@ -48,6 +48,7 @@ class ExtensionSetup extends Object
 			// 检查系统中是否保留扩展的数据
 			if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
 			{
+				$aService = Service::singleton() ;
 				$aService->setEnableDataUpgrader(true);
 				// 升级数据
 				//$this->upgradeData(Version::fromString($sDataVersion),$aExtMeta , $aMessageQueue) ;
@@ -85,7 +86,7 @@ class ExtensionSetup extends Object
 		// 已经激活
 		foreach($aExtMgr->enableExtensionNameIterator() as $enableExtensionName){
 			if($enableExtensionName == $sExtName){
-				throw new Exception("启用扩展失败，指定的扩展已经激活：%s",$sExtName) ;
+				//throw new Exception("启用扩展失败，指定的扩展已经激活：%s",$sExtName) ;
 				return ;
 			}
 		}
@@ -523,9 +524,25 @@ class ExtensionSetup extends Object
 	 */
 	public function installData(ExtensionMetainfo $aExtMeta , MessageQueue $aMessageQueue)
 	{
+		if( !$aExtMeta->dataVersion() ){
+			throw new Exception(
+				'扩展`%s(%s)`的metainfo.xml中没有data version，不需要安装数据',
+				array(
+					$aExtMeta->title(),
+					$aExtMeta->name(),
+				)
+			);
+		}
 		if( !$sDataInstallerClass = $aExtMeta->dataInstallerClass())
 		{
-			return false;
+			throw new Exception(
+				'扩展`%s(%s)`的metainfo.xml文件中有data version (%s)但没有data installer，无法执行数据安装',
+				array(
+					$aExtMeta->title(),
+					$aExtMeta->name(),
+					$aExtMeta->dataVersion()
+				)
+			);
 		}
 		
 		if(!class_exists($sDataInstallerClass)){
