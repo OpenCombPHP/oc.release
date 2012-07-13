@@ -135,6 +135,8 @@ class ExtensionLoader extends Object
 			}
 		}
 		
+		Setting::setFlyweight($aExtension->setting(), $aExtMeta->name()) ;
+		
 		// 执行扩展的加载函数
 		$aExtension->load($aService) ;
 

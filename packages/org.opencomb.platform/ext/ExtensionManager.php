@@ -119,6 +119,9 @@ class ExtensionManager extends Object
 		return new \ArrayIterator($this->arrExtensionInstances) ;
 	}
 	
+	/**
+	 * @return Extension
+	 */
 	public function extension($sName) 
 	{
 		if( !isset($this->arrExtensionInstances[$sName]) )
