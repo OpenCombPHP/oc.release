@@ -86,7 +86,7 @@ class ExtensionSetup extends Object
 		// 已经激活
 		foreach($aExtMgr->enableExtensionNameIterator() as $enableExtensionName){
 			if($enableExtensionName == $sExtName){
-				throw new Exception("启用扩展失败，指定的扩展已经激活：%s",$sExtName) ;
+				//throw new Exception("启用扩展失败，指定的扩展已经激活：%s",$sExtName) ;
 				return ;
 			}
 		}
