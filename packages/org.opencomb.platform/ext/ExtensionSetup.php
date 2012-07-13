@@ -48,6 +48,7 @@ class ExtensionSetup extends Object
 			// 检查系统中是否保留扩展的数据
 			if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
 			{
+				$aService = Service::singleton() ;
 				$aService->setEnableDataUpgrader(true);
 				// 升级数据
 				//$this->upgradeData(Version::fromString($sDataVersion),$aExtMeta , $aMessageQueue) ;
