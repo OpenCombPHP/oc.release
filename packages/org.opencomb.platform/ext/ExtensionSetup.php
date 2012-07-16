@@ -535,6 +535,7 @@ class ExtensionSetup extends Object
 		}
 		if( !$sDataInstallerClass = $aExtMeta->dataInstallerClass())
 		{
+			return false;
 			throw new Exception(
 				'扩展`%s(%s)`的metainfo.xml文件中有data version (%s)但没有data installer，无法执行数据安装',
 				array(
