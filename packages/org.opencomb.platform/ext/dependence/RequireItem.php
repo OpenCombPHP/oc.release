@@ -58,10 +58,15 @@ class RequireItem
 				return $this->checkLanguageModuleVersion();
 				break ;
 			case self::TYPE_FRAMEWORK :
-				return $this->checkVersion(Version::FromString(\org\jecat\framework\VERSION)) ;
+				$aVersionCompat = new VersionCompat;
+				// 当前版本
+				$aVersionCompat->addCompatibleVersion( Version::FromString(\org\jecat\framework\VERSION ) );
+				// 其它兼容版本
+				$aVersionCompat->addFromString( \org\jecat\framework\VERSIONCOMPAT ) ;
+				return $this->checkVersion( $aVersionCompat ) ;
 				break ;
 			case self::TYPE_PLATFORM :
-				return $this->checkVersion(Platform::singleton()->version()) ;
+				return $this->checkVersion(Platform::singleton()->versionCompat()) ;
 				break;
 			case self::TYPE_EXTENSION :
 				// 激活时为 true

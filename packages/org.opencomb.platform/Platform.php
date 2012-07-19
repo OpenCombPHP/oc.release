@@ -37,7 +37,7 @@ class Platform
 {
 	const version = '0.4.0.1' ;
 	const data_version = '0.3.1' ;
-	const version_compat = "" ;
+	const version_compat = "=0.4" ;
 	
 	/**
 	 * @return Platform
