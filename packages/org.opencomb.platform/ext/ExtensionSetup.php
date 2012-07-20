@@ -231,11 +231,13 @@ class ExtensionSetup extends Object
 		}
 		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
 
+/*
 		// 修改 ExtensionManager
 		$aExtensionManager->removeEnableExtension($aExtMeta);
 
 		// 刷新系统缓存
 		ServiceSerializer::singleton()->addSystemObject($aExtensionManager) ;
+//*/
 	}
 	
 	public function changePriority($sExtName,$nNewPriority){
