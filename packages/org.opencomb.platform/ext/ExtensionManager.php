@@ -227,7 +227,7 @@ class ExtensionManager extends Object
 		}
 		
 		// arrExtensionInstances
-		unset($this->arrExtensionInstances[$aExtensionMetainfo->name()]);
+		// unset($this->arrExtensionInstances[$aExtensionMetainfo->name()]);
 	}
 	
 	/**
