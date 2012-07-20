@@ -1,3 +1,22 @@
+<if "$aId=\org\jecat\framework\auth\IdManager::singleton()->currentId()">
+		
+		Hi,
+		<select onchange="window.location.href='/?c=org.opencomb.coresystem.user.SwichId&uid=' + this.options[this.selectedOption].value">
+			<foreach for="\org\jecat\framework\auth\IdManager::singleton()->iterator()" item='aId'>
+			<option value="{=$aId->userId()}"{= $aId===$aCurrentId? ' selected': ''}>{=$aId->displayName()}</option>
+			</foreach>
+		</select>
+				
+		<if "\org\opencomb\coresystem\auth\PurviewQuery::singleton()->hasPurview($aId,\org\opencomb\coresystem\auth\Id::PLATFORM_ADMIN,'coresystem')">
+			| <a href="?c=control.panel">控制面板</a>
+		</if>
+		
+		| <a href="?c=logout">退出</a>
+		
+	<else />
+		<a href="?c=login">登录</a>
+</if>
+
 <h3>Welcome to use OpenComb !</h3>
 
 There is a castle on a cloud,<br />
