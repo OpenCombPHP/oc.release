@@ -168,12 +168,20 @@ class ExtensionSetup extends Object
 		// 删除扩展 ------------
 		
 		// 修改 ExtensionManager
+		/*
 		$aExtensionManager->removeInstallExtension($aExtMeta);
 		ServiceSerializer::singleton()->addSystemObject($aExtensionManager) ;
 
+		*/
 		// 设置 setting	
-		$aExtList = $this->buildInstalledExtensionList($aExtensionManager) ;
-		Setting::singleton()->setItem('/extensions','installeds',$aExtList) ;
+		$arrExtList = $this->buildInstalledExtensionList($aExtensionManager) ;
+		$sInstallPath = $aExtMeta->installPath() ;
+		$sInstallPath = Folder::relativePath(oc\EXTENSIONS_FOLDER,$sInstallPath) ?: $sInstallPath ;
+		$rSearch = array_search( $sInstallPath , $arrExtList ) ;
+		if( $rSearch !== false ){
+			unset( $arrExtList[ $rSearch ] );
+		}
+		Setting::singleton()->setItem('/extensions','installeds',$arrExtList) ;
 
 		$aMessageQueue->create(Message::success,'扩展`%s`已经从服务中卸载',array($sExtName)) ;
 	}
