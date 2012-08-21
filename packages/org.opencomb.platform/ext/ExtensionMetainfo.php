@@ -407,7 +407,10 @@ class ExtensionMetainfo extends Object
 	
 	public function setting()
 	{
-		return Setting::singleton()->separate('extensions/'.$this->name()) ;
+		if( null === $this->aSetting ){
+			$this->aSetting = Setting::singleton()->separate('extensions/'.$this->name()) ;
+		}
+		return $this->aSetting ;
 	}
 	
 	/**
@@ -490,5 +493,6 @@ class ExtensionMetainfo extends Object
 	
 	private $aDependence ;
 	
+	private $aSetting = null;
 }
 
