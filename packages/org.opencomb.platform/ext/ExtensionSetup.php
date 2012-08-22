@@ -130,7 +130,8 @@ class ExtensionSetup extends Object
 
 		// check dependence
 		$arrDependence = array();
-		foreach($aExtensionManager->iterator() as $aExtension){
+		foreach($aExtensionManager->enableExtensionNameIterator() as $aExtName){
+			$aExtension = $aExtensionManager->extension($sExtName);
 			foreach($aExtension->metainfo()->dependence()->iterator() as $aRequireItem){
 				if($aRequireItem->type() === RequireItem::TYPE_EXTENSION){
 					if($aRequireItem->itemName() === $sExtName){
@@ -195,7 +196,8 @@ class ExtensionSetup extends Object
 		
 		// check dependence
 		$arrDependence = array();
-		foreach($aExtensionManager->iterator() as $aExtension){
+		foreach($aExtensionManager->enableExtensionNameIterator() as $aExtName){
+			$aExtension = $aExtensionManager->extension($sExtName);
 			foreach($aExtension->metainfo()->dependence()->iterator() as $aRequireItem){
 				if($aRequireItem->type() === RequireItem::TYPE_EXTENSION){
 					if($aRequireItem->itemName() === $sExtName){

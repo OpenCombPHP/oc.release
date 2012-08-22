@@ -113,6 +113,7 @@ class ExtensionManager extends Object
 	
 	/**
 	 * \Iterator
+	 * @notice 这个函数返回的并不是已经启用的扩展的列表，而是扩展对象缓存列表。
 	 */
 	public function iterator()
 	{
