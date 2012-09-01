@@ -47,8 +47,8 @@ class Service extends Application
 		if( !$sSignature = $aSetting->item('/service','signature') )
 		{
 			$sSignature = md5( microtime() . rand(0,100000) ) ;
-			$aSetting->setItem('/service','signature',$sSignature) ;
-			$aSetting->saveKey('/service') ;
+			$aSetting->setValue('/service/signature',$sSignature) ;
+			// $aSetting->saveKey('/service') ;
 		}
 		
 		return $sSignature ;
@@ -74,13 +74,13 @@ class Service extends Application
 	
 	public function isEnableDataUpgrader(){
 		$aSetting = Setting::singleton() ;
-		$bEnableDataUpgrader = $aSetting->item('/service','bEnableDataUpgrader',false);
+		$bEnableDataUpgrader = $aSetting->value('/service/bEnableDataUpgrader',false);
 		return $bEnableDataUpgrader ;
 	}
 	
 	public function setEnableDataUpgrader($b){
 		$aSetting = Setting::singleton() ;
-		$bEnableDataUpgrader = $aSetting->setItem('/service','bEnableDataUpgrader',(bool)$b);
+		$bEnableDataUpgrader = $aSetting->setValue('/service/bEnableDataUpgrader',(bool)$b);
 	}
 	
 	private $aExtensionManager ;

@@ -27,7 +27,7 @@ class ExtensionManager extends Object
 		
 		// 取得Setting中的item数据：已安装扩展的路径数组
 		// 如果指定的item不存在返回 null （该item以数组形式保存在 setting中） 。
-		foreach( $aSetting->item("/extensions",'installeds')?: array()  as $sExtPath )
+		foreach( $aSetting->value('/extensions/installeds',array())  as $sExtPath )
 		{
 			try{
 				$aExtension = ExtensionMetainfo::load(
@@ -42,7 +42,7 @@ class ExtensionManager extends Object
 		}
 		
 		// 取得Settnig中的另一项item数据：激活使用的扩展名称数组
-		$this->arrEnableExtensionNames = $aSetting->item("/extensions",'enable') ?: array() ;
+		$this->arrEnableExtensionNames = $aSetting->value('/extensions/enable' , array() );
 	}
 	
 	/**

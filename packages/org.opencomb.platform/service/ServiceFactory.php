@@ -7,6 +7,7 @@ use org\jecat\framework\lang\Exception;
 use org\opencomb\platform\system\OcSession;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\imp\FsSetting;
+use org\jecat\framework\setting\imp\ScalableSetting;
 use org\jecat\framework\cache\Cache;
 use org\jecat\framework\lang\oop\Package;
 use org\jecat\framework\fs\Folder;
@@ -54,7 +55,9 @@ class ServiceFactory extends HttpAppFactory
 		Folder::setSingleton($aFolder) ;
 		
 		// setting
-		$aSetting = FsSetting::createFromPath($arrServiceSetting['folder_setting']) ;
+		$aSetting = new ScalableSetting(
+			FsSetting::createFromPath($arrServiceSetting['folder_setting'])
+		);
 		Setting::setSingleton($aSetting) ;
 		
 		// 初始化 cache
@@ -62,7 +65,7 @@ class ServiceFactory extends HttpAppFactory
 		
 		// 从缓存中恢复 Service ---------------
 		$aServiceSerializer=$this->createServiceSerializer($aService) ;
-		if( !$aSetting->item('service','serialize',false) or ($aServiceSerializer and !$aServiceSerializer->restore($aSetting)) )
+		if( !$aSetting->value('/service/serialize',false) or ($aServiceSerializer and !$aServiceSerializer->restore($aSetting)) )
 		{
 			// 重建 Service
 			// --------------------------
@@ -78,7 +81,7 @@ class ServiceFactory extends HttpAppFactory
 			
 			// Locale
 			Locale::createSessionLocale(
-				$aSetting->item('service/locale','language','zh'), $aSetting->item('service/locale','country','CN'), true
+				$aSetting->value('/service/locale/language','zh'), $aSetting->value('/service/locale/country','CN'), true
 			) ;
 			
 			// 模板文件
@@ -118,7 +121,7 @@ class ServiceFactory extends HttpAppFactory
 		}
 		
 		// 启用class路径缓存
-		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->item('/service/class','enableClassPathCache',true) ) ;
+		ClassLoader::singleton()->setEnableClassCache( Setting::singleton()->value('/service/class/enableClassPathCache',true) ) ;
 		
 		if($aOriApp)
 		{
@@ -203,22 +206,22 @@ class ServiceFactory extends HttpAppFactory
 	private function initServiceUnrestorableSystem(Service $aService,Folder $aFolder,Setting $aSetting,array & $arrServiceSetting)
 	{
 		// 数据库
-		$sDBConfig = $aSetting->item('/service/db','config','alpha') ;
-		if( !$sDsn=$aSetting->item('/service/db/'.$sDBConfig,'dsn')
-				or !$sUsername=$aSetting->item('/service/db/'.$sDBConfig,'username') 
-				or !$sPassword=$aSetting->item('/service/db/'.$sDBConfig,'password')
+		$sDBConfig = $aSetting->value('/service/db/config','alpha') ;
+		if( !$sDsn=$aSetting->value('/service/db/'.$sDBConfig.'/dsn')
+				or !$sUsername=$aSetting->value('/service/db/'.$sDBConfig.'/username') 
+				or !$sPassword=$aSetting->value('/service/db/'.$sDBConfig.'/password')
 		)
 		{
 			throw new Exception("数据库配置无效(config: %s;dsn: %s; user: %s; passwd: %s)",array(
 			  $sDBConfig, @$sDsn, @$sUsername, (@$sPassword? '[used]': '[empty]')
 			)) ;
 		}
-		$sOptions = $aSetting->item('/service/db/'.$sDBConfig,'options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
+		$sOptions = $aSetting->value('/service/db/'.$sDBConfig.'/options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
 		
 		$aDB = new DB( $sDsn, $sUsername, $sPassword, $sOptions ) ;
 		
 		// 表名称前缀
-		if( $sTablePrefix=$aSetting->item('/service/db/'.$sDBConfig,'table_prefix',null) )
+		if( $sTablePrefix=$aSetting->value('/service/db/'.$sDBConfig.'/table_prefix',null) )
 		{
 			$aDB->setTableNamePrefix($sTablePrefix) ;
 		}
@@ -237,7 +240,7 @@ class ServiceFactory extends HttpAppFactory
 		
 		
 		// 高速缓存
-		if( !$aService->isDebugging() and $arrHsCacheSetting=$aSetting->item('/service/cache','high-speed',null) )
+		if( !$aService->isDebugging() and $arrHsCacheSetting=$aSetting->value('/service/cache/high-speed',null) )
 		{
 			//try{
 				$aHighSpeedCache = call_user_func( array($arrHsCacheSetting['driver'],'createInstance'),$arrHsCacheSetting['parameters'] ) ;

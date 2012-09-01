@@ -120,17 +120,17 @@ class ExtensionLoader extends Object
 			// 扩展的数据版本
 			$aExtDataVersion = $aExtMeta->dataVersion();
 			// 系统中已安装的数据版本
-			if( $sDataVersion = $aExtMeta->setting()->item('/','data-version') )
+			if( $sDataVersion = $aExtMeta->setting()->value('/data-version') )
 			{
 				$aDataVersion = Version::fromString($sDataVersion);
 				if( $aDataVersion->compare( $aExtDataVersion ) != 0){
 					if(ExtensionSetup::singleton()->upgradeData( $aDataVersion , $aExtMeta , $aMesgQ )){
-						$aExtMeta->setting()->setItem('/','data-version',(string)$aExtDataVersion ) ;
+						$aExtMeta->setting()->setValue('/data-version',(string)$aExtDataVersion ) ;
 					}
 				}
 			}else{
 				if( ExtensionSetup::singleton()->installData($aExtMeta,$aMesgQ ) ){
-					$aExtMeta->setting()->setItem('/','data-version',(string)$aExtDataVersion) ;
+					$aExtMeta->setting()->setValue('/data-version',(string)$aExtDataVersion) ;
 				}
 			}
 		}

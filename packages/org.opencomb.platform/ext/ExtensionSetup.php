@@ -46,7 +46,7 @@ class ExtensionSetup extends Object
 		
 		if( $aExtMeta->dataVersion() ){
 			// 检查系统中是否保留扩展的数据
-			if( $sDataVersion=Setting::singleton()->item('/extensions/'.$aExtMeta->name(),'data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
+			if( $sDataVersion=Setting::singleton()->value('/extensions/'.$aExtMeta->name().'/data-version') )	// 已经安装同名扩展，或系统中保留此扩展数据
 			{
 				$aService = Service::singleton() ;
 				$aService->setEnableDataUpgrader(true);
@@ -59,7 +59,7 @@ class ExtensionSetup extends Object
 			{
 				$this->installData($aExtMeta,$aMessageQueue) ;
 				// 写入数据版本
-				$aExtMeta->setting()->setItem('/','data-version',(string)$aExtMeta->dataVersion() ) ;
+				$aExtMeta->setting()->setValue('/data-version',(string)$aExtMeta->dataVersion() ) ;
 			}
 		}
 		
@@ -71,7 +71,7 @@ class ExtensionSetup extends Object
 		
 		// 设置 setting
 		$arrExtList = $this->buildInstalledExtensionList($aExtMgr) ;
-		Setting::singleton()->setItem('/extensions','installeds',$arrExtList) ;
+		Setting::singleton()->setValue('/extensions/installeds',$arrExtList) ;
 		
 		// 卸载新扩展的类包
 		$this->unloadClassPackages($aExtMeta) ;
@@ -102,9 +102,9 @@ class ExtensionSetup extends Object
 		// 优先级
 		$nPriority = $aExtMeta->priority() ;
 		// 设置 setting
-		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
+		$arrEnable = Setting::singleton()->value('/extensions/enable',array()) ;
 		$arrEnable[$nPriority][] = $sExtName ;
-		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
+		Setting::singleton()->setValue('/extensions/enable',$arrEnable) ;
 		
 		// 修改 ExtensionManager
 		$aExtMgr->addEnableExtension($aExtMeta);
@@ -157,7 +157,7 @@ class ExtensionSetup extends Object
 		{
 			// 安装和升级的时候已经正确在setting中保存了数据版本，卸载的时候没必要再写一遍
 			// $aExtension = new Extension($aExtMeta) ;
-			// $aExtension->setting()->setItem('/','data-version',$aExtension->dataVersion()->toString(false)) ;
+			// $aExtension->setting()->setValue('/data-version',$aExtension->dataVersion()->toString(false)) ;
 		}
 		// 清理数据
 		else
@@ -180,7 +180,7 @@ class ExtensionSetup extends Object
 		if( $rSearch !== false ){
 			unset( $arrExtList[ $rSearch ] );
 		}
-		Setting::singleton()->setItem('/extensions','installeds',$arrExtList) ;
+		Setting::singleton()->setValue('/extensions/installeds',$arrExtList) ;
 
 		$aMessageQueue->create(Message::success,'扩展`%s`已经从服务中卸载',array($sExtName)) ;
 	}
@@ -221,7 +221,7 @@ class ExtensionSetup extends Object
 
 		// -- Extension Enable --------
 		// 设置 setting
-		$arrEnable = Setting::singleton()->item('/extensions','enable') ;
+		$arrEnable = Setting::singleton()->value('/extensions/enable',array()) ;
 		foreach($arrEnable as &$arrExtNameList)
 		{
 			if(($pos = array_search($sExtName,$arrExtNameList))!==false)
@@ -229,7 +229,7 @@ class ExtensionSetup extends Object
 				unset($arrExtNameList[$pos]) ;
 			}
 		}
-		Setting::singleton()->setItem('/extensions','enable',$arrEnable) ;
+		Setting::singleton()->setValue('/extensions/enable',$arrEnable) ;
 
 		// 修改 ExtensionManager
 		$aExtensionManager->removeEnableExtension($aExtMeta);
@@ -291,7 +291,7 @@ class ExtensionSetup extends Object
 		if( !isset($arrEnableNew[$nNewPriority]) ){
 			$arrEnableNew[$nNewPriority] = array($sExtName);
 		}
-		$aSetting->setItem('/extensions','enable',$arrEnableNew) ;
+		$aSetting->setValue('/extensions/enable',$arrEnableNew) ;
 		
 		// 刷新系统缓存
 		ServiceSerializer::singleton()->addSystemObject($aExtMgr) ;
@@ -397,7 +397,7 @@ class ExtensionSetup extends Object
 		}
 		
 		// 保存setting
-		$aSetting->setItem('/extensions','enable',$arrEnable) ;
+		$aSetting->setValue('/extensions/enable',$arrEnable) ;
 	}
 	
 	/**
