@@ -8,6 +8,7 @@ use org\opencomb\platform\system\OcSession;
 use org\jecat\framework\cache\FSCache;
 use org\jecat\framework\setting\imp\FsSetting;
 use org\jecat\framework\setting\imp\ScalableSetting;
+use org\jecat\framework\setting\imp\SaeMemcacheSetting;
 use org\jecat\framework\cache\Cache;
 use org\jecat\framework\lang\oop\Package;
 use org\jecat\framework\fs\Folder;
@@ -35,30 +36,43 @@ use org\jecat\framework\message\MessageQueue;
 
 class ServiceFactory extends HttpAppFactory
 {
+	/*
 	static public function singleton($bCreateNew=true,$createArgvs=null,$sClass=null)
 	{
 		return Object::singleton($bCreateNew,null,__CLASS__) ;
 	}
+	*/
 	
-	public function create(array & $arrServiceSetting)
-	{
+	public function __construct(array $arrServiceSettings){
 		// 检查服务配置
-		$this->checkingServiceSetting($arrServiceSetting) ;
+		$this->checkingServiceSetting( $arrServiceSettings );
 		
+		$this->arrServiceSettings = $arrServiceSettings ;
+	}
+	
+	public function startBaseSystem(){
+		// filesystem
+		$aFolder = new Folder($this->arrServiceSettings['folder_path']) ;
+		Folder::setSingleton($aFolder) ;
+		
+		// setting
+		$aSetting = $this->createServiceSetting(
+			$this->arrServiceSettings['serviceSetting'],
+			$this->arrServiceSettings
+		);
+		Setting::setSingleton($aSetting) ;
+	}
+	
+	public function create()
+	{
+		$arrServiceSetting = $this->arrServiceSettings ;
 		// 创建服务
 		$aService = new Service() ;
 		$aService->setServiceSetting($arrServiceSetting) ;
 		$aOriApp = Application::switchSingleton($aService) ;
 		
-		// filesystem
-		$aFolder = new Folder($arrServiceSetting['folder_path']) ;
-		Folder::setSingleton($aFolder) ;
-		
-		// setting
-		$aSetting = new ScalableSetting(
-			FsSetting::createFromPath($arrServiceSetting['folder_setting'])
-		);
-		Setting::setSingleton($aSetting) ;
+		$aFolder = Folder::singleton() ;
+		$aSetting = Setting::singleton() ;
 		
 		// 初始化 cache
 		$aCache = $this->createCache($aService,$arrServiceSetting['folder_cache']) ;
@@ -171,6 +185,41 @@ class ServiceFactory extends HttpAppFactory
 				$arrServiceSetting['folder_files_url'].= '/' ;
 			}
 			$arrServiceSetting['folder_files_url'].= 'services/' . $arrServiceSetting['folder_name'] . '/files' ;
+		}
+		if(empty($arrServiceSetting['serviceSetting'])){
+			$arrServiceSetting['serviceSetting'] = array(
+				'type' => self::SCALABLE_SETTING,
+				'innerSetting' => array(
+					'type' => self::FS_SETTING,
+				)
+			);
+		}
+	}
+	
+	const FS_SETTING = 'FS_SETTING';
+	const SCALABLE_SETTING = 'SCALABLE_SETTING';
+	const SAE_MEMCACHE_SETTING = 'SAE_MEMCACHE_SETTING';
+	private function createServiceSetting(array $arrSetting , array $arrServiceSetting){
+		switch($arrSetting['type']){
+		case self::FS_SETTING :
+			return FsSetting::createFromPath($arrServiceSetting['folder_setting']);
+			break;
+		case self::SCALABLE_SETTING :
+			return new ScalableSetting(
+				$this->createServiceSetting(
+					$arrSetting['innerSetting'],
+					$arrServiceSetting
+				)
+			);
+			break;
+		case self::SAE_MEMCACHE_SETTING :
+			return new SaeMemcacheSetting();
+			break;
+		default:
+			throw new Exception(
+				"无效的setting配置：\n %s",
+				var_export($arrSetting,true)
+			);
 		}
 	}
 	
@@ -305,4 +354,6 @@ class ServiceFactory extends HttpAppFactory
 		
 		return $aSrcFileMgr ;
 	}
+	
+	private $arrServiceSettings = array() ;
 }

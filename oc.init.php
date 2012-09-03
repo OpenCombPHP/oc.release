@@ -11,6 +11,7 @@ require_once \org\jecat\framework\CLASSPATH."/setting/IKey.php" ;
 require_once \org\jecat\framework\CLASSPATH."/setting/Key.php" ;
 require_once \org\jecat\framework\CLASSPATH."/setting/imp/FsSetting.php" ;
 require_once \org\jecat\framework\CLASSPATH."/setting/imp/ScalableSetting.php" ;
+require_once \org\jecat\framework\CLASSPATH."/setting/imp/SaeMemcacheSetting.php" ;
 require_once \org\jecat\framework\CLASSPATH."/setting/imp/FsKey.php" ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/Cache.php' ;
 require_once \org\jecat\framework\CLASSPATH.'/cache/FSCache.php' ;
