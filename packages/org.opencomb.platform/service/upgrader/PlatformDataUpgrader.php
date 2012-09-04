@@ -10,6 +10,7 @@ use org\opencomb\platform\service\ServiceShutdowner;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\lang\Exception;
 use org\jecat\framework\message\MessageQueue;
+use org\jecat\framework\message\Message;
 
 /*
 	org\opencomb\platform\system\upgrader ;
@@ -23,6 +24,10 @@ class PlatformDataUpgrader extends Object{
 		flock($aLockRes,LOCK_EX);
 		
 		if( self::CheckResult_NeedUpgrade === $this->check() ){
+			$aMessageQueue->create(
+				Message::notice,
+				'发现蜂巢平台数据需要升级'
+			);
 			// shut down system
 			$aServiceShutdowner = ServiceShutdowner :: singleton() ;
 			$aServiceShutdowner->shutdown();
@@ -33,6 +38,11 @@ class PlatformDataUpgrader extends Object{
 				// restore system
 				$aServiceShutdowner->restore() ;
 				fclose($aLockRes);
+				
+				$aMessageQueue->create(
+					Message::success,
+					'蜂巢平台数据升级成功'
+				);
 				return TRUE;
 			}catch(Exception $e){
 				$aServiceShutdowner->restore() ;
@@ -113,6 +123,11 @@ class PlatformDataUpgrader extends Object{
 			if( ! $aUpgrader instanceof IUpgrader){
 				throw new Exception('Upgrader `%s` 未实现指定接口 ： IUpgrader',$sPath);
 			}
+			$aMessageQueue->create(
+				Message::notice,
+				'开始执行蜂巢平台数据升级程序：`%s`',
+				$sPath
+			);
 			$aUpgrader->process($aMessageQueue);
 			$aSetting->setValue('/service/data_version',$arrMap[$sPath]['to']);
 		}

@@ -19,7 +19,7 @@ class ServiceShutdowner extends Object
 	public function shutdown($sMessage="系统正在离线升级中……")
 	{
 		$sContents = self::$sTemplate ;
-		$sContents = str_replace('%title%', sprintf(Setting::singleton()->item('/platform','systemname'),"系统关闭"), $sContents) ;
+		$sContents = str_replace('%title%', sprintf(Setting::singleton()->value('/platform/systemname'),"系统关闭"), $sContents) ;
 		$sContents = str_replace('%contents%', $sMessage, $sContents) ;
 		
 		Folder::singleton()->findFile('/lock.shutdown.html',Folder::FIND_AUTO_CREATE)->openWriter()->write($sContents) ;
