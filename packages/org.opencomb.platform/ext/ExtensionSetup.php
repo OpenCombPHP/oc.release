@@ -269,7 +269,7 @@ class ExtensionSetup extends Object
 		
 		// 设置 setting
 		$aSetting = Setting::singleton() ;
-		$arrEnable = $aSetting->item('/extensions','enable') ;
+		$arrEnable = $aSetting->item('/extensions/enable') ;
 		$arrEnableNew = array();
 		foreach($arrEnable as $nPriority=>$arrExtNameList){
 			
@@ -303,7 +303,7 @@ class ExtensionSetup extends Object
 		$aSetting = Setting::singleton() ;
 		
 		// 读取并整理顺序
-		$arrEnable = $aSetting->item('/extensions','enable');
+		$arrEnable = $aSetting->item('/extensions/enable');
 		
 		$nExtPriority = -1 ; // $sExtName 的优先级
 		$nExtPosition = -1 ; // $sExtName 目前的位置

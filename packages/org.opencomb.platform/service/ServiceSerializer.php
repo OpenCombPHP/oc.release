@@ -172,8 +172,8 @@ class ServiceSerializer extends Object
 		}
 
 		// 恢复 Locale
-		$sLang = Locale::sessionLanguage($aSetting->item('service/locale','language','zh')) ;
-		$sCountry = Locale::sessionCountry($aSetting->item('service/locale','country','CN')) ;
+		$sLang = Locale::sessionLanguage($aSetting->item('service/locale/language','zh')) ;
+		$sCountry = Locale::sessionCountry($aSetting->item('service/locale/country','CN')) ;
 		if( $aLocale = $aCache->item($this->cacheStorePath('org\\jecat\\framework\\locale\\Locale',$sLang.'-'.$sCountry)) )
 		{
 			Locale::setFlyweight($sLang, $sCountry, $aLocale) ;

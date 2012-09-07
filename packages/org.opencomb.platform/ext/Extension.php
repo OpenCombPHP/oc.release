@@ -194,7 +194,7 @@ class Extension extends Object
 	{
 		if( !$this->aDataVersion )
 		{
-			if( $sDataVersion = $this->setting()->item('/','data-version') )
+			if( $sDataVersion = $this->setting()->item('/data-version') )
 			{
 				$this->aDataVersion = Version::fromString($sDataVersion) ;
 			}
