@@ -257,14 +257,14 @@ class ServiceFactory extends HttpAppFactory
 		// 数据库
 		$sDBConfig = $aSetting->value('/service/db/config','alpha') ;
 		if( !$sDsn=$aSetting->value('/service/db/'.$sDBConfig.'/dsn')
-				or !$sUsername=$aSetting->value('/service/db/'.$sDBConfig.'/username') 
-				or !$sPassword=$aSetting->value('/service/db/'.$sDBConfig.'/password')
+				or !$sUsername=$aSetting->value('/service/db/'.$sDBConfig.'/username')
 		)
 		{
 			throw new Exception("数据库配置无效(config: %s;dsn: %s; user: %s; passwd: %s)",array(
 			  $sDBConfig, @$sDsn, @$sUsername, (@$sPassword? '[used]': '[empty]')
 			)) ;
 		}
+		$sPassword=$aSetting->value('/service/db/'.$sDBConfig.'/password') ;
 		$sOptions = $aSetting->value('/service/db/'.$sDBConfig.'/options',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'")) ;
 		
 		$aDB = new DB( $sDsn, $sUsername, $sPassword, $sOptions ) ;
