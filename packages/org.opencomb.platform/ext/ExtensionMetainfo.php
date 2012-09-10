@@ -263,11 +263,7 @@ class ExtensionMetainfo extends Object
 				$aFolderIter = $aMultiFolder->iterator( FSIterator::CONTAIN_FOLDER | FSIterator::RETURN_FSO );
 				foreach( $aFolderIter as $aSubFolder ){
 					$sNamespace = $aSubFolder->name() ;
-					$sNamespace = str_replace('.','\\',$sNamespace) ;
-					$sNamespace = str_replace('/','\\',$sNamespace) ;
-				
 					$sFolder = '/'.$sPtg.'s/'.$aSubFolder->name();
-					Folder::formatPath($sFolder) ;
 					$arrMember [] = array($sFolder,$sNamespace) ;
 				}
 			}
