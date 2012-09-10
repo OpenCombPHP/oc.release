@@ -44,7 +44,7 @@ class Service extends Application
 	public function signature()
 	{
 		$aSetting = Setting::singleton() ;
-		if( !$sSignature = $aSetting->item('/service/signature') )
+		if( !$sSignature = $aSetting->value('/service/signature') )
 		{
 			$sSignature = md5( microtime() . rand(0,100000) ) ;
 			$aSetting->setValue('/service/signature',$sSignature) ;
