@@ -188,10 +188,7 @@ class ServiceFactory extends HttpAppFactory
 		}
 		if(empty($arrServiceSetting['serviceSetting'])){
 			$arrServiceSetting['serviceSetting'] = array(
-				'type' => self::SCALABLE_SETTING,
-				'innerSetting' => array(
-					'type' => self::FS_SETTING,
-				)
+				'type' => self::FS_SETTING,
 			);
 		}
 	}
