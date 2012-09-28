@@ -36,18 +36,21 @@ use org\jecat\framework\message\MessageQueue;
 
 class ServiceFactory extends HttpAppFactory
 {
-	/*
 	static public function singleton($bCreateNew=true,$createArgvs=null,$sClass=null)
 	{
 		return Object::singleton($bCreateNew,null,__CLASS__) ;
 	}
-	*/
 	
-	public function __construct(array $arrServiceSettings){
+	static public function setSingleton(self $aInstance=null)
+	{
+		parent::setSingleton($aInstance) ;
+	}
+	
+	public function __construct(array &$arrServiceSettings){
 		// 检查服务配置
 		$this->checkingServiceSetting( $arrServiceSettings );
 		
-		$this->arrServiceSettings = $arrServiceSettings ;
+		$this->arrServiceSettings = &$arrServiceSettings ;
 	}
 	
 	public function startBaseSystem(){
@@ -57,15 +60,14 @@ class ServiceFactory extends HttpAppFactory
 		
 		// setting
 		$aSetting = $this->createServiceSetting(
-			$this->arrServiceSettings['serviceSetting'],
-			$this->arrServiceSettings
+			$this->arrServiceSettings['serviceSetting']
 		);
 		Setting::setSingleton($aSetting) ;
 	}
 	
 	public function create()
 	{
-		$arrServiceSetting = $this->arrServiceSettings ;
+		$arrServiceSetting = &$this->arrServiceSettings ;
 		// 创建服务
 		$aService = new Service() ;
 		$aService->setServiceSetting($arrServiceSetting) ;
@@ -196,16 +198,15 @@ class ServiceFactory extends HttpAppFactory
 	const FS_SETTING = 'FS_SETTING';
 	const SCALABLE_SETTING = 'SCALABLE_SETTING';
 	const SAE_MEMCACHE_SETTING = 'SAE_MEMCACHE_SETTING';
-	private function createServiceSetting(array $arrSetting , array $arrServiceSetting){
+	public function createServiceSetting(array $arrSetting){
 		switch($arrSetting['type']){
 		case self::FS_SETTING :
-			return FsSetting::createFromPath($arrServiceSetting['folder_setting']);
+			return FsSetting::createFromPath($this->arrServiceSettings['folder_setting']);
 			break;
 		case self::SCALABLE_SETTING :
 			return new ScalableSetting(
 				$this->createServiceSetting(
-					$arrSetting['innerSetting'],
-					$arrServiceSetting
+					$arrSetting['innerSetting']
 				)
 			);
 			break;

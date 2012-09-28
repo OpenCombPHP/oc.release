@@ -40,5 +40,3 @@ class AbstractTestUpgrader implements IUpgrader{
 		}
 	}
 }
-
-

@@ -35,8 +35,8 @@ use org\opencomb\platform\service\ServiceFactory;
  */
 class Platform
 {
-	const version = '0.4.0.1' ;
-	const data_version = '0.3.1' ;
+	const version = '0.4.0.3' ;
+	const data_version = '0.3.2' ;
 	const version_compat = "=0.4" ;
 	
 	/**

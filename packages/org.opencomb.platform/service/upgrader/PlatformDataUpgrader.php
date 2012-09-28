@@ -26,7 +26,11 @@ class PlatformDataUpgrader extends Object{
 		if( self::CheckResult_NeedUpgrade === $this->check() ){
 			$aMessageQueue->create(
 				Message::notice,
-				'发现蜂巢平台数据需要升级'
+				'发现蜂巢平台数据需要升级。系统中安装的数据版本为:`%s`，平台的数据版本为:`%s`',
+				array(
+					$this->dataVersion(),
+					$this->currentVersion() ,
+				)
 			);
 			// shut down system
 			$aServiceShutdowner = ServiceShutdowner :: singleton() ;

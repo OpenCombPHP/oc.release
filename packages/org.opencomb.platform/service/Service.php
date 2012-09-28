@@ -54,10 +54,14 @@ class Service extends Application
 		return $sSignature ;
 	}
 	
-	public function setServiceSetting(array $arrServiceSetting)
+	public function setServiceSetting(array &$arrServiceSetting)
 	{
 		$this->arrServiceSetting =& $arrServiceSetting ;
 		$this->setServiceName($arrServiceSetting['name']) ;
+	}
+	
+	public function &serviceSetting(){
+		return $this->arrServiceSetting ;
 	}
 
 	/**
