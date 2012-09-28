@@ -121,7 +121,6 @@ class PlatformDataUpgrader extends Object{
 			);
 		}
 		
-		$aSetting = Setting::singleton() ;
 		foreach($arrPath as $sPath){
 			$aUpgrader = new $sPath ;
 			if( ! $aUpgrader instanceof IUpgrader){
@@ -133,7 +132,10 @@ class PlatformDataUpgrader extends Object{
 				$sPath
 			);
 			$aUpgrader->process($aMessageQueue);
-			$aSetting->setValue('/service/data_version',$arrMap[$sPath]['to']);
+			
+			// 执行 $aUpgrader 时可能会更改 Setting 的 singleton 
+			// 所以执行完需要重要获取 singleton
+			Setting::singleton()->setValue('/service/data_version',$arrMap[$sPath]['to']);
 		}
 	}
 	

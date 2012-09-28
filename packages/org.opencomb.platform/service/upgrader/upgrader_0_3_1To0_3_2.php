@@ -6,6 +6,7 @@ use org\jecat\framework\message\Message;
 use org\jecat\framework\util\Version;
 use org\opencomb\platform\service\Service;
 use org\opencomb\platform\service\ServiceFactory;
+use org\jecat\framework\setting\Setting;
 
 class upgrader_0_3_1To0_3_2 implements IUpgrader{
 	public function process(MessageQueue $aMessageQueue){
@@ -14,13 +15,24 @@ class upgrader_0_3_1To0_3_2 implements IUpgrader{
 		$arrServiceSetting = &$aService->serviceSetting();
 		
 		if( $arrServiceSetting['serviceSetting']['type'] === ServiceFactory::FS_SETTING ){
-			$aScalableSetting = new ScalableSetting(
-				FsSetting::createFromPath($arrServiceSetting['folder_setting'])
+			$aServiceFactory = ServiceFactory::singleton();
+			$aFormerFsSetting = $aServiceFactory->createServiceSetting(
+				array(
+					'type' => ServiceFactory::FS_SETTING
+				)
 			);
 			
-			$aFormerFsSetting = Setting::singleton();
-			
 			$arrKeyList = $aFormerFsSetting->keyList('');
+			
+			$aScalableSetting = $aServiceFactory->createServiceSetting(
+				array(
+					'type' => ServiceFactory::SCALABLE_SETTING,
+					'innerSetting' => array(
+						'type' => ServiceFactory::FS_SETTING
+					),
+				)
+			);
+			
 			foreach($arrKeyList as $sKey){
 				$aScalableSetting->setValue(
 					$sKey,
@@ -43,6 +55,8 @@ class upgrader_0_3_1To0_3_2 implements IUpgrader{
 					'type' => 'FS_SETTING',
 				),
 			);
+			
+			Setting::setSingleton( $aScalableSetting );
 		}
 	}
 }
